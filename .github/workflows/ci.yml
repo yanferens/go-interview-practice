@@ -1,0 +1,93 @@
+name: Test Submissions and Update Scoreboards
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  test-submissions:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    strategy:
+      matrix:
+        challenge:
+          - challenge-1
+          - challenge-2  # Add all challenge directories here
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'  # Specify Go version
+
+      - name: Run Tests for ${{ matrix.challenge }}
+        working-directory: ${{ matrix.challenge }}
+        run: |
+          for user_dir in submissions/*; do
+            if [ -d "$user_dir" ]; then
+              echo "Testing submission from $(basename $user_dir)"
+              cp "$user_dir"/*.go .
+              go test -v > "${user_dir}/test_results.txt" 2>&1 || true
+            fi
+          done
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.challenge }}-test-results
+          path: |
+            ${{ matrix.challenge }}/submissions/*/test_results.txt
+
+  update-scoreboards:
+    runs-on: ubuntu-latest
+    needs: test-submissions
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download Test Results Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: '**-test-results'
+          path: ./artifacts
+
+      - name: Generate Scoreboards
+        run: |
+          for artifact_dir in artifacts/*; do
+            challenge_name=$(basename "$artifact_dir" | sed 's/-test-results//')
+            echo "Processing $challenge_name"
+
+            scoreboard="$challenge_name/SCOREBOARD.md"
+            echo "# Scoreboard for $challenge_name" > "$scoreboard"
+            echo "| Username   | Passed Tests | Total Tests |" >> "$scoreboard"
+            echo "|------------|--------------|-------------|" >> "$scoreboard"
+
+            for result_file in "$artifact_dir"/submissions/*/test_results.txt; do
+              username=$(basename "$(dirname "$result_file")")
+              pass_count=$(grep -c "^--- PASS" "$result_file" || true)
+              fail_count=$(grep -c "^--- FAIL" "$result_file" || true)
+              total_tests=$((pass_count + fail_count))
+              echo "| $username | $pass_count | $total_tests |" >> "$scoreboard"
+            done
+          done
+
+      - name: Commit and Push Scoreboards
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add */SCOREBOARD.md
+          git commit -m "Update scoreboards with latest test results [skip ci]" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
