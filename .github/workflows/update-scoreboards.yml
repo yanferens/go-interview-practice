@@ -53,9 +53,9 @@ jobs:
               echo "Test results for $USERNAME:"
               cat "$submission_dir/test_results.txt"
 
-              # Parse test results (Remove leading spaces from grep patterns)
-              PASS_COUNT=$(grep -c "^--- PASS: " "$submission_dir/test_results.txt" || true)
-              FAIL_COUNT=$(grep -c "^--- FAIL: " "$submission_dir/test_results.txt" || true)
+              # Parse test results (allow any leading spaces before '--- PASS:' or '--- FAIL:')
+              PASS_COUNT=$(grep -c "^[[:space:]]*--- PASS: " "$submission_dir/test_results.txt" || true)
+              FAIL_COUNT=$(grep -c "^[[:space:]]*--- FAIL: " "$submission_dir/test_results.txt" || true)
               TOTAL_TESTS=$((PASS_COUNT + FAIL_COUNT))
 
               # Update scoreboard
