@@ -18,44 +18,42 @@ fi
 read -p "Enter your GitHub username: " USERNAME
 
 SUBMISSION_DIR="submissions/$USERNAME"
-SOLUTION_FILE="$SUBMISSION_DIR/solution-template.go"
+SUBMISSION_FILE="$SUBMISSION_DIR/solution-template.go"
 
 # Check if the submission file exists
-if [ ! -f "$SOLUTION_FILE" ]; then
-    echo "Error: Solution file '$SOLUTION_FILE' not found."
+if [ ! -f "$SUBMISSION_FILE" ]; then
+    echo "Error: Solution file '$SUBMISSION_FILE' not found."
     exit 1
 fi
 
-# Ensure go.mod exists
-if [ ! -f "go.mod" ]; then
-    echo "Initializing Go module in the current directory."
-    go mod init "challenge" || echo "Failed to initialize Go module."
-fi
+# Create a temporary directory to avoid modifying the original files
+TEMP_DIR=$(mktemp -d)
 
-# Copy the participant's solution to the current directory
-cp "$SOLUTION_FILE" .
+# Copy the participant's solution and the test file to the temporary directory
+cp "$SUBMISSION_FILE" "solution-template_test.go" "$TEMP_DIR/"
 
 echo "Running tests for user '$USERNAME'..."
 
-# Update the test file to point to the participant's solution
-TEST_FILE="solution-template_test.go"
+# Navigate to the temporary directory
+pushd "$TEMP_DIR" > /dev/null
 
-# Backup the original test file
-cp "$TEST_FILE" "${TEST_FILE}.bak"
-
-# Replace the cmd execution line to point to the participant's solution
-sed -i.bak "s|go run .*|go run solution-template.go|" "$TEST_FILE"
+# Initialize a new Go module in the temporary directory
+go mod init "challenge" || {
+  echo "Failed to initialize Go module."
+  popd > /dev/null
+  rm -rf "$TEMP_DIR"
+  exit 1
+}
 
 # Run the tests
 go test -v
 
 TEST_EXIT_CODE=$?
 
-# Restore the original test file
-mv "${TEST_FILE}.bak" "$TEST_FILE"
-rm -f "${TEST_FILE}.bak"
+# Return to the original directory
+popd > /dev/null
 
-# Clean up the copied solution file
-rm -f "solution-template.go"
+# Clean up the temporary directory
+rm -rf "$TEMP_DIR"
 
 exit $TEST_EXIT_CODE
