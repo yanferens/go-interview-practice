@@ -1,3 +1,9 @@
+# Scoreboard for challenge-4
+| Username   | Passed Tests | Total Tests |
+|------------|--------------|-------------|
+| RezaSi | 3 | 8 |
+
+
 [View the Scoreboard](SCOREBOARD.md)
 
 # Challenge 4: Concurrent Graph BFS Queries
