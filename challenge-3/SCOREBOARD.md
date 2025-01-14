@@ -1,6 +1,6 @@
-# Scoreboard for challenge-2
+# Scoreboard for challenge-3
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
-| RezaSi | 6 | 6 |
+| RezaSi | 0 | 0 |
 
 
