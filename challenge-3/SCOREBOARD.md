@@ -2,5 +2,3 @@
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
 | RezaSi | 5 | 5 |
-
-
