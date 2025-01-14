@@ -1,27 +1,5 @@
 [View the Scoreboard](SCOREBOARD.md)
 
-## **Challenge 3: Employee Data Management**
-
-### **Directory Structure**
-
-```
-challenge-3/
-├── README.md
-├── solution-template.go
-├── solution-template_test.go
-└── submissions/
-```
-
----
-
-## **Files and Contents**
-
-### **1. `README.md`**
-
-```markdown
-<!-- SCOREBOARD_START -->
-<!-- SCOREBOARD_END -->
-
 # Challenge 3: Employee Data Management
 
 ## Problem Statement
