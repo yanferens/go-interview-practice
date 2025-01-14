@@ -49,9 +49,13 @@ jobs:
               # Run tests and capture output
               (cd "$challenge_dir" && go test -v) > "$submission_dir/test_results.txt" 2>&1 || true
 
+              # Output test results for debugging
+              echo "Test results for $USERNAME:"
+              cat "$submission_dir/test_results.txt"
+
               # Parse test results for subtests only
-              PASS_COUNT=$(grep -c "^--- PASS:.*\/" "$submission_dir/test_results.txt" || true)
-              FAIL_COUNT=$(grep -c "^--- FAIL:.*\/" "$submission_dir/test_results.txt" || true)
+              PASS_COUNT=$(grep -c "^    --- PASS: " "$submission_dir/test_results.txt" || true)
+              FAIL_COUNT=$(grep -c "^    --- FAIL: " "$submission_dir/test_results.txt" || true)
               TOTAL_TESTS=$((PASS_COUNT + FAIL_COUNT))
 
               # Update scoreboard
@@ -60,6 +64,21 @@ jobs:
               # Clean up copied files
               rm -f "$challenge_dir"/*.go
             done
+
+            # Insert the scoreboard at the top of README.md
+            readme="$challenge_dir/README.md"
+            if [ -f "$readme" ]; then
+              # Add a newline to separate the scoreboard from the rest of the content
+              echo -e "\n" >> "$scoreboard"
+
+              # Combine SCOREBOARD.md and README.md into a new README file
+              cat "$scoreboard" "$readme" > "$challenge_dir/README_new.md"
+
+              # Replace the old README.md with the new one
+              mv "$challenge_dir/README_new.md" "$readme"
+            else
+              echo "README.md not found in $challenge_dir"
+            fi
           done
 
       - name: Commit and Push Scoreboards
