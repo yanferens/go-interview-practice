@@ -40,11 +40,14 @@ jobs:
 
             # Run tests for all submissions
             for submission_dir in "$challenge_dir"/submissions/*/; do
+              # Skip if not a directory
+              [ -d "$submission_dir" ] || continue
+
               USERNAME=$(basename "$submission_dir")
               echo "Testing submission from $USERNAME"
 
               # Copy submission files
-              cp "$submission_dir"/*.go "$challenge_dir/"
+              cp "$submission_dir"/*.go "$challenge_dir/" 2>/dev/null || true
 
               # Run tests and capture output
               (cd "$challenge_dir" && go test -v) > "$submission_dir/test_results.txt" 2>&1 || true
@@ -53,7 +56,7 @@ jobs:
               echo "Test results for $USERNAME:"
               cat "$submission_dir/test_results.txt"
 
-              # Parse test results (allow any leading spaces before '--- PASS:' or '--- FAIL:')
+              # Parse test results (allow leading spaces before '--- PASS:' or '--- FAIL:')
               PASS_COUNT=$(grep -c "^[[:space:]]*--- PASS: " "$submission_dir/test_results.txt" || true)
               FAIL_COUNT=$(grep -c "^[[:space:]]*--- FAIL: " "$submission_dir/test_results.txt" || true)
               TOTAL_TESTS=$((PASS_COUNT + FAIL_COUNT))
@@ -64,6 +67,25 @@ jobs:
               # Clean up copied files
               rm -f "$challenge_dir"/*.go
             done
+
+            # -------------------
+            # Sort scoreboard by Passed Tests, descending
+            # -------------------
+            # Skip first 3 lines:
+            #  1) # Scoreboard for ...
+            #  2) | Username   | Passed Tests | Total Tests |
+            #  3) |------------|--------------|-------------|
+            if [ -s "$scoreboard" ]; then
+              temp_sorted=$(mktemp)
+              head -n 3 "$scoreboard" > "$temp_sorted"
+
+              # Starting from line 4, sort by the 3rd column (Passed Tests) numerically, descending
+              tail -n +4 "$scoreboard" \
+                | sort -t '|' -k3,3nr \
+                >> "$temp_sorted"
+
+              mv "$temp_sorted" "$scoreboard"
+            fi
 
             # Insert the scoreboard at the top of README.md
             readme="$challenge_dir/README.md"
@@ -85,7 +107,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add challenge-*/SCOREBOARD.md
+          git add challenge-*/SCOREBOARD.md challenge-*/README.md
           git commit -m "Update scoreboards [skip ci]" || echo "No changes to commit"
           git push
         env:
