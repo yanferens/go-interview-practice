@@ -1,9 +1,3 @@
-# Scoreboard for challenge-3
-| Username   | Passed Tests | Total Tests |
-|------------|--------------|-------------|
-| RezaSi | 5 | 5 |
-
-
 [View the Scoreboard](SCOREBOARD.md)
 
 # Challenge 3: Employee Data Management

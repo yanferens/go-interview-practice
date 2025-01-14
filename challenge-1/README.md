@@ -1,9 +1,3 @@
-# Scoreboard for challenge-1
-| Username   | Passed Tests | Total Tests |
-|------------|--------------|-------------|
-| RezaSi | 6 | 6 |
-
-
 [View the Scoreboard](SCOREBOARD.md)
 
 # Challenge 1: Sum of Two Numbers
