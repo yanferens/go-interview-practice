@@ -73,7 +73,7 @@ jobs:
 
             # Sort scoreboard data and append to SCOREBOARD.md
             awk -F',' 'BEGIN { OFS=" | "; print "| Username", "Passed Tests", "Total Tests", "Last Submission Time |"; print "|------------", "--------------", "-------------", "----------------------|"; } 
-              { print "| " $1, $2, $3, $4 " |"; }' <(sort -t ',' -k2,2nr -k4,4r "$temp_scoreboard") >> "$scoreboard"
+              { print "| " $1, $2, $3, $4 " |"; }' <(sort -t ',' -k2,2nr -k4,4 "$temp_scoreboard") >> "$scoreboard"
 
             # Remove the temporary scoreboard file
             rm "$temp_scoreboard"
