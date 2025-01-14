@@ -49,9 +49,9 @@ jobs:
               # Run tests and capture output
               (cd "$challenge_dir" && go test -v) > "$submission_dir/test_results.txt" 2>&1 || true
 
-              # Parse test results
-              PASS_COUNT=$(grep -c "^--- PASS:" "$submission_dir/test_results.txt" || true)
-              FAIL_COUNT=$(grep -c "^--- FAIL:" "$submission_dir/test_results.txt" || true)
+              # Parse test results for subtests only
+              PASS_COUNT=$(grep -c "^--- PASS:.*\/" "$submission_dir/test_results.txt" || true)
+              FAIL_COUNT=$(grep -c "^--- FAIL:.*\/" "$submission_dir/test_results.txt" || true)
               TOTAL_TESTS=$((PASS_COUNT + FAIL_COUNT))
 
               # Update scoreboard
