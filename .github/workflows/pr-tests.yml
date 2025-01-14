@@ -1,0 +1,43 @@
+name: PR Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  test-submissions:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        challenge:
+          - challenge-1
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Run Tests for ${{ matrix.challenge }}
+        working-directory: ${{ matrix.challenge }}
+        run: |
+          USERNAME="${{ github.event.pull_request.user.login }}"
+          SUBMISSION_DIR="submissions/$USERNAME"
+          if [ -d "$SUBMISSION_DIR" ]; then
+            echo "Testing submission from $USERNAME"
+            cp "$SUBMISSION_DIR"/*.go .
+            go test -v
+          else
+            echo "No submission found for $USERNAME"
+          fi

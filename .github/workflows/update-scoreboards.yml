@@ -1,0 +1,70 @@
+name: Update Scoreboards
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-scoreboards:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Run Tests and Update Scoreboards
+        run: |
+          for challenge_dir in challenge-*/; do
+            challenge_name=$(basename "$challenge_dir")
+            echo "Processing $challenge_name"
+
+            # Ensure go.mod exists
+            if [ ! -f "$challenge_dir/go.mod" ]; then
+              (cd "$challenge_dir" && go mod init "$challenge_name")
+            fi
+
+            # Initialize scoreboard
+            scoreboard="$challenge_dir/SCOREBOARD.md"
+            echo "# Scoreboard for $challenge_name" > "$scoreboard"
+            echo "| Username   | Passed Tests | Total Tests |" >> "$scoreboard"
+            echo "|------------|--------------|-------------|" >> "$scoreboard"
+
+            # Run tests for all submissions
+            for submission_dir in "$challenge_dir"/submissions/*/; do
+              USERNAME=$(basename "$submission_dir")
+              echo "Testing submission from $USERNAME"
+
+              # Copy submission files
+              cp "$submission_dir"/*.go "$challenge_dir/"
+
+              # Run tests and capture output
+              (cd "$challenge_dir" && go test -v) > "$submission_dir/test_results.txt" 2>&1 || true
+
+              # Parse test results
+              PASS_COUNT=$(grep -c "^--- PASS:" "$submission_dir/test_results.txt" || true)
+              FAIL_COUNT=$(grep -c "^--- FAIL:" "$submission_dir/test_results.txt" || true)
+              TOTAL_TESTS=$((PASS_COUNT + FAIL_COUNT))
+
+              # Update scoreboard
+              echo "| $USERNAME | $PASS_COUNT | $TOTAL_TESTS |" >> "$scoreboard"
+
+              # Clean up copied files
+              rm -f "$challenge_dir"/*.go
+            done
+          done
+
+      - name: Commit and Push Scoreboards
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add challenge-*/SCOREBOARD.md
+          git commit -m "Update scoreboards [skip ci]" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
