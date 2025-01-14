@@ -1,6 +1,6 @@
 # Scoreboard for challenge-1
-| Username   | Passed Tests | Total Tests | Last Submission Time |
-|------------|--------------|-------------|----------------------|
-| Username | Passed Tests | Total Tests | Last Submission Time |
-|------------ | -------------- | ------------- | ----------------------|
-| RezaSi | 5 | 5 | 2025-01-14 13:05:29 UTC |
+| Username   | Passed Tests | Total Tests |
+|------------|--------------|-------------|
+| RezaSi | 5 | 5 |
+
+
