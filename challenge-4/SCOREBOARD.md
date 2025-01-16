@@ -1,5 +1,5 @@
 # Scoreboard for challenge-4
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
-| AliNazariii | N/A | N/A |
-| RezaSi | N/A | N/A |
+| AliNazariii | 8 | 8 |
+| RezaSi | 3 | 8 |

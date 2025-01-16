@@ -1,5 +1,5 @@
 # Scoreboard for challenge-1
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
-| AliNazariii | N/A | N/A |
-| RezaSi | N/A | N/A |
+| AliNazariii | 6 | 6 |
+| RezaSi | 6 | 6 |
