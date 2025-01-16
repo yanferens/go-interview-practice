@@ -1,4 +1,5 @@
 # Scoreboard for challenge-2
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
-| RezaSi | 7 | 7 |
+| AliNazariii | 7 | 7 |
+| RezaSi | 0 | 0 |
