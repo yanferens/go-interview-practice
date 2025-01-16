@@ -19,7 +19,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: "1.21"
+          go-version: '1.21'
 
       - name: Run Tests and Update Scoreboards
         run: |
@@ -28,61 +28,48 @@ jobs:
             challenge_name=$(basename "$challenge_dir")
             echo "Processing $challenge_name"
 
-            # Ensure go.mod exists or init if missing
+            # Ensure go.mod exists
             if [ ! -f "$challenge_dir/go.mod" ]; then
-              (cd "$challenge_dir" && go mod init "$challenge_name" && go mod tidy)
-            else
-              (cd "$challenge_dir" && go mod tidy)
+              (cd "$challenge_dir" && go mod init "$challenge_name")
             fi
 
             # Initialize scoreboard
             scoreboard="$challenge_dir/SCOREBOARD.md"
-            {
-              echo "# Scoreboard for $challenge_name"
-              echo "| Username   | Passed Tests | Total Tests |"
-              echo "|------------|--------------|-------------|"
-            } > "$scoreboard"
+            echo "# Scoreboard for $challenge_name" > "$scoreboard"
+            echo "| Username   | Passed Tests | Total Tests |" >> "$scoreboard"
+            echo "|------------|--------------|-------------|" >> "$scoreboard"
 
-            # Iterate over each submission
+            # Run tests for all submissions
             for submission_dir in "$challenge_dir"/submissions/*/; do
+              # Skip if not a directory
               [ -d "$submission_dir" ] || continue
-              USERNAME=$(basename "$submission_dir")
-              echo "Testing submission from $USERNAME in $challenge_name"
 
-              # Copy user’s .go files to the challenge dir (where official tests live)
+              USERNAME=$(basename "$submission_dir")
+              echo "Testing submission from $USERNAME"
+
+              # Copy participant's *.go files
               cp "$submission_dir"/*.go "$challenge_dir/" 2>/dev/null || true
 
-              # Run tests, capture output
-              (cd "$challenge_dir" && go test -v) > "$submission_dir/test_results_raw.txt" 2>&1 || true
+              # Run tests and capture output
+              (cd "$challenge_dir" && go test -v) > "$submission_dir/test_results.txt" 2>&1 || true
 
-              # Remove ANSI color codes and other escapes from raw output
-              sed -r 's/\x1B\[[0-9;]*m//g' "$submission_dir/test_results_raw.txt" > "$submission_dir/test_results.txt"
-
+              # Show logs
               echo "Test results for $USERNAME:"
               cat "$submission_dir/test_results.txt"
 
-              # Check for "[no test files]" scenario
-              if grep -q "[no test files]" "$submission_dir/test_results.txt"; then
-                PASS_STR="N/A"
-                TOTAL_STR="N/A"
-              else
-                # Count lines matching '--- PASS:' or '--- FAIL:' (leading spaces OK)
-                PASS_COUNT=$(grep -c "^[[:space:]]*--- PASS: " "$submission_dir/test_results.txt" || true)
-                FAIL_COUNT=$(grep -c "^[[:space:]]*--- FAIL: " "$submission_dir/test_results.txt" || true)
-                TOTAL_TESTS=$((PASS_COUNT + FAIL_COUNT))
+              # Parse test results
+              PASS_COUNT=$(grep -c "^[[:space:]]*--- PASS: " "$submission_dir/test_results.txt" || true)
+              FAIL_COUNT=$(grep -c "^[[:space:]]*--- FAIL: " "$submission_dir/test_results.txt" || true)
+              TOTAL_TESTS=$((PASS_COUNT + FAIL_COUNT))
 
-                PASS_STR="$PASS_COUNT"
-                TOTAL_STR="$TOTAL_TESTS"
-              fi
+              # Update scoreboard
+              echo "| $USERNAME | $PASS_COUNT | $TOTAL_TESTS |" >> "$scoreboard"
 
-              # Append row to scoreboard
-              echo "| $USERNAME | $PASS_STR | $TOTAL_STR |" >> "$scoreboard"
-
-              # Remove user code but keep official test files (ending in _test.go)
+              # Clean up copied participant files, keep any _test.go
               for f in "$challenge_dir"/*.go; do
                 case "$f" in
                   *_test.go)
-                    # Official test file - keep
+                    # Keep official test file
                     ;;
                   *.go)
                     rm -f "$f"
@@ -91,14 +78,14 @@ jobs:
               done
             done
 
-            # Sort scoreboard by Passed Tests desc; skip top 3 lines
+            # Sort scoreboard by Passed Tests desc; skip the first 3 lines (header)
             if [ -s "$scoreboard" ]; then
-              temp_file=$(mktemp)
-              head -n 3 "$scoreboard" > "$temp_file"
+              temp_sorted=$(mktemp)
+              head -n 3 "$scoreboard" > "$temp_sorted"
               tail -n +4 "$scoreboard" \
                 | sort -t '|' -k3,3nr \
-                >> "$temp_file"
-              mv "$temp_file" "$scoreboard"
+                >> "$temp_sorted"
+              mv "$temp_sorted" "$scoreboard"
             fi
           done
 
