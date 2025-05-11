@@ -1,0 +1,50 @@
+{{define "content"}}
+<div class="row mb-4">
+    <div class="col">
+        <h1>Challenge Scoreboard</h1>
+        <p class="lead">View all successful challenge submissions.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Challenge</th>
+                                <th>Difficulty</th>
+                                <th>Username</th>
+                                <th>Submitted At</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{range $id, $entries := .Scoreboards}}
+                                {{range $entry := $entries}}
+                                <tr>
+                                    <td>Challenge {{$id}}: {{(index $.Challenges $id).Title}}</td>
+                                    <td>
+                                        <span class="badge bg-primary badge-{{(index $.Challenges $id).Difficulty | lower}}">
+                                            {{(index $.Challenges $id).Difficulty}}
+                                        </span>
+                                    </td>
+                                    <td>{{$entry.Username}}</td>
+                                    <td>{{$entry.SubmittedAt.Format "Jan 02, 2006"}}</td>
+                                    <td>
+                                        <a href="/challenge/{{$id}}" class="btn btn-sm btn-primary">Try Challenge</a>
+                                        <a href="/scoreboard/{{$id}}" class="btn btn-sm btn-outline-secondary">View Scoreboard</a>
+                                    </td>
+                                </tr>
+                                {{end}}
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}} 

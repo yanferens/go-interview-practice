@@ -1,0 +1,149 @@
+{{define "content"}}
+<div class="row mb-4">
+    <div class="col">
+        <h1>Go Interview Practice Challenges</h1>
+        <p class="lead">Improve your Go programming skills by solving these coding challenges. Complete challenges to prepare for technical interviews and build your portfolio.</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <button class="btn btn-outline-secondary btn-sm me-2" id="filter-all">All</button>
+                <button class="btn btn-outline-success btn-sm me-2" id="filter-beginner">Beginner</button>
+                <button class="btn btn-outline-warning btn-sm me-2" id="filter-intermediate">Intermediate</button>
+                <button class="btn btn-outline-danger btn-sm" id="filter-advanced">Advanced</button>
+            </div>
+            <div>
+                <select class="form-select" id="sort-select">
+                    <option value="id-asc">Number (Ascending)</option>
+                    <option value="id-desc">Number (Descending)</option>
+                    <option value="difficulty">Difficulty</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="challenges-container">
+    {{range .Challenges}}
+    <div class="col-md-6 col-lg-4 challenge-item" data-difficulty="{{.Difficulty}}">
+        <div class="card challenge-card">
+            <div class="card-body">
+                <h5 class="card-title">Challenge {{.ID}}: {{.Title}}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    <span class="badge bg-primary badge-{{.Difficulty | lower}}">{{.Difficulty}}</span>
+                </h6>
+                <div class="card-text challenge-description" data-raw-description="{{.Description}}">
+                    <!-- Description will be rendered by JavaScript -->
+                </div>
+                <div class="d-flex justify-content-between mt-3">
+                    <a href="/challenge/{{.ID}}" class="btn btn-primary">Start Challenge</a>
+                    <a href="/scoreboard/{{.ID}}" class="btn btn-outline-secondary">Scoreboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{end}}
+</div>
+{{end}}
+
+{{define "scripts"}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filters
+        const filterButtons = document.querySelectorAll('[id^="filter-"]');
+        const challengeItems = document.querySelectorAll('.challenge-item');
+        const sortSelect = document.getElementById('sort-select');
+        const challengesContainer = document.getElementById('challenges-container');
+
+        // Format challenge descriptions
+        document.querySelectorAll('.challenge-description').forEach(descEl => {
+            const rawDesc = descEl.getAttribute('data-raw-description');
+            if (!rawDesc) return;
+            
+            // Extract the first paragraph after the title
+            // This skips links, section headers, etc.
+            let description = '';
+            
+            // Remove markdown links
+            const cleanDesc = rawDesc.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+            
+            // Split by lines and look for the first paragraph
+            const lines = cleanDesc.split('\n');
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                // Skip title lines, empty lines
+                if (line.startsWith('#') || line === '' || line.startsWith('---') || line.startsWith('!')) {
+                    continue;
+                }
+                
+                // Found a paragraph, use it
+                description = line;
+                break;
+            }
+            
+            // If no good paragraph found, use the first 150 chars
+            if (!description && cleanDesc.length > 0) {
+                description = cleanDesc.substring(0, 150) + '...';
+            }
+            
+            // Create clean preview
+            descEl.innerHTML = `<p>${description.substring(0, 150)}${description.length > 150 ? '...' : ''}</p>`;
+        });
+
+        // Filter challenges by difficulty
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const filter = this.id.replace('filter-', '');
+                
+                // Update active button
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show/hide challenges
+                challengeItems.forEach(item => {
+                    if (filter === 'all') {
+                        item.style.display = '';
+                    } else {
+                        const difficulty = item.getAttribute('data-difficulty').toLowerCase();
+                        item.style.display = difficulty === filter.toLowerCase() ? '' : 'none';
+                    }
+                });
+            });
+        });
+
+        // Sort challenges
+        sortSelect.addEventListener('change', function() {
+            const sortValue = this.value;
+            const challenges = Array.from(challengeItems);
+            
+            challenges.sort((a, b) => {
+                if (sortValue === 'id-asc') {
+                    const idA = parseInt(a.querySelector('.card-title').textContent.match(/Challenge (\d+)/)[1]);
+                    const idB = parseInt(b.querySelector('.card-title').textContent.match(/Challenge (\d+)/)[1]);
+                    return idA - idB;
+                } else if (sortValue === 'id-desc') {
+                    const idA = parseInt(a.querySelector('.card-title').textContent.match(/Challenge (\d+)/)[1]);
+                    const idB = parseInt(b.querySelector('.card-title').textContent.match(/Challenge (\d+)/)[1]);
+                    return idB - idA;
+                } else if (sortValue === 'difficulty') {
+                    const diffMap = { 'beginner': 1, 'intermediate': 2, 'advanced': 3 };
+                    const diffA = a.getAttribute('data-difficulty').toLowerCase();
+                    const diffB = b.getAttribute('data-difficulty').toLowerCase();
+                    return diffMap[diffA] - diffMap[diffB];
+                }
+            });
+            
+            // Reappend in sorted order
+            challenges.forEach(challenge => {
+                challengesContainer.appendChild(challenge);
+            });
+        });
+
+        // Initialize: set all filter as active
+        document.getElementById('filter-all').classList.add('active');
+    });
+</script>
+{{end}} 

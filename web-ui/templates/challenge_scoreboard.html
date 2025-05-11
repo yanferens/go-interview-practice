@@ -1,0 +1,51 @@
+{{define "content"}}
+<div class="row mb-4">
+    <div class="col">
+        <h1>Challenge {{.Challenge.ID}} Scoreboard: {{.Challenge.Title}}</h1>
+        <p class="lead">
+            <span class="badge bg-primary badge-{{.Challenge.Difficulty | lower}}">{{.Challenge.Difficulty}}</span>
+            View successful submissions for this challenge.
+        </p>
+        
+        <div class="mt-3 mb-4">
+            <a href="/challenge/{{.Challenge.ID}}" class="btn btn-primary">Try this Challenge</a>
+            <a href="/scoreboard" class="btn btn-outline-secondary">Overall Scoreboard</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Username</th>
+                                <th>Submitted At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{if .Entries}}
+                                {{range $index, $entry := .Entries}}
+                                <tr>
+                                    <td>{{add $index 1}}</td>
+                                    <td>{{$entry.Username}}</td>
+                                    <td>{{$entry.SubmittedAt.Format "Jan 02, 2006"}}</td>
+                                </tr>
+                                {{end}}
+                            {{else}}
+                                <tr>
+                                    <td colspan="3" class="text-center">No submissions yet. Be the first to solve this challenge!</td>
+                                </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}} 

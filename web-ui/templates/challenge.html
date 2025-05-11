@@ -1,0 +1,356 @@
+{{define "content"}}
+<div class="row mb-4">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Challenges</a></li>
+                <li class="breadcrumb-item active">Challenge {{.Challenge.ID}}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-5">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Challenge {{.Challenge.ID}}: {{.Challenge.Title}}</h5>
+                <span class="badge bg-primary badge-{{.Challenge.Difficulty | lower}}">{{.Challenge.Difficulty}}</span>
+            </div>
+            <div class="card-body">
+                <div class="markdown-content" id="challenge-description"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="editorTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="solution-tab" data-bs-toggle="tab" href="#solution" role="tab">Solution</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="tests-tab" data-bs-toggle="tab" href="#tests" role="tab">Tests</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="results-tab" data-bs-toggle="tab" href="#results" role="tab">Results</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="solution" role="tabpanel">
+                        <div id="editor" class="editor-container"></div>
+                    </div>
+                    <div class="tab-pane fade" id="tests" role="tabpanel">
+                        <div id="test-editor" class="editor-container"></div>
+                    </div>
+                    <div class="tab-pane fade" id="results" role="tabpanel">
+                        <div id="test-results" class="p-3">
+                            <div class="alert alert-info">Run your code to see test results.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-3">
+                    <button class="btn btn-primary" id="run-button">
+                        <span class="spinner-border spinner-border-sm d-none" id="run-spinner" role="status" aria-hidden="true"></span>
+                        <span id="run-text">Run Tests</span>
+                    </button>
+                    <button class="btn btn-success" id="submit-button">
+                        <span class="spinner-border spinner-border-sm d-none" id="submit-spinner" role="status" aria-hidden="true"></span>
+                        <span id="submit-text">Submit Solution</span>
+                    </button>
+                </div>
+                
+                <!-- Status message toast -->
+                <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+                    <div id="statusToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto" id="toast-title">Notification</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body" id="toast-message">
+                            Message content
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}
+
+{{define "scripts"}}
+<script>
+    // Store challenge data
+    const challenge = {
+        id: {{.Challenge.ID}},
+        title: "{{.Challenge.Title}}",
+        description: `{{.Challenge.Description}}`,
+        template: `{{.Challenge.Template}}`,
+        testFile: `{{.Challenge.TestFile}}`
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Markdown for description
+        const descriptionElement = document.getElementById('challenge-description');
+        descriptionElement.innerHTML = marked.parse(challenge.description);
+
+        // Initialize code editor for solution
+        const editor = ace.edit("editor");
+        editor.setTheme("ace/theme/chrome");
+        editor.session.setMode("ace/mode/golang");
+        editor.setValue(challenge.template);
+        editor.clearSelection();
+
+        // Initialize code editor for tests
+        const testEditor = ace.edit("test-editor");
+        testEditor.setTheme("ace/theme/chrome");
+        testEditor.session.setMode("ace/mode/golang");
+        testEditor.setValue(challenge.testFile);
+        testEditor.setReadOnly(true);
+        testEditor.clearSelection();
+        
+        // Toast initialization
+        const toastElement = document.getElementById('statusToast');
+        let toast;
+        if (typeof bootstrap !== 'undefined') {
+            toast = new bootstrap.Toast(toastElement, { delay: 5000 });
+        } else {
+            // Fallback for when Bootstrap JS isn't loaded
+            toast = {
+                show: function() {
+                    toastElement.classList.add('show');
+                    setTimeout(() => {
+                        toastElement.classList.remove('show');
+                    }, 5000);
+                }
+            };
+        }
+        
+        // Toast helper function
+        function showToast(title, message, type = 'info') {
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-message').textContent = message;
+            
+            // Remove any existing color classes
+            toastElement.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info', 'text-white');
+            
+            // Add appropriate color class
+            if (type === 'success') {
+                toastElement.classList.add('bg-success', 'text-white');
+            } else if (type === 'error') {
+                toastElement.classList.add('bg-danger', 'text-white');
+            } else if (type === 'warning') {
+                toastElement.classList.add('bg-warning');
+            } else {
+                toastElement.classList.add('bg-info', 'text-white');
+            }
+            
+            toast.show();
+        }
+
+        // Handle Run Tests button
+        const runButton = document.getElementById('run-button');
+        const runSpinner = document.getElementById('run-spinner');
+        const runText = document.getElementById('run-text');
+        
+        runButton.addEventListener('click', function() {
+            const code = editor.getValue();
+            const resultsTab = document.getElementById('results-tab');
+            const resultsPane = document.getElementById('results');
+            const resultsDiv = document.getElementById('test-results');
+            
+            // Disable button and show spinner
+            runButton.disabled = true;
+            runSpinner.classList.remove('d-none');
+            runText.textContent = 'Running...';
+            
+            // Switch to results tab
+            resultsTab.click();
+            
+            // Show loading indicator
+            resultsDiv.innerHTML = `
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <p class="text-center mt-2">Running tests...</p>
+            `;
+            
+            // Call API to run tests
+            fetch('/api/run', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    challengeId: challenge.id,
+                    code: code
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Format and display test results
+                let outputHtml = '';
+                
+                if (data.passed) {
+                    outputHtml += `<div class="alert alert-success mb-3">
+                        <h4 class="alert-heading">All Tests Passed! 🎉</h4>
+                        <p>Execution time: ${data.executionMs}ms</p>
+                    </div>`;
+                    showToast('Success', 'All tests passed!', 'success');
+                } else {
+                    outputHtml += `<div class="alert alert-danger mb-3">
+                        <h4 class="alert-heading">Tests Failed</h4>
+                        <p>Review the output below to fix your solution.</p>
+                    </div>`;
+                    showToast('Tests Failed', 'Some tests didn\'t pass. Check the results tab.', 'warning');
+                }
+                
+                // Format test output
+                outputHtml += `<div class="card">
+                    <div class="card-header">Test Output</div>
+                    <div class="card-body">
+                        <pre><code class="language-go">${escapeHtml(data.output)}</code></pre>
+                    </div>
+                </div>`;
+                
+                resultsDiv.innerHTML = outputHtml;
+                
+                // Apply syntax highlighting
+                document.querySelectorAll('pre code').forEach((el) => {
+                    hljs.highlightElement(el);
+                });
+                
+                // Re-enable button and hide spinner
+                runButton.disabled = false;
+                runSpinner.classList.add('d-none');
+                runText.textContent = 'Run Tests';
+            })
+            .catch(error => {
+                resultsDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <h4 class="alert-heading">Error</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+                
+                showToast('Error', 'Failed to run tests: ' + error.message, 'error');
+                
+                // Re-enable button and hide spinner
+                runButton.disabled = false;
+                runSpinner.classList.add('d-none');
+                runText.textContent = 'Run Tests';
+            });
+        });
+
+        // Handle Submit Solution button
+        const submitButton = document.getElementById('submit-button');
+        const submitSpinner = document.getElementById('submit-spinner');
+        const submitText = document.getElementById('submit-text');
+        
+        submitButton.addEventListener('click', function() {
+            const code = editor.getValue();
+            const username = document.getElementById('username').value;
+            
+            if (!username) {
+                showToast('Error', 'Please enter your GitHub username before submitting.', 'error');
+                return;
+            }
+            
+            // Disable button and show spinner
+            submitButton.disabled = true;
+            submitSpinner.classList.remove('d-none');
+            submitText.textContent = 'Submitting...';
+            
+            // Submit solution
+            fetch('/api/submissions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    challengeId: challenge.id,
+                    code: code
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Switch to results tab to show test results
+                document.getElementById('results-tab').click();
+                
+                // Format and display test results
+                let outputHtml = '';
+                
+                if (data.passed) {
+                    outputHtml += `<div class="alert alert-success mb-3">
+                        <h4 class="alert-heading">Solution Submitted Successfully! 🎉</h4>
+                        <p>All tests passed. Execution time: ${data.executionMs}ms</p>
+                        <hr>
+                        <p class="mb-0">Your solution has been added to the scoreboard.</p>
+                    </div>`;
+                    
+                    showToast('Success', 'Your solution was submitted successfully and all tests passed!', 'success');
+                } else {
+                    outputHtml += `<div class="alert alert-warning mb-3">
+                        <h4 class="alert-heading">Solution Submitted with Failing Tests</h4>
+                        <p>Review the output below to fix your solution.</p>
+                    </div>`;
+                    
+                    showToast('Warning', 'Your solution was submitted but some tests failed.', 'warning');
+                }
+                
+                // Format test output
+                outputHtml += `<div class="card">
+                    <div class="card-header">Test Output</div>
+                    <div class="card-body">
+                        <pre><code class="language-go">${escapeHtml(data.testOutput)}</code></pre>
+                    </div>
+                </div>`;
+                
+                document.getElementById('test-results').innerHTML = outputHtml;
+                
+                // Apply syntax highlighting
+                document.querySelectorAll('pre code').forEach((el) => {
+                    hljs.highlightElement(el);
+                });
+                
+                // Re-enable button and hide spinner
+                submitButton.disabled = false;
+                submitSpinner.classList.add('d-none');
+                submitText.textContent = 'Submit Solution';
+                
+                // If passed, offer to view scoreboard
+                if (data.passed) {
+                    setTimeout(() => {
+                        if (confirm('View the scoreboard to see your submission?')) {
+                            window.location.href = `/scoreboard/${challenge.id}`;
+                        }
+                    }, 1500);
+                }
+            })
+            .catch(error => {
+                showToast('Error', 'Failed to submit solution: ' + error.message, 'error');
+                
+                // Re-enable button and hide spinner
+                submitButton.disabled = false;
+                submitSpinner.classList.add('d-none');
+                submitText.textContent = 'Submit Solution';
+            });
+        });
+        
+        // Helper function to escape HTML
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    });
+</script>
+{{end}} 
