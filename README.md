@@ -19,6 +19,10 @@ This repository contains a series of Go (Golang) coding challenges designed to h
 - [Scripts and Automation](#scripts-and-automation)
   - [create_submission.sh](#createsubmissionsh)
   - [run_tests.sh](#run_testssh)
+- [Challenge List](#challenge-list)
+  - [Beginner Challenges](#beginner-challenges)
+  - [Intermediate Challenges](#intermediate-challenges)
+  - [Advanced Challenges](#advanced-challenges)
 - [Contributing](#contributing)
   - [Adding a New Challenge](#adding-a-new-challenge)
 - [License](#license)
@@ -190,6 +194,54 @@ This script runs the tests against your solution.
 - Copies your solution file into the challenge directory.
 - Runs the tests.
 - Cleans up any temporary files used during testing.
+
+---
+
+## **Challenge List**
+
+The challenges are organized in increasing difficulty from beginner to advanced levels. Start from the easier ones if you're new to Go, and progress to the more complex ones as you build your skills.
+
+### **Beginner Challenges**
+
+1. **Challenge 1: Sum of Two Numbers**
+   - Implement a function to sum two integers.
+   - Focus: Basic Go syntax, function implementation.
+
+2. **Challenge 2: Reverse a String**
+   - Implement a function to reverse a string.
+   - Focus: String manipulation, runes, and character handling.
+
+3. **Challenge 3: Employee Data Management**
+   - Implement a struct to manage employee data with basic operations.
+   - Focus: Structs, methods, slice operations.
+
+6. **Challenge 6: Word Frequency Counter**
+   - Implement a function that counts word occurrences in a text.
+   - Focus: Maps, string handling, data processing.
+
+### **Intermediate Challenges**
+
+4. **Challenge 4: Concurrent Graph BFS Queries**
+   - Implement a BFS algorithm for graph traversal with concurrency.
+   - Focus: Goroutines, channels, graph algorithms.
+
+5. **Challenge 5: HTTP Authentication Middleware**
+   - Implement an HTTP middleware for authentication.
+   - Focus: HTTP handling, middleware pattern.
+
+7. **Challenge 7: Bank Account with Error Handling**
+   - Implement a banking system with proper error handling.
+   - Focus: Custom errors, error handling, thread safety.
+
+### **Advanced Challenges**
+
+8. **Challenge 8: Chat Server with Channels**
+   - Implement a chat server using channels and goroutines.
+   - Focus: Concurrency patterns, message passing, goroutine management.
+
+9. **Challenge 9: RESTful Book Management API**
+   - Implement a RESTful API for a book management system.
+   - Focus: Web services, HTTP routing, JSON handling, database interactions.
 
 ---
 
