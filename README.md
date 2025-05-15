@@ -69,8 +69,7 @@ git clone https://github.com/yourusername/go-interview-practice.git
 
 The Go Interview Practice includes a modern, interactive web interface for a more engaging learning experience.
 
-![Go Interview Practice Web UI](https://your-screenshot-url-here.png)
-> *Consider adding a screenshot of your Web UI here to showcase the interface*
+![Go Interview Practice Web UI](./images/challenges.png)
 
 ### **Features**
 
