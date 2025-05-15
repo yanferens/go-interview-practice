@@ -79,6 +79,7 @@ The Go Interview Practice includes a modern, interactive web interface for a mor
 - **Learning Materials**: Access detailed learning content for each challenge
 - **Scoreboards**: Track your progress and compare with other users
 - **Modern UI**: Clean, responsive design with intuitive navigation
+- **Direct Filesystem Submission**: Submit your solution directly to your local repository with one click
 
 ### **Running the Web UI**
 
@@ -104,6 +105,21 @@ For more details about the Web UI, check the [web-ui/README.md](web-ui/README.md
 ## **Working on Challenges**
 
 ### **Setting Up Your Submission**
+
+You can set up your submission in two ways:
+
+#### **Method 1: Using the Web UI (Recommended for Development)**
+
+1. Run the web UI as described in the [Web UI](#web-ui) section.
+2. Browse challenges and select one to work on.
+3. Implement your solution in the in-browser editor.
+4. Click "Run Tests" to test your solution.
+5. Once all tests pass, click "Submit Solution" to submit your solution to the scoreboard.
+6. You will be given the option to either:
+   - Save your solution directly to the filesystem with one click
+   - Copy the commands to manually create the submission files
+
+#### **Method 2: Using the Command Line**
 
 We have provided a bash script called `create_submission.sh` to help you set up your submission directory and copy the solution template.
 

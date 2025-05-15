@@ -103,4 +103,46 @@ Contributions to improve the web UI are welcome! Please feel free to submit pull
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Submission Process
+
+The web UI provides two ways to submit your solution:
+
+### 1. In-Browser Submission (For Scoreboard Only)
+
+When you click the "Submit Solution" button, your solution will be:
+- Tested against the challenge test cases
+- Added to the in-memory scoreboard if all tests pass
+- Displayed in the challenge scoreboard
+
+This submission is temporary and only exists in the current server session. It doesn't save your solution to the filesystem.
+
+### 2. Filesystem Submission (For Pull Requests)
+
+After successfully submitting a solution that passes all tests, you'll see two options:
+
+#### Option 1: One-Click Filesystem Save
+
+Click the "Save to Filesystem" button to:
+- Automatically create a submission directory in your local repository
+- Save your solution to `challenge-X/submissions/yourusername/solution-template.go`
+- Get a list of Git commands to commit and push your changes
+
+This option creates the actual file structure needed for a GitHub pull request.
+
+#### Option 2: Copy Manual Commands
+
+If you prefer to manage the file creation yourself, you can:
+- Click "Copy Commands" to copy shell commands to your clipboard
+- Run these commands in your terminal to create the submission files
+- Commit and push the changes using the provided Git commands
+
+### Completing Your Submission
+
+After saving your solution to the filesystem (via either method), complete the submission by:
+1. Committing your changes
+2. Pushing to your fork
+3. Creating a pull request to the original repository
+
+This workflow ensures your submission is properly integrated into the project's review system. 

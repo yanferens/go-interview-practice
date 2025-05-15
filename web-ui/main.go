@@ -131,6 +131,7 @@ func main() {
 	mux.HandleFunc("/api/submissions", handleSubmissions)
 	mux.HandleFunc("/api/scoreboard/", getScoreboard)
 	mux.HandleFunc("/api/run", runCode)
+	mux.HandleFunc("/api/save-to-filesystem", saveSubmissionToFilesystem)
 	
 	// Web routes
 	mux.HandleFunc("/", homePage)
@@ -575,6 +576,76 @@ func updateScoreboard(submission Submission) {
 	
 	// Add to memory scoreboard
 	scoreboards[submission.ChallengeID] = append(scoreboards[submission.ChallengeID], entry)
+}
+
+// saveSubmissionToFilesystem saves a submission to the local filesystem
+func saveSubmissionToFilesystem(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	
+	var request struct {
+		Username    string `json:"username"`
+		ChallengeID int    `json:"challengeId"`
+		Code        string `json:"code"`
+	}
+	
+	err := json.NewDecoder(r.Body).Decode(&request)
+	if err != nil {
+		http.Error(w, "Invalid request data", http.StatusBadRequest)
+		return
+	}
+	
+	// Ensure the username is valid
+	if request.Username == "" {
+		http.Error(w, "Username is required", http.StatusBadRequest)
+		return
+	}
+	
+	// Get the challenge
+	_, ok := challenges[request.ChallengeID]
+	if !ok {
+		http.Error(w, "Challenge not found", http.StatusNotFound)
+		return
+	}
+	
+	// Create the directory structure if it doesn't exist
+	submissionDir := filepath.Join("..", fmt.Sprintf("challenge-%d", request.ChallengeID), "submissions", request.Username)
+	err = os.MkdirAll(submissionDir, 0755)
+	if err != nil {
+		http.Error(w, "Failed to create submission directory: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	
+	// Write the solution file
+	solutionFile := filepath.Join(submissionDir, "solution-template.go")
+	err = ioutil.WriteFile(solutionFile, []byte(request.Code), 0644)
+	if err != nil {
+		http.Error(w, "Failed to write solution file: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	
+	// Return success response with git commands
+	response := struct {
+		Success  bool   `json:"success"`
+		Message  string `json:"message"`
+		FilePath string `json:"filePath"`
+		GitCommands []string `json:"gitCommands"`
+	}{
+		Success:  true,
+		Message:  "Solution saved to filesystem",
+		FilePath: solutionFile,
+		GitCommands: []string{
+			fmt.Sprintf("cd %s", filepath.Join("..", "..")),
+			fmt.Sprintf("git add %s", filepath.Join(fmt.Sprintf("challenge-%d", request.ChallengeID), "submissions", request.Username, "solution-template.go")),
+			fmt.Sprintf("git commit -m \"Add solution for Challenge %d\"", request.ChallengeID),
+			"git push origin main",
+		},
+	}
+	
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
 }
 
 // --- Web Handlers ---

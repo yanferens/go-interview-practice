@@ -307,6 +307,28 @@
                     </div>`;
                     
                     showToast('Success', 'Your solution was submitted successfully and all tests passed!', 'success');
+                    
+                    // Add file system submission instructions
+                    outputHtml += `<div class="alert alert-info mb-3">
+                        <h5>Complete Your Submission:</h5>
+                        <div class="d-flex gap-2 mb-3">
+                            <button class="btn btn-primary" id="save-filesystem-btn">Save to Filesystem</button>
+                            <button class="btn btn-secondary" id="copy-commands-btn">Copy Commands</button>
+                        </div>
+                        <p>Manual commands to save your solution and create a pull request:</p>
+                        <div class="bg-dark text-light p-3 rounded">
+                            <pre><code>$ ./create_submission.sh ${challenge.id}
+$ cd challenge-${challenge.id}/submissions/${username}/
+$ cat > solution-template.go << 'EOL'
+${escapeHtml(code)}
+EOL
+$ cd ../../../
+$ git add challenge-${challenge.id}/submissions/${username}/
+$ git commit -m "Add solution for Challenge ${challenge.id}"
+$ git push origin main</code></pre>
+                        </div>
+                        <p class="mt-2">Then create a pull request on GitHub to complete your submission.</p>
+                    </div>`;
                 } else {
                     outputHtml += `<div class="alert alert-warning mb-3">
                         <h4 class="alert-heading">Solution Submitted with Failing Tests</h4>
@@ -330,6 +352,75 @@
                 document.querySelectorAll('pre code').forEach((el) => {
                     hljs.highlightElement(el);
                 });
+                
+                // Add copy functionality for the commands
+                const copyBtn = document.getElementById('copy-commands-btn');
+                if (copyBtn) {
+                    copyBtn.addEventListener('click', function() {
+                        const commandText = document.querySelector('.bg-dark pre code').innerText;
+                        navigator.clipboard.writeText(commandText)
+                            .then(() => {
+                                showToast('Success', 'Commands copied to clipboard!', 'success');
+                                copyBtn.textContent = 'Copied!';
+                                setTimeout(() => {
+                                    copyBtn.textContent = 'Copy Commands';
+                                }, 2000);
+                            })
+                            .catch(err => {
+                                showToast('Error', 'Failed to copy: ' + err, 'error');
+                            });
+                    });
+                }
+                
+                // Add functionality to save directly to filesystem
+                const saveFilesystemBtn = document.getElementById('save-filesystem-btn');
+                if (saveFilesystemBtn) {
+                    saveFilesystemBtn.addEventListener('click', function() {
+                        this.disabled = true;
+                        this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+                        
+                        fetch('/api/save-to-filesystem', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                username: username,
+                                challengeId: challenge.id,
+                                code: code
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                showToast('Success', 'Solution saved to filesystem!', 'success');
+                                
+                                // Show git commands
+                                let gitCommandsHtml = '<div class="mt-3"><h6>Complete the submission with these Git commands:</h6><ol>';
+                                data.gitCommands.forEach(cmd => {
+                                    gitCommandsHtml += `<li><code>${escapeHtml(cmd)}</code></li>`;
+                                });
+                                gitCommandsHtml += '</ol></div>';
+                                
+                                // Insert after the button
+                                this.parentNode.insertAdjacentHTML('afterend', gitCommandsHtml);
+                            } else {
+                                showToast('Error', data.message || 'Failed to save to filesystem', 'error');
+                            }
+                            
+                            this.disabled = false;
+                            this.textContent = 'Saved!';
+                            setTimeout(() => {
+                                this.textContent = 'Save to Filesystem';
+                            }, 2000);
+                        })
+                        .catch(error => {
+                            showToast('Error', 'Failed to save: ' + error.message, 'error');
+                            this.disabled = false;
+                            this.textContent = 'Save to Filesystem';
+                        });
+                    });
+                }
                 
                 // Re-enable button and hide spinner
                 submitButton.disabled = false;
