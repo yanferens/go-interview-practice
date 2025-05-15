@@ -108,6 +108,7 @@ If you have an idea for a new challenge:
    ├── README.md
    ├── solution-template.go
    ├── solution-template_test.go
+   ├── learning.md
    └── submissions/
    ```
 
@@ -115,27 +116,35 @@ If you have an idea for a new challenge:
 
    - Include problem statement, function signature, input/output format, constraints, and sample inputs/outputs in `README.md`.
 
-6. **Create the Solution Template:**
+6. **Create Learning Materials:**
+
+   - In `challenge-[number]/learning.md`, provide:
+     - Explanations of relevant Go concepts needed for the challenge
+     - Code examples demonstrating these concepts
+     - Best practices and efficiency considerations
+     - Links to further reading resources
+
+7. **Create the Solution Template:**
 
    - Provide a skeleton code in `solution-template.go` with appropriate comments.
 
-7. **Write Comprehensive Tests:**
+8. **Write Comprehensive Tests:**
 
    - Create `solution-template_test.go` with detailed test cases covering various scenarios, including edge cases.
 
-8. **Update Documentation:**
+9. **Update Documentation:**
 
    - Add the new challenge to the main `README.md`.
 
-9. **Commit and Push:**
+10. **Commit and Push:**
 
-   ```bash
-   git add challenge-[number]/
-   git commit -m "Add Challenge [number]: [Challenge Title]"
-   git push origin add-challenge-[number]
-   ```
+    ```bash
+    git add challenge-[number]/
+    git commit -m "Add Challenge [number]: [Challenge Title]"
+    git push origin add-challenge-[number]
+    ```
 
-10. **Create a Pull Request:**
+11. **Create a Pull Request:**
 
     - Submit the pull request for review.
     - Ensure all tests pass in the CI workflow.

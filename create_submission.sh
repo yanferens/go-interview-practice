@@ -42,6 +42,12 @@ echo "Copied solution template to your submission directory."
 echo "Your submission directory is ready at '$SUBMISSION_DIR'."
 echo "You can edit your solution in '$SUBMISSION_DIR/solution-template.go'."
 
+# Check if learning materials exist and inform the user
+if [ -f "$CHALLENGE/learning.md" ]; then
+    echo "Learning materials for this challenge are available at '$CHALLENGE/learning.md'."
+    echo "You can also view them through the web UI on the challenge page."
+fi
+
 # Optional: Initialize a Go module in the challenge directory if go.mod doesn't exist
 cd "$CHALLENGE"
 if [ ! -f "go.mod" ]; then

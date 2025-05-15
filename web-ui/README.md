@@ -7,8 +7,9 @@ This is a web-based user interface for the Go Interview Practice project, provid
 - **Challenge Browser**: View all available coding challenges with difficulty indicators.
 - **In-browser Code Editor**: Edit and run Go code directly in your browser with syntax highlighting.
 - **Test Runner**: Run tests against your solution and see results in real-time.
+- **Learning Materials**: Access Go learning materials specific to each challenge to improve your understanding.
 - **Scoreboard**: Track your progress and see how you compare to others.
-- **Markdown Support**: Challenge descriptions rendered with full Markdown support.
+- **Markdown Support**: Challenge descriptions and learning materials rendered with full Markdown support.
 
 ## Getting Started
 

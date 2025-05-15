@@ -201,6 +201,12 @@ This script runs the tests against your solution.
 
 The challenges are organized in increasing difficulty from beginner to advanced levels. Start from the easier ones if you're new to Go, and progress to the more complex ones as you build your skills.
 
+Each challenge includes:
+- Detailed problem statement
+- Function signature to implement
+- Test cases to validate your solution
+- Learning materials related to the concepts required for the challenge
+
 ### **Beginner Challenges**
 
 1. **Challenge 1: Sum of Two Numbers**
@@ -233,6 +239,10 @@ The challenges are organized in increasing difficulty from beginner to advanced 
    - Implement a banking system with proper error handling.
    - Focus: Custom errors, error handling, thread safety.
 
+10. **Challenge 10: Polymorphic Shape Calculator**
+   - Implement a system to calculate properties of various geometric shapes.
+   - Focus: Interfaces, polymorphism, Go's interface system.
+
 ### **Advanced Challenges**
 
 8. **Challenge 8: Chat Server with Channels**
@@ -242,6 +252,14 @@ The challenges are organized in increasing difficulty from beginner to advanced 
 9. **Challenge 9: RESTful Book Management API**
    - Implement a RESTful API for a book management system.
    - Focus: Web services, HTTP routing, JSON handling, database interactions.
+
+11. **Challenge 11: Concurrent Web Content Aggregator**
+   - Implement a system that concurrently fetches and processes web content.
+   - Focus: Advanced concurrency patterns, context handling, rate limiting.
+
+12. **Challenge 12: File Processing Pipeline with Advanced Error Handling**
+   - Implement a modular pipeline for file processing with comprehensive error handling.
+   - Focus: Error wrapping, custom error types, error handling in concurrent code.
 
 ---
 

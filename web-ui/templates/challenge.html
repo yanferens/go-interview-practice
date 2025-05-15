@@ -35,6 +35,9 @@
                     <li class="nav-item">
                         <a class="nav-link" id="results-tab" data-bs-toggle="tab" href="#results" role="tab">Results</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="learning-tab" data-bs-toggle="tab" href="#learning" role="tab">Learning Materials</a>
+                    </li>
                 </ul>
             </div>
             <div class="card-body">
@@ -48,6 +51,11 @@
                     <div class="tab-pane fade" id="results" role="tabpanel">
                         <div id="test-results" class="p-3">
                             <div class="alert alert-info">Run your code to see test results.</div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="learning" role="tabpanel">
+                        <div id="learning-materials" class="p-3 markdown-content">
+                            <!-- Learning materials will be loaded here -->
                         </div>
                     </div>
                 </div>
@@ -88,13 +96,18 @@
         title: "{{.Challenge.Title}}",
         description: `{{.Challenge.Description}}`,
         template: `{{.Challenge.Template}}`,
-        testFile: `{{.Challenge.TestFile}}`
+        testFile: `{{.Challenge.TestFile}}`,
+        learningMaterials: `{{.Challenge.LearningMaterials}}`
     };
 
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize Markdown for description
         const descriptionElement = document.getElementById('challenge-description');
         descriptionElement.innerHTML = marked.parse(challenge.description);
+
+        // Initialize Markdown for learning materials
+        const learningElement = document.getElementById('learning-materials');
+        learningElement.innerHTML = marked.parse(challenge.learningMaterials);
 
         // Initialize code editor for solution
         const editor = ace.edit("editor");

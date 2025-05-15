@@ -23,12 +23,13 @@ var content embed.FS
 
 // Challenge represents a coding challenge
 type Challenge struct {
-	ID          int    `json:"id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Difficulty  string `json:"difficulty"`
-	Template    string `json:"template"`
-	TestFile    string `json:"testFile"`
+	ID               int    `json:"id"`
+	Title            string `json:"title"`
+	Description      string `json:"description"`
+	Difficulty       string `json:"difficulty"`
+	Template         string `json:"template"`
+	TestFile         string `json:"testFile"`
+	LearningMaterials string `json:"learningMaterials"`
 }
 
 // Submission represents a user's submitted solution
@@ -210,15 +211,26 @@ func loadChallenges() {
 		if err != nil {
 			log.Printf("Warning: Could not read test file for challenge %d: %v", id, err)
 		}
+
+		// Read learning materials if available
+		learningPath := filepath.Join(dir, "learning.md")
+		learningContent := []byte("*No learning materials available for this challenge yet.*")
+		if learningFileContent, err := ioutil.ReadFile(learningPath); err == nil {
+			learningContent = learningFileContent
+			log.Printf("Loaded learning materials for challenge %d", id)
+		} else {
+			log.Printf("No learning materials found for challenge %d (this is okay)", id)
+		}
 		
 		// Create challenge
 		challenge := &Challenge{
-			ID:          id,
-			Title:       title,
-			Description: string(readmeContent),
-			Difficulty:  difficulty,
-			Template:    string(templateContent),
-			TestFile:    string(testContent),
+			ID:               id,
+			Title:            title,
+			Description:      string(readmeContent),
+			Difficulty:       difficulty,
+			Template:         string(templateContent),
+			TestFile:         string(testContent),
+			LearningMaterials: string(learningContent),
 		}
 		
 		challenges[id] = challenge

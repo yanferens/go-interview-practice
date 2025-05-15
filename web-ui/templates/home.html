@@ -1,24 +1,56 @@
 {{define "content"}}
 <div class="row mb-4">
     <div class="col">
-        <h1>Go Interview Practice Challenges</h1>
-        <p class="lead">Improve your Go programming skills by solving these coding challenges. Complete challenges to prepare for technical interviews and build your portfolio.</p>
+        <div class="text-center py-4">
+            <h1 class="display-4">Go Interview Practice</h1>
+            <p class="lead">Master Go programming with hands-on coding challenges</p>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <a href="#challenges" class="btn btn-primary">Browse Challenges</a>
+                <a href="https://github.com/RezaSi/go-interview-practice" class="btn btn-outline-dark">
+                    <i class="bi bi-github"></i> GitHub
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 
 <div class="row mb-4">
     <div class="col">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <button class="btn btn-outline-secondary btn-sm me-2" id="filter-all">All</button>
-                <button class="btn btn-outline-success btn-sm me-2" id="filter-beginner">Beginner</button>
-                <button class="btn btn-outline-warning btn-sm me-2" id="filter-intermediate">Intermediate</button>
-                <button class="btn btn-outline-danger btn-sm" id="filter-advanced">Advanced</button>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h2>Improve Your Go Skills</h2>
+                        <p class="mb-0">Each challenge includes detailed problem statements, test cases, and learning materials to help you master key Go concepts for technical interviews.</p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <div class="d-flex justify-content-md-end gap-2">
+                            <span class="badge bg-primary rounded-pill py-2 px-3 fs-6">Hands-on Practice</span>
+                            <span class="badge bg-info text-white rounded-pill py-2 px-3 fs-6">Learning Materials</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4" id="challenges">
+    <div class="col">
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
-                <select class="form-select" id="sort-select">
-                    <option value="id-asc">Number (Ascending)</option>
-                    <option value="id-desc">Number (Descending)</option>
+                <h2 class="mb-0">Challenge Library</h2>
+            </div>
+            <div class="d-flex gap-2">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-sm btn-outline-secondary active" id="filter-all">All</button>
+                    <button class="btn btn-sm btn-outline-success" id="filter-beginner">Beginner</button>
+                    <button class="btn btn-sm btn-outline-warning" id="filter-intermediate">Intermediate</button>
+                    <button class="btn btn-sm btn-outline-danger" id="filter-advanced">Advanced</button>
+                </div>
+                <select class="form-select form-select-sm" id="sort-select" style="width: auto;">
+                    <option value="id-asc">Number ↑</option>
+                    <option value="id-desc">Number ↓</option>
                     <option value="difficulty">Difficulty</option>
                 </select>
             </div>
@@ -26,19 +58,28 @@
     </div>
 </div>
 
-<div class="row" id="challenges-container">
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4" id="challenges-container">
     {{range .Challenges}}
-    <div class="col-md-6 col-lg-4 challenge-item" data-difficulty="{{.Difficulty}}">
-        <div class="card challenge-card">
+    <div class="col challenge-item" data-difficulty="{{.Difficulty}}">
+        <div class="card h-100 shadow-sm hover-shadow">
+            <div class="card-header py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="badge {{if eq .Difficulty "Beginner"}}bg-success{{else if eq .Difficulty "Intermediate"}}bg-warning{{else}}bg-danger{{end}} rounded-pill">{{.Difficulty}}</span>
+                    <span class="badge bg-secondary rounded-pill">Challenge #{{.ID}}</span>
+                </div>
+            </div>
             <div class="card-body">
-                <h5 class="card-title">Challenge {{.ID}}: {{.Title}}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">
-                    <span class="badge bg-primary badge-{{.Difficulty | lower}}">{{.Difficulty}}</span>
-                </h6>
+                <h5 class="card-title">{{.Title}}</h5>
                 <div class="card-text challenge-description" data-raw-description="{{.Description}}">
                     <!-- Description will be rendered by JavaScript -->
                 </div>
-                <div class="d-flex justify-content-between mt-3">
+                <div class="d-flex mt-3 gap-2">
+                    <span class="badge bg-light text-dark border"><i class="bi bi-book"></i> Learning Materials</span>
+                    <span class="badge bg-light text-dark border"><i class="bi bi-code-slash"></i> Test Cases</span>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent">
+                <div class="d-flex justify-content-between">
                     <a href="/challenge/{{.ID}}" class="btn btn-primary">Start Challenge</a>
                     <a href="/scoreboard/{{.ID}}" class="btn btn-outline-secondary">Scoreboard</a>
                 </div>
@@ -58,13 +99,26 @@
         const sortSelect = document.getElementById('sort-select');
         const challengesContainer = document.getElementById('challenges-container');
 
+        // Hover effects for cards
+        document.querySelectorAll('.hover-shadow').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.classList.add('shadow');
+                this.style.transform = 'translateY(-5px)';
+                this.style.transition = 'all 0.3s ease';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.classList.remove('shadow');
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
         // Format challenge descriptions
         document.querySelectorAll('.challenge-description').forEach(descEl => {
             const rawDesc = descEl.getAttribute('data-raw-description');
             if (!rawDesc) return;
             
             // Extract the first paragraph after the title
-            // This skips links, section headers, etc.
             let description = '';
             
             // Remove markdown links
@@ -90,7 +144,7 @@
             }
             
             // Create clean preview
-            descEl.innerHTML = `<p>${description.substring(0, 150)}${description.length > 150 ? '...' : ''}</p>`;
+            descEl.innerHTML = `<p class="text-muted">${description.substring(0, 120)}${description.length > 120 ? '...' : ''}</p>`;
         });
 
         // Filter challenges by difficulty
@@ -121,12 +175,12 @@
             
             challenges.sort((a, b) => {
                 if (sortValue === 'id-asc') {
-                    const idA = parseInt(a.querySelector('.card-title').textContent.match(/Challenge (\d+)/)[1]);
-                    const idB = parseInt(b.querySelector('.card-title').textContent.match(/Challenge (\d+)/)[1]);
+                    const idA = parseInt(a.querySelector('.badge.bg-secondary').textContent.match(/Challenge #(\d+)/)[1]);
+                    const idB = parseInt(b.querySelector('.badge.bg-secondary').textContent.match(/Challenge #(\d+)/)[1]);
                     return idA - idB;
                 } else if (sortValue === 'id-desc') {
-                    const idA = parseInt(a.querySelector('.card-title').textContent.match(/Challenge (\d+)/)[1]);
-                    const idB = parseInt(b.querySelector('.card-title').textContent.match(/Challenge (\d+)/)[1]);
+                    const idA = parseInt(a.querySelector('.badge.bg-secondary').textContent.match(/Challenge #(\d+)/)[1]);
+                    const idB = parseInt(b.querySelector('.badge.bg-secondary').textContent.match(/Challenge #(\d+)/)[1]);
                     return idB - idA;
                 } else if (sortValue === 'difficulty') {
                     const diffMap = { 'beginner': 1, 'intermediate': 2, 'advanced': 3 };
