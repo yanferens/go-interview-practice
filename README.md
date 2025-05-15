@@ -2,7 +2,16 @@
 
 Welcome to the **Go Interview Practice** repository!
 
-This repository contains a series of Go (Golang) coding challenges designed to help you prepare for technical interviews. Each challenge includes detailed instructions, automated tests, and per-challenge scoreboards to track your progress. Bash scripts are provided to streamline solution submission and testing.
+This repository contains a series of Go (Golang) coding challenges designed to help you prepare for technical interviews. Each challenge includes detailed instructions, automated tests, learning materials, and per-challenge scoreboards to track your progress. Access challenges through our interactive Web UI or work directly with code files.
+
+## **Key Features**
+
+- 🌐 **Interactive Web UI**: Modern web interface with in-browser code editor and real-time testing
+- 📚 **Learning Materials**: Comprehensive Go concepts explanations for each challenge
+- 🧪 **Automated Testing**: Immediate feedback on your solution's correctness
+- 📊 **Scoreboards**: Track your progress and compare with others
+- 🔄 **Continuous Integration**: GitHub Actions workflow to validate submissions
+- 🎯 **Progressive Difficulty**: Challenges ranging from beginner to advanced levels
 
 ## **Table of Contents**
 
@@ -10,6 +19,9 @@ This repository contains a series of Go (Golang) coding challenges designed to h
   - [Prerequisites](#prerequisites)
   - [Forking the Repository](#forking-the-repository)
   - [Cloning Your Fork](#cloning-your-fork)
+- [Web UI](#web-ui)
+  - [Features](#features)
+  - [Running the Web UI](#running-the-web-ui)
 - [Working on Challenges](#working-on-challenges)
   - [Setting Up Your Submission](#setting-up-your-submission)
   - [Implementing the Solution](#implementing-the-solution)
@@ -50,6 +62,43 @@ Clone your forked repository to your local machine:
 ```bash
 git clone https://github.com/yourusername/go-interview-practice.git
 ```
+
+---
+
+## **Web UI**
+
+The Go Interview Practice includes a modern, interactive web interface for a more engaging learning experience.
+
+![Go Interview Practice Web UI](https://your-screenshot-url-here.png)
+> *Consider adding a screenshot of your Web UI here to showcase the interface*
+
+### **Features**
+
+- **Interactive Challenge Browser**: Browse all coding challenges with difficulty filters and sorting options
+- **In-browser Code Editor**: Write and edit Go code directly in your browser
+- **Integrated Test Runner**: Run tests against your solutions in real-time
+- **Learning Materials**: Access detailed learning content for each challenge
+- **Scoreboards**: Track your progress and compare with other users
+- **Modern UI**: Clean, responsive design with intuitive navigation
+
+### **Running the Web UI**
+
+1. Navigate to the web-ui directory:
+   ```bash
+   cd web-ui
+   ```
+
+2. Run the web server:
+   ```bash
+   go run main.go
+   ```
+
+3. Open your browser and visit:
+   ```
+   http://localhost:8080
+   ```
+
+For more details about the Web UI, check the [web-ui/README.md](web-ui/README.md) file.
 
 ---
 
@@ -199,7 +248,7 @@ This script runs the tests against your solution.
 
 ## **Challenge List**
 
-The challenges are organized in increasing difficulty from beginner to advanced levels. Start from the easier ones if you're new to Go, and progress to the more complex ones as you build your skills.
+The challenges are organized in increasing difficulty from beginner to advanced levels. Start from the easier ones if you're new to Go, and progress to the more complex ones as you build your skills. You can access these challenges through the Web UI or directly via code files.
 
 Each challenge includes:
 - Detailed problem statement
