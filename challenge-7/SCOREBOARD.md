@@ -1,7 +1,3 @@
-# Challenge 7: Bank Account with Error Handling - Scoreboard
-
-| Rank | Username | Solution | Date Submitted |
-|------|----------|----------|----------------|
-| 1    |          |          |                |
-| 2    |          |          |                |
-| 3    |          |          |                | 
+# Scoreboard for challenge-7
+| Username   | Passed Tests | Total Tests |
+|------------|--------------|-------------|

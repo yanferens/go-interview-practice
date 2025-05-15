@@ -1,4 +1,3 @@
-# Challenge 10: Polymorphic Shape Calculator - Scoreboard
-
-| GitHub Username | Status |
-| --------------- | ------ |
+# Scoreboard for challenge-10
+| Username   | Passed Tests | Total Tests |
+|------------|--------------|-------------|

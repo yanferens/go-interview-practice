@@ -1,7 +1,3 @@
-# Challenge 8: Chat Server with Channels - Scoreboard
-
-| Rank | Username | Solution | Date Submitted |
-|------|----------|----------|----------------|
-| 1    |          |          |                |
-| 2    |          |          |                |
-| 3    |          |          |                | 
+# Scoreboard for challenge-8
+| Username   | Passed Tests | Total Tests |
+|------------|--------------|-------------|

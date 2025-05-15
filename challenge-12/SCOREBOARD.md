@@ -1,4 +1,3 @@
-# Challenge 12: File Processing Pipeline with Advanced Error Handling - Scoreboard
-
-| GitHub Username | Status |
-| --------------- | ------ | 
+# Scoreboard for challenge-12
+| Username   | Passed Tests | Total Tests |
+|------------|--------------|-------------|

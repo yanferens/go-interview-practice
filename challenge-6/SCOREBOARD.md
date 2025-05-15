@@ -1,7 +1,4 @@
-# Challenge 6: Word Frequency Counter - Scoreboard
-
-| Rank | Username | Solution | Date Submitted |
-|------|----------|----------|----------------|
-| 1    |          |          |                |
-| 2    |          |          |                |
-| 3    |          |          |                | 
+# Scoreboard for challenge-6
+| Username   | Passed Tests | Total Tests |
+|------------|--------------|-------------|
+| RezaSi | 7 | 7 |

@@ -1,4 +1,3 @@
-# Challenge 11: Concurrent Web Content Aggregator - Scoreboard
-
-| GitHub Username | Status |
-| --------------- | ------ | 
+# Scoreboard for challenge-11
+| Username   | Passed Tests | Total Tests |
+|------------|--------------|-------------|
