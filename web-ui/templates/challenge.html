@@ -19,6 +19,15 @@
             </div>
             <div class="card-body">
                 <div class="markdown-content" id="challenge-description"></div>
+                
+                {{if .HasAttempted}}
+                <div class="alert alert-success mt-3">
+                    <i class="bi bi-check-circle-fill"></i> You've previously attempted this challenge.
+                    {{if .ExistingSolution}}
+                    <br>Your existing solution has been loaded in the editor.
+                    {{end}}
+                </div>
+                {{end}}
             </div>
         </div>
     </div>
@@ -90,8 +99,8 @@
 
 {{define "scripts"}}
 <script>
-    // Store challenge data
-    const challenge = {
+    // Challenge data from server
+    const challengeData = {
         id: {{.Challenge.ID}},
         title: "{{.Challenge.Title}}",
         description: `{{.Challenge.Description}}`,
@@ -99,28 +108,43 @@
         testFile: `{{.Challenge.TestFile}}`,
         learningMaterials: `{{.Challenge.LearningMaterials}}`
     };
+    
+    // User data and existing solution, properly escaped for JavaScript
+    const hasAttempted = {{if .HasAttempted}}true{{else}}false{{end}};
+    // Safely define existingSolution variable
+    let existingSolution = null;
+    {{if .ExistingSolution}}
+    existingSolution = `{{js .ExistingSolution}}`;
+    {{end}}
 
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize Markdown for description
         const descriptionElement = document.getElementById('challenge-description');
-        descriptionElement.innerHTML = marked.parse(challenge.description);
+        descriptionElement.innerHTML = marked.parse(challengeData.description);
 
         // Initialize Markdown for learning materials
         const learningElement = document.getElementById('learning-materials');
-        learningElement.innerHTML = marked.parse(challenge.learningMaterials);
+        learningElement.innerHTML = marked.parse(challengeData.learningMaterials);
 
         // Initialize code editor for solution
         const editor = ace.edit("editor");
         editor.setTheme("ace/theme/chrome");
         editor.session.setMode("ace/mode/golang");
-        editor.setValue(challenge.template);
+        
+        // Load content from template or existing solution
+        if (existingSolution) {
+            editor.setValue(existingSolution);
+        } else {
+            editor.setValue(challengeData.template);
+        }
+        
         editor.clearSelection();
 
         // Initialize code editor for tests
         const testEditor = ace.edit("test-editor");
         testEditor.setTheme("ace/theme/chrome");
         testEditor.session.setMode("ace/mode/golang");
-        testEditor.setValue(challenge.testFile);
+        testEditor.setValue(challengeData.testFile);
         testEditor.setReadOnly(true);
         testEditor.clearSelection();
         
@@ -199,7 +223,7 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    challengeId: challenge.id,
+                    challengeId: challengeData.id,
                     code: code
                 })
             })
@@ -286,7 +310,7 @@
                 },
                 body: JSON.stringify({
                     username: username,
-                    challengeId: challenge.id,
+                    challengeId: challengeData.id,
                     code: code
                 })
             })
@@ -317,14 +341,14 @@
                         </div>
                         <p>Manual commands to save your solution and create a pull request:</p>
                         <div class="bg-dark text-light p-3 rounded">
-                            <pre><code>$ ./create_submission.sh ${challenge.id}
-$ cd challenge-${challenge.id}/submissions/${username}/
+                            <pre><code>$ ./create_submission.sh ${challengeData.id}
+$ cd challenge-${challengeData.id}/submissions/${username}/
 $ cat > solution-template.go << 'EOL'
 ${escapeHtml(code)}
 EOL
 $ cd ../../../
-$ git add challenge-${challenge.id}/submissions/${username}/
-$ git commit -m "Add solution for Challenge ${challenge.id}"
+$ git add challenge-${challengeData.id}/submissions/${username}/
+$ git commit -m "Add solution for Challenge ${challengeData.id}"
 $ git push origin main</code></pre>
                         </div>
                         <p class="mt-2">Then create a pull request on GitHub to complete your submission.</p>
@@ -386,7 +410,7 @@ $ git push origin main</code></pre>
                             },
                             body: JSON.stringify({
                                 username: username,
-                                challengeId: challenge.id,
+                                challengeId: challengeData.id,
                                 code: code
                             })
                         })
@@ -431,7 +455,7 @@ $ git push origin main</code></pre>
                 if (data.passed) {
                     setTimeout(() => {
                         if (confirm('View the scoreboard to see your submission?')) {
-                            window.location.href = `/scoreboard/${challenge.id}`;
+                            window.location.href = `/scoreboard/${challengeData.id}`;
                         }
                     }, 1500);
                 }

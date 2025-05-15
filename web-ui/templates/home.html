@@ -42,6 +42,10 @@
                 <h2 class="mb-0">Challenge Library</h2>
             </div>
             <div class="d-flex gap-2">
+                <button id="refresh-attempts" class="btn btn-sm btn-outline-primary me-2">
+                    <span class="spinner-border spinner-border-sm d-none" id="refresh-spinner"></span>
+                    <span id="refresh-text">Refresh Attempts</span>
+                </button>
                 <div class="btn-group" role="group">
                     <button class="btn btn-sm btn-outline-secondary active" id="filter-all">All</button>
                     <button class="btn btn-sm btn-outline-success" id="filter-beginner">Beginner</button>
@@ -49,9 +53,9 @@
                     <button class="btn btn-sm btn-outline-danger" id="filter-advanced">Advanced</button>
                 </div>
                 <select class="form-select form-select-sm" id="sort-select" style="width: auto;">
+                    <option value="difficulty" selected>Difficulty</option>
                     <option value="id-asc">Number ↑</option>
                     <option value="id-desc">Number ↓</option>
-                    <option value="difficulty">Difficulty</option>
                 </select>
             </div>
         </div>
@@ -60,8 +64,8 @@
 
 <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4" id="challenges-container">
     {{range .Challenges}}
-    <div class="col challenge-item" data-difficulty="{{.Difficulty}}">
-        <div class="card h-100 shadow-sm hover-shadow">
+    <div class="col challenge-item" data-difficulty="{{.Difficulty}}" data-id="{{.ID}}" data-attempted="{{if and $.UserAttempts (index $.UserAttempts.AttemptedIDs .ID)}}true{{else}}false{{end}}">
+        <div class="card h-100 shadow-sm hover-shadow {{if and $.UserAttempts (index $.UserAttempts.AttemptedIDs .ID)}}border-success bg-light{{end}}">
             <div class="card-header py-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="badge {{if eq .Difficulty "Beginner"}}bg-success{{else if eq .Difficulty "Intermediate"}}bg-warning{{else}}bg-danger{{end}} rounded-pill">{{.Difficulty}}</span>
@@ -76,6 +80,9 @@
                 <div class="d-flex mt-3 gap-2">
                     <span class="badge bg-light text-dark border"><i class="bi bi-book"></i> Learning Materials</span>
                     <span class="badge bg-light text-dark border"><i class="bi bi-code-slash"></i> Test Cases</span>
+                    {{if and $.UserAttempts (index $.UserAttempts.AttemptedIDs .ID)}}
+                    <span class="badge bg-success text-white border"><i class="bi bi-check-circle"></i> Attempted</span>
+                    {{end}}
                 </div>
             </div>
             <div class="card-footer bg-transparent">
@@ -98,6 +105,175 @@
         const challengeItems = document.querySelectorAll('.challenge-item');
         const sortSelect = document.getElementById('sort-select');
         const challengesContainer = document.getElementById('challenges-container');
+        const refreshButton = document.getElementById('refresh-attempts');
+        const refreshSpinner = document.getElementById('refresh-spinner');
+        const refreshText = document.getElementById('refresh-text');
+        const usernameInput = document.getElementById('username');
+
+        // Auto-refresh attempts on page load if username is set
+        function autoRefreshAttempts() {
+            const username = usernameInput?.value;
+            
+            if (!username) {
+                return;
+            }
+            
+            // Call API to refresh attempts
+            fetch('/api/refresh-attempts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Reset all cards first
+                    challengeItems.forEach(item => {
+                        const id = parseInt(item.getAttribute('data-id'));
+                        const card = item.querySelector('.card');
+                        const badges = item.querySelector('.d-flex.mt-3.gap-2');
+                        
+                        // Remove existing attempt markers
+                        item.setAttribute('data-attempted', 'false');
+                        card.classList.remove('border-success', 'bg-light');
+                        
+                        // Remove existing attempt badge if any
+                        const existingBadge = badges.querySelector('.badge.bg-success.text-white');
+                        if (existingBadge && existingBadge.innerHTML.includes('Attempted')) {
+                            existingBadge.remove();
+                        }
+                    });
+                    
+                    // Add attempt markers for attempted challenges
+                    Object.keys(data.attemptedIds).forEach(id => {
+                        if (data.attemptedIds[id]) {
+                            const item = document.querySelector(`.challenge-item[data-id="${id}"]`);
+                            if (item) {
+                                // Mark as attempted
+                                item.setAttribute('data-attempted', 'true');
+                                const card = item.querySelector('.card');
+                                card.classList.add('border-success', 'bg-light');
+                                
+                                // Add attempted badge if not exists
+                                const badges = item.querySelector('.d-flex.mt-3.gap-2');
+                                if (!badges.querySelector('.badge.bg-success.text-white')) {
+                                    const badge = document.createElement('span');
+                                    badge.className = 'badge bg-success text-white border';
+                                    badge.innerHTML = '<i class="bi bi-check-circle"></i> Attempted';
+                                    badges.appendChild(badge);
+                                }
+                            }
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Error auto-refreshing attempts:", error);
+            });
+        }
+        
+        // Run auto-refresh after short delay
+        setTimeout(autoRefreshAttempts, 500);
+        
+        // Handle refresh attempts button
+        if (refreshButton) {
+            refreshButton.addEventListener('click', function() {
+                const username = document.getElementById('username')?.value;
+                
+                if (!username) {
+                    alert('Please enter your GitHub username first');
+                    return;
+                }
+                
+                // Disable button and show spinner
+                refreshButton.disabled = true;
+                refreshSpinner.classList.remove('d-none');
+                refreshText.textContent = 'Refreshing...';
+                
+                // Call API to refresh attempts
+                fetch('/api/refresh-attempts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update UI to reflect new attempts
+                        console.log("Refreshed attempts:", data.attemptedIds);
+                        
+                        // Reset all cards first
+                        challengeItems.forEach(item => {
+                            const id = parseInt(item.getAttribute('data-id'));
+                            const card = item.querySelector('.card');
+                            const badges = item.querySelector('.d-flex.mt-3.gap-2');
+                            
+                            // Remove existing attempt markers
+                            item.setAttribute('data-attempted', 'false');
+                            card.classList.remove('border-success', 'bg-light');
+                            
+                            // Remove existing attempt badge if any
+                            const existingBadge = badges.querySelector('.badge.bg-success.text-white');
+                            if (existingBadge && existingBadge.innerHTML.includes('Attempted')) {
+                                existingBadge.remove();
+                            }
+                        });
+                        
+                        // Add attempt markers for attempted challenges
+                        Object.keys(data.attemptedIds).forEach(id => {
+                            if (data.attemptedIds[id]) {
+                                const item = document.querySelector(`.challenge-item[data-id="${id}"]`);
+                                if (item) {
+                                    // Mark as attempted
+                                    item.setAttribute('data-attempted', 'true');
+                                    const card = item.querySelector('.card');
+                                    card.classList.add('border-success', 'bg-light');
+                                    
+                                    // Add attempted badge if not exists
+                                    const badges = item.querySelector('.d-flex.mt-3.gap-2');
+                                    if (!badges.querySelector('.badge.bg-success.text-white')) {
+                                        const badge = document.createElement('span');
+                                        badge.className = 'badge bg-success text-white border';
+                                        badge.innerHTML = '<i class="bi bi-check-circle"></i> Attempted';
+                                        badges.appendChild(badge);
+                                    }
+                                }
+                            }
+                        });
+                        
+                        // Show success message
+                        alert('Successfully refreshed your attempted challenges');
+                    } else {
+                        alert('Failed to refresh attempts');
+                    }
+                    
+                    // Re-enable button and hide spinner
+                    refreshButton.disabled = false;
+                    refreshSpinner.classList.add('d-none');
+                    refreshText.textContent = 'Refresh Attempts';
+                })
+                .catch(error => {
+                    console.error("Error refreshing attempts:", error);
+                    alert('Error refreshing attempts. Please try again.');
+                    
+                    // Re-enable button and hide spinner
+                    refreshButton.disabled = false;
+                    refreshSpinner.classList.add('d-none');
+                    refreshText.textContent = 'Refresh Attempts';
+                });
+            });
+        }
+
+        // Sort challenges by default by difficulty
+        sortChallenges('difficulty');
 
         // Hover effects for cards
         document.querySelectorAll('.hover-shadow').forEach(card => {
@@ -170,7 +346,11 @@
 
         // Sort challenges
         sortSelect.addEventListener('change', function() {
-            const sortValue = this.value;
+            sortChallenges(this.value);
+        });
+
+        // Sort challenges function
+        function sortChallenges(sortValue) {
             const challenges = Array.from(challengeItems);
             
             challenges.sort((a, b) => {
@@ -194,7 +374,7 @@
             challenges.forEach(challenge => {
                 challengesContainer.appendChild(challenge);
             });
-        });
+        }
 
         // Initialize: set all filter as active
         document.getElementById('filter-all').classList.add('active');
