@@ -208,11 +208,11 @@ func loadChallenges() {
 		// Determine difficulty level based on the challenge number or content
 		var difficulty string
 		switch {
-		case id <= 3 || id == 6:
+		case id <= 3 || id == 6 || id == 21: // Also map Easy to Beginner
 			difficulty = "Beginner"
-		case id == 4 || id == 5 || id == 7:
+		case id == 4 || id == 5 || id == 7 || id == 10 || id == 13 || id == 14 || id == 16 || id == 17 || id == 19 || id == 22 || id == 23: // Map Medium to Intermediate
 			difficulty = "Intermediate"
-		default:
+		default: // Map Medium-Hard and Hard to Advanced
 			difficulty = "Advanced"
 		}
 
