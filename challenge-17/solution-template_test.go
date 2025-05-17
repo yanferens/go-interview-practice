@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -43,7 +44,7 @@ func TestIsPalindromeEdgeCases(t *testing.T) {
 	}{
 		{"Special characters only", "!@#$%^&*()", true}, // Special chars should be ignored, leaving empty string
 		{"Mixed with emoji", "😊1221😊", true},            // Should work with Unicode characters
-		{"Very long palindrome", "a" + ("b" * 10000) + "a", true},
+		{"Very long palindrome", "a" + strings.Repeat("b", 10000) + "a", true},
 		{"All spaces", "          ", true}, // All spaces should be ignored, leaving empty string
 	}
 
