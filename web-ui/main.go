@@ -131,9 +131,7 @@ func main() {
 
 	staticHandler := http.FileServer(http.FS(fsys))
 	mux.Handle("/static/", http.StripPrefix("/static/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Add debug logging
-		log.Printf("Serving static file: %s", r.URL.Path)
-
+		// Set appropriate content type headers
 		if strings.HasSuffix(r.URL.Path, ".css") {
 			w.Header().Set("Content-Type", "text/css")
 		} else if strings.HasSuffix(r.URL.Path, ".js") {
@@ -236,9 +234,6 @@ func loadChallenges() {
 		learningContent := []byte("*No learning materials available for this challenge yet.*")
 		if learningFileContent, err := ioutil.ReadFile(learningPath); err == nil {
 			learningContent = learningFileContent
-			log.Printf("Loaded learning materials for challenge %d", id)
-		} else {
-			log.Printf("No learning materials found for challenge %d (this is okay)", id)
 		}
 
 		// Create challenge
@@ -266,7 +261,6 @@ func loadScoreboardForChallenge(id int, dir string) {
 	scoreboardPath := filepath.Join(dir, "SCOREBOARD.md")
 	scoreboardContent, err := ioutil.ReadFile(scoreboardPath)
 	if err != nil {
-		log.Printf("No scoreboard found for challenge %d", id)
 		return
 	}
 
@@ -327,8 +321,6 @@ func loadScoreboardForChallenge(id int, dir string) {
 			continue
 		}
 
-		log.Printf("Parsed username from scoreboard: %s for challenge %d", username, id)
-
 		// Use current time for existing entries
 		entry := ScoreboardEntry{
 			Username:    username,
@@ -340,7 +332,6 @@ func loadScoreboardForChallenge(id int, dir string) {
 	}
 
 	scoreboards[id] = entries
-	log.Printf("Loaded %d scoreboard entries for challenge %d", len(entries), id)
 }
 
 // IsNumeric checks if a string contains only digits
@@ -398,28 +389,21 @@ func getExistingSolution(username string, challengeID int) string {
 		return ""
 	}
 
-	log.Printf("Looking for solution file for user %s, challenge %d", username, challengeID)
-
 	// Try different path formats
 	// First try the relative path from web-ui
 	submissionFile := filepath.Join("..", fmt.Sprintf("challenge-%d", challengeID), "submissions", username, "solution-template.go")
-	log.Printf("Trying path: %s", submissionFile)
 	content, err := ioutil.ReadFile(submissionFile)
 	if err == nil {
-		log.Printf("Found solution at path: %s", submissionFile)
 		return string(content)
 	}
 
 	// Try alternative path from root directory
 	altSubmissionFile := filepath.Join(fmt.Sprintf("challenge-%d", challengeID), "submissions", username, "solution-template.go")
-	log.Printf("Trying alternate path: %s", altSubmissionFile)
 	content, err = ioutil.ReadFile(altSubmissionFile)
 	if err == nil {
-		log.Printf("Found solution at alternate path: %s", altSubmissionFile)
 		return string(content)
 	}
 
-	log.Printf("No solution file found for user %s, challenge %d", username, challengeID)
 	return ""
 }
 
@@ -630,6 +614,30 @@ func testSubmission(submission Submission) (TestResult, error) {
 	cmd.Dir = tempDir
 	if err := cmd.Run(); err != nil {
 		return result, fmt.Errorf("failed to initialize Go module: %v", err)
+	}
+
+	// For challenge-14 (gRPC challenge), install required gRPC dependencies
+	if submission.ChallengeID == 14 {
+		log.Printf("Installing gRPC dependencies for challenge 14")
+
+		// Install gRPC packages
+		grpcCmd := exec.Command("go", "get", "google.golang.org/grpc")
+		grpcCmd.Dir = tempDir
+		if err := grpcCmd.Run(); err != nil {
+			log.Printf("Warning: Failed to install google.golang.org/grpc: %v", err)
+		}
+
+		codesCmd := exec.Command("go", "get", "google.golang.org/grpc/codes")
+		codesCmd.Dir = tempDir
+		if err := codesCmd.Run(); err != nil {
+			log.Printf("Warning: Failed to install google.golang.org/grpc/codes: %v", err)
+		}
+
+		statusCmd := exec.Command("go", "get", "google.golang.org/grpc/status")
+		statusCmd.Dir = tempDir
+		if err := statusCmd.Run(); err != nil {
+			log.Printf("Warning: Failed to install google.golang.org/grpc/status: %v", err)
+		}
 	}
 
 	// Run tests
