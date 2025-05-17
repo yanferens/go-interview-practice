@@ -450,15 +450,6 @@ $ git push origin main</code></pre>
                 submitButton.disabled = false;
                 submitSpinner.classList.add('d-none');
                 submitText.textContent = 'Submit Solution';
-                
-                // If passed, offer to view scoreboard
-                if (data.passed) {
-                    setTimeout(() => {
-                        if (confirm('View the scoreboard to see your submission?')) {
-                            window.location.href = `/scoreboard/${challengeData.id}`;
-                        }
-                    }, 1500);
-                }
             })
             .catch(error => {
                 showToast('Error', 'Failed to submit solution: ' + error.message, 'error');
