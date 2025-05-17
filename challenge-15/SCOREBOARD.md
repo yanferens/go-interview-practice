@@ -1,3 +1,3 @@
-# Scoreboard for challenge-23
+# Scoreboard for challenge-15
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|

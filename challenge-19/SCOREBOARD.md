@@ -1,4 +1,3 @@
-# Challenge 19: Slice Operations - Scoreboard
-
-| Rank | User | Submission Date | Execution Time |
-|------|------|----------------|---------------| 
+# Scoreboard for challenge-19
+| Username   | Passed Tests | Total Tests |
+|------------|--------------|-------------|

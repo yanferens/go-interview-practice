@@ -1,5 +1,3 @@
-# Challenge 25: Graph Algorithms - Shortest Path - Scoreboard
-
-| # | Username | Created At | Score |
-|---|----------|------------|-------|
-|   |          |            |       | 
+# Scoreboard for challenge-25
+| Username   | Passed Tests | Total Tests |
+|------------|--------------|-------------|

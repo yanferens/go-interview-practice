@@ -1,4 +1,3 @@
-# Challenge 20: File Counter - Scoreboard
-
-| Rank | User | Submission Date | Execution Time |
-|------|------|----------------|---------------| 
+# Scoreboard for challenge-20
+| Username   | Passed Tests | Total Tests |
+|------------|--------------|-------------|

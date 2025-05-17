@@ -1,4 +1,3 @@
-# Challenge 18: Temperature Converter - Scoreboard
-
-| Rank | User | Submission Date | Execution Time |
-|------|------|----------------|---------------| 
+# Scoreboard for challenge-18
+| Username   | Passed Tests | Total Tests |
+|------------|--------------|-------------|
