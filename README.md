@@ -8,7 +8,7 @@ Welcome to the **Go Interview Practice** repository! Master Go programming and a
 
 - **Interactive Web UI** - Code, test, and submit solutions in your browser
 - **Automated Testing** - Get immediate feedback on your solutions
-- **🏆 Automated Scoreboards** - Solutions are automatically scored and ranked
+- **Automated Scoreboards** - Solutions are automatically scored and ranked
 - **Performance Analytics** - Track execution time and memory usage for your solutions
 - **Comprehensive Learning** - Each challenge includes detailed explanations and resources
 - **Progressive Difficulty** - From beginner to advanced Go concepts
