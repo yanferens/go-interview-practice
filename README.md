@@ -271,59 +271,33 @@ Each challenge includes:
 - Test cases to validate your solution
 - Learning materials related to the concepts required for the challenge
 
-### **Beginner Challenges**
-
-1. **Challenge 1: Sum of Two Numbers**
-   - Implement a function to sum two integers.
-   - Focus: Basic Go syntax, function implementation.
-
-2. **Challenge 2: Reverse a String**
-   - Implement a function to reverse a string.
-   - Focus: String manipulation, runes, and character handling.
-
-3. **Challenge 3: Employee Data Management**
-   - Implement a struct to manage employee data with basic operations.
-   - Focus: Structs, methods, slice operations.
-
-6. **Challenge 6: Word Frequency Counter**
-   - Implement a function that counts word occurrences in a text.
-   - Focus: Maps, string handling, data processing.
-
-### **Intermediate Challenges**
-
-4. **Challenge 4: Concurrent Graph BFS Queries**
-   - Implement a BFS algorithm for graph traversal with concurrency.
-   - Focus: Goroutines, channels, graph algorithms.
-
-5. **Challenge 5: HTTP Authentication Middleware**
-   - Implement an HTTP middleware for authentication.
-   - Focus: HTTP handling, middleware pattern.
-
-7. **Challenge 7: Bank Account with Error Handling**
-   - Implement a banking system with proper error handling.
-   - Focus: Custom errors, error handling, thread safety.
-
-10. **Challenge 10: Polymorphic Shape Calculator**
-   - Implement a system to calculate properties of various geometric shapes.
-   - Focus: Interfaces, polymorphism, Go's interface system.
-
-### **Advanced Challenges**
-
-8. **Challenge 8: Chat Server with Channels**
-   - Implement a chat server using channels and goroutines.
-   - Focus: Concurrency patterns, message passing, goroutine management.
-
-9. **Challenge 9: RESTful Book Management API**
-   - Implement a RESTful API for a book management system.
-   - Focus: Web services, HTTP routing, JSON handling, database interactions.
-
-11. **Challenge 11: Concurrent Web Content Aggregator**
-   - Implement a system that concurrently fetches and processes web content.
-   - Focus: Advanced concurrency patterns, context handling, rate limiting.
-
-12. **Challenge 12: File Processing Pipeline with Advanced Error Handling**
-   - Implement a modular pipeline for file processing with comprehensive error handling.
-   - Focus: Error wrapping, custom error types, error handling in concurrent code.
+| # | Challenge | Difficulty | Focus |
+|---|-----------|------------|-------|
+| [1](./challenge-1) | Sum of Two Numbers | Beginner | Basic Go syntax, function implementation |
+| [2](./challenge-2) | Reverse a String | Beginner | String manipulation, runes, and character handling |
+| [3](./challenge-3) | Employee Data Management | Beginner | Structs, methods, slice operations |
+| [4](./challenge-4) | Concurrent Graph BFS Queries | Intermediate | Goroutines, channels, graph algorithms |
+| [5](./challenge-5) | HTTP Authentication Middleware | Intermediate | HTTP handling, middleware pattern |
+| [6](./challenge-6) | Word Frequency Counter | Beginner | Maps, string handling, data processing |
+| [7](./challenge-7) | Bank Account with Error Handling | Intermediate | Custom errors, error handling, thread safety |
+| [8](./challenge-8) | Chat Server with Channels | Advanced | Concurrency patterns, message passing, goroutine management |
+| [9](./challenge-9) | RESTful Book Management API | Advanced | Web services, HTTP routing, JSON handling, database interactions |
+| [10](./challenge-10) | Polymorphic Shape Calculator | Intermediate | Interfaces, polymorphism, Go's interface system |
+| [11](./challenge-11) | Concurrent Web Content Aggregator | Advanced | Advanced concurrency patterns, context handling, rate limiting |
+| [12](./challenge-12) | File Processing Pipeline with Advanced Error Handling | Advanced | Error wrapping, custom error types, error handling in concurrent code |
+| [13](./challenge-13) | Trie Data Structure | Intermediate | Data structures, tree implementation, string processing |
+| [14](./challenge-14) | Rate Limiter Implementation | Intermediate | Concurrency control, time handling, distributed systems concepts |
+| [15](./challenge-15) | Consistent Hashing | Advanced | Distributed systems, hashing algorithms, load balancing |
+| [16](./challenge-16) | Builder Pattern Implementation | Intermediate | Design patterns, fluent interfaces, object creation |
+| [17](./challenge-17) | Worker Pool Pattern | Intermediate | Concurrency patterns, resource management, task distribution |
+| [18](./challenge-18) | Distributed Lock | Advanced | Distributed systems, synchronization, consensus |
+| [19](./challenge-19) | Functional Options Pattern | Intermediate | API design, function closures, configuration patterns |
+| [20](./challenge-20) | Circuit Breaker Pattern | Advanced | Resilience patterns, fault tolerance, state management |
+| [21](./challenge-21) | Binary Search Implementation | Easy | Search algorithms, array operations, recursion vs. iteration |
+| [22](./challenge-22) | Greedy Coin Change | Medium-Easy | Greedy algorithms, optimization problems, currency systems |
+| [23](./challenge-23) | String Pattern Matching | Medium | String algorithms, pattern matching, time complexity optimization |
+| [24](./challenge-24) | Dynamic Programming - Longest Increasing Subsequence | Medium-Hard | Dynamic programming, optimization, algorithm complexity |
+| [25](./challenge-25) | Graph Algorithms - Shortest Path | Hard | Graph theory, path-finding algorithms, BFS, Dijkstra, Bellman-Ford |
 
 ---
 
