@@ -28,6 +28,10 @@ function formatExecutionTime(ms) {
 // Initialize syntax highlighting for code blocks
 function initSyntaxHighlighting() {
     document.querySelectorAll('pre code').forEach((el) => {
+        // Fix for Go language blocks
+        if (el.className === 'language-go') {
+            el.className = 'language-golang'; // Convert 'go' to 'golang' for better highlighting
+        }
         hljs.highlightElement(el);
     });
 }
@@ -41,16 +45,26 @@ function renderMarkdown(markdownText, targetElement) {
         gfm: true,      // GitHub flavored markdown
         breaks: true,   // Line breaks are rendered
         highlight: function(code, lang) {
-            const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+            // Normalize language name - convert 'go' to 'golang' if needed
+            let language = lang;
+            if (lang === 'go') {
+                language = 'golang';
+            } else {
+                language = hljs.getLanguage(lang) ? lang : 'plaintext';
+            }
             return hljs.highlight(code, { language }).value;
-        }
+        },
+        langPrefix: 'language-'  // Add proper language prefix for CSS
     });
     
     // Parse and render markdown
     targetElement.innerHTML = marked.parse(markdownText);
     
-    // Initialize syntax highlighting on code blocks
-    initSyntaxHighlighting();
+    // Additionally, ensure Go code blocks are properly highlighted
+    targetElement.querySelectorAll('pre code.language-go').forEach((el) => {
+        el.className = 'language-golang';
+        hljs.highlightElement(el);
+    });
 }
 
 // Helper for creating a code editor
@@ -145,6 +159,23 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize syntax highlighting
     initSyntaxHighlighting();
+    
+    // Apply renderMarkdown to all markdown content containers
+    document.querySelectorAll('.markdown-content').forEach(function(el) {
+        // If there's a data attribute with the markdown content, use that
+        const content = el.getAttribute('data-markdown');
+        if (content) {
+            renderMarkdown(content, el);
+        }
+        // Otherwise just ensure proper syntax highlighting for existing content
+        else {
+            // Make sure Go code blocks have the right class for syntax highlighting
+            el.querySelectorAll('pre code.language-go').forEach(function(codeEl) {
+                codeEl.className = 'language-golang';
+                hljs.highlightElement(codeEl);
+            });
+        }
+    });
     
     // Handle username persistence
     const usernameInput = document.getElementById('username');

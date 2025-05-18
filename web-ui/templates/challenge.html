@@ -120,11 +120,11 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize Markdown for description
         const descriptionElement = document.getElementById('challenge-description');
-        descriptionElement.innerHTML = marked.parse(challengeData.description);
+        renderMarkdown(challengeData.description, descriptionElement);
 
         // Initialize Markdown for learning materials
         const learningElement = document.getElementById('learning-materials');
-        learningElement.innerHTML = marked.parse(challengeData.learningMaterials);
+        renderMarkdown(challengeData.learningMaterials, learningElement);
 
         // Initialize code editor for solution
         const editor = ace.edit("editor");

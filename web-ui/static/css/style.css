@@ -231,4 +231,46 @@
     body {
         padding-top: 4.5rem;
     }
+}
+
+/* Go language syntax highlighting specific styles */
+.markdown-content pre code.language-go,
+.markdown-content pre code.language-golang {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+    color: #333;
+    background: #f8f8f8;
+}
+
+/* Style for Go keywords */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-type {
+    color: #00579E;
+    font-weight: bold;
+}
+
+/* Style for Go functions and methods */
+.hljs-title,
+.hljs-title.function_ {
+    color: #4078F2;
+}
+
+/* Style for Go strings */
+.hljs-string,
+.hljs-quote {
+    color: #008000;
+}
+
+/* Style for Go comments */
+.hljs-comment {
+    color: #999988;
+    font-style: italic;
+}
+
+/* Style for Go numbers */
+.hljs-number,
+.hljs-literal {
+    color: #005CC5;
 } 
