@@ -75,6 +75,7 @@ For developers familiar with Go who want to deepen their knowledge
 - **[Challenge 17](./challenge-17)**: Interactive Debugging Tutorial
 - **[Challenge 19](./challenge-19)**: Slice Operations
 - **[Challenge 23](./challenge-23)**: String Pattern Matching
+- **[Challenge 27](./challenge-27)**: Go Generics Data Structures
 
 ### 🔴 Advanced
 Challenging problems that test mastery of Go and computer science concepts
@@ -87,6 +88,7 @@ Challenging problems that test mastery of Go and computer science concepts
 - **[Challenge 20](./challenge-20)**: Circuit Breaker Pattern
 - **[Challenge 24](./challenge-24)**: Dynamic Programming - Longest Increasing Subsequence
 - **[Challenge 25](./challenge-25)**: Graph Algorithms - Shortest Path
+- **[Challenge 26](./challenge-26)**: Regular Expression Text Processor
 
 ## 💡 How to Use This Repository
 
