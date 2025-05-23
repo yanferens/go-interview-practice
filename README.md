@@ -89,6 +89,7 @@ Challenging problems that test mastery of Go and computer science concepts
 - **[Challenge 24](./challenge-24)**: Dynamic Programming - Longest Increasing Subsequence
 - **[Challenge 25](./challenge-25)**: Graph Algorithms - Shortest Path
 - **[Challenge 26](./challenge-26)**: Regular Expression Text Processor
+- **[Challenge 28](./challenge-28)**: Cache Implementation with Multiple Eviction Policies
 
 ## 💡 How to Use This Repository
 
