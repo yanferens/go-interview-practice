@@ -48,7 +48,7 @@ MinCoins(87, []int{1, 5, 10, 25, 50})
 ### Sample Output 1
 
 ```
-6
+5
 ```
 
 ### Sample Input 2

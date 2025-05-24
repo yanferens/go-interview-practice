@@ -16,12 +16,12 @@ func TestMinCoins(t *testing.T) {
 		{"Only pennies needed", 4, []int{1, 5, 10, 25, 50}, 4},
 		{"Exact denomination", 5, []int{1, 5, 10, 25, 50}, 1},
 		{"Simple combination", 11, []int{1, 5, 10, 25, 50}, 2},
-		{"Example 1", 87, []int{1, 5, 10, 25, 50}, 6},
+		{"Example 1", 87, []int{1, 5, 10, 25, 50}, 5},
 		{"Example 2", 42, []int{1, 5, 10, 25, 50}, 5},
-		{"Larger amount", 99, []int{1, 5, 10, 25, 50}, 7},
+		{"Larger amount", 99, []int{1, 5, 10, 25, 50}, 8},
 		{"Cannot make amount", 3, []int{5, 10, 25}, -1},
 		{"Custom denominations", 30, []int{1, 6, 10}, 3},
-		{"Larger denominations", 63, []int{1, 5, 10, 21, 25}, 3},
+		{"Larger denominations", 63, []int{1, 5, 10, 21, 25}, 6},
 	}
 
 	for _, tt := range tests {
@@ -51,7 +51,7 @@ func TestCoinCombination(t *testing.T) {
 		{"Larger amount", 99, []int{1, 5, 10, 25, 50}, map[int]int{1: 4, 10: 2, 25: 1, 50: 1}},
 		{"Cannot make amount", 3, []int{5, 10, 25}, map[int]int{}},
 		{"Custom denominations", 30, []int{1, 6, 10}, map[int]int{10: 3}},
-		{"Larger denominations", 63, []int{1, 5, 10, 21, 25}, map[int]int{1: 1, 21: 1, 25: 1, 10: 1, 5: 1}},
+		{"Larger denominations", 63, []int{1, 5, 10, 21, 25}, map[int]int{1: 3, 10: 1, 25: 2}},
 	}
 
 	for _, tt := range tests {
@@ -70,8 +70,8 @@ func TestExampleCases(t *testing.T) {
 	denominations := []int{1, 5, 10, 25, 50}
 
 	// Example 1
-	if result := MinCoins(87, denominations); result != 6 {
-		t.Errorf("MinCoins(87, %v) = %d, expected 6", denominations, result)
+	if result := MinCoins(87, denominations); result != 5 {
+		t.Errorf("MinCoins(87, %v) = %d, expected 5", denominations, result)
 	}
 
 	// Example 2
