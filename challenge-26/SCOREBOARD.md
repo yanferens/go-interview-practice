@@ -1,4 +1,3 @@
-# Scoreboard for challenge-22
+# Scoreboard for challenge-26
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
-| RezaSi | 23 | 23 |
