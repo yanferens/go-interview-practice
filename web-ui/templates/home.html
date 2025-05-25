@@ -304,8 +304,9 @@
             const lines = cleanDesc.split('\n');
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
-                // Skip title lines, empty lines
-                if (line.startsWith('#') || line === '' || line.startsWith('---') || line.startsWith('!')) {
+                // Skip title lines, empty lines, scoreboard links
+                if (line.startsWith('#') || line === '' || line.startsWith('---') || line.startsWith('!') || 
+                    line.toLowerCase().includes('scoreboard') || line.toLowerCase().includes('view the scoreboard')) {
                     continue;
                 }
                 
