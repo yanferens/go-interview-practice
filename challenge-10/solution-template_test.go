@@ -36,7 +36,7 @@ func TestRectangleConstructor(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			rect, err := NewRectangle(tt.width, tt.height)
-			
+
 			if tt.shouldError {
 				if err == nil {
 					t.Errorf("Expected an error for width=%.2f, height=%.2f, but got none", tt.width, tt.height)
@@ -74,7 +74,7 @@ func TestCircleConstructor(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			circle, err := NewCircle(tt.radius)
-			
+
 			if tt.shouldError {
 				if err == nil {
 					t.Errorf("Expected an error for radius=%.2f, but got none", tt.radius)
@@ -116,7 +116,7 @@ func TestTriangleConstructor(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			triangle, err := NewTriangle(tt.a, tt.b, tt.c)
-			
+
 			if tt.shouldError {
 				if err == nil {
 					t.Errorf("Expected an error for sides (%.2f, %.2f, %.2f), but got none", tt.a, tt.b, tt.c)
@@ -160,7 +160,7 @@ func TestRectangleArea(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to create rectangle: %v", err)
 			}
-			
+
 			area := rect.Area()
 			if !floatEquals(area, tt.area) {
 				t.Errorf("Expected area=%.2f, got %.2f", tt.area, area)
@@ -187,7 +187,7 @@ func TestRectanglePerimeter(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to create rectangle: %v", err)
 			}
-			
+
 			perimeter := rect.Perimeter()
 			if !floatEquals(perimeter, tt.perimeter) {
 				t.Errorf("Expected perimeter=%.2f, got %.2f", tt.perimeter, perimeter)
@@ -213,7 +213,7 @@ func TestCircleArea(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to create circle: %v", err)
 			}
-			
+
 			area := circle.Area()
 			if !floatEquals(area, tt.area) {
 				t.Errorf("Expected area=%.2f, got %.2f", tt.area, area)
@@ -239,7 +239,7 @@ func TestCirclePerimeter(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to create circle: %v", err)
 			}
-			
+
 			perimeter := circle.Perimeter()
 			if !floatEquals(perimeter, tt.perimeter) {
 				t.Errorf("Expected perimeter=%.2f, got %.2f", tt.perimeter, perimeter)
@@ -254,8 +254,8 @@ func TestTriangleArea(t *testing.T) {
 		a, b, c float64
 		area    float64
 	}{
-		{3.0, 4.0, 5.0, 6.0}, // Right triangle
-		{5.0, 5.0, 6.0, 12.0}, // Isosceles triangle
+		{3.0, 4.0, 5.0, 6.0},                // Right triangle
+		{5.0, 5.0, 6.0, 12.0},               // Isosceles triangle
 		{5.0, 5.0, 5.0, 10.825317547305483}, // Equilateral triangle
 	}
 
@@ -265,7 +265,7 @@ func TestTriangleArea(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to create triangle: %v", err)
 			}
-			
+
 			area := triangle.Area()
 			if !floatEquals(area, tt.area) {
 				t.Errorf("Expected area=%.8f, got %.8f", tt.area, area)
@@ -291,7 +291,7 @@ func TestTrianglePerimeter(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to create triangle: %v", err)
 			}
-			
+
 			perimeter := triangle.Perimeter()
 			if !floatEquals(perimeter, tt.perimeter) {
 				t.Errorf("Expected perimeter=%.2f, got %.2f", tt.perimeter, perimeter)
@@ -327,7 +327,7 @@ func TestShapeStringMethod(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			str := tt.shape.String()
-			
+
 			for _, part := range tt.expectedParts {
 				if !strings.Contains(strings.ToLower(str), strings.ToLower(part)) {
 					t.Errorf("Expected string representation to contain '%s', but got: %s", part, str)
@@ -339,16 +339,16 @@ func TestShapeStringMethod(t *testing.T) {
 
 // TestShapeCalculatorTotalArea tests the TotalArea method of ShapeCalculator
 func TestShapeCalculatorTotalArea(t *testing.T) {
-	rect, _ := NewRectangle(5.0, 3.0)      // Area = 15
-	circle, _ := NewCircle(2.0)            // Area = 12.57
+	rect, _ := NewRectangle(5.0, 3.0)         // Area = 15
+	circle, _ := NewCircle(2.0)               // Area = 12.57
 	triangle, _ := NewTriangle(3.0, 4.0, 5.0) // Area = 6
-	
+
 	calculator := NewShapeCalculator()
 	shapes := []Shape{rect, circle, triangle}
-	
+
 	totalArea := calculator.TotalArea(shapes)
 	expectedArea := 15.0 + math.Pi*4.0 + 6.0
-	
+
 	if !floatEquals(totalArea, expectedArea) {
 		t.Errorf("Expected total area = %.2f, got %.2f", expectedArea, totalArea)
 	}
@@ -356,15 +356,15 @@ func TestShapeCalculatorTotalArea(t *testing.T) {
 
 // TestShapeCalculatorLargestShape tests the LargestShape method of ShapeCalculator
 func TestShapeCalculatorLargestShape(t *testing.T) {
-	rect, _ := NewRectangle(5.0, 3.0)      // Area = 15
-	circle, _ := NewCircle(2.0)            // Area = 12.57
+	rect, _ := NewRectangle(5.0, 3.0)         // Area = 15
+	circle, _ := NewCircle(2.0)               // Area = 12.57
 	triangle, _ := NewTriangle(3.0, 4.0, 5.0) // Area = 6
-	
+
 	calculator := NewShapeCalculator()
 	shapes := []Shape{rect, circle, triangle}
-	
+
 	largest := calculator.LargestShape(shapes)
-	
+
 	if largest != rect {
 		t.Errorf("Expected largest shape to be Rectangle, got %T with area %.2f", largest, largest.Area())
 	}
@@ -372,39 +372,39 @@ func TestShapeCalculatorLargestShape(t *testing.T) {
 
 // TestShapeCalculatorSortByArea tests the SortByArea method of ShapeCalculator
 func TestShapeCalculatorSortByArea(t *testing.T) {
-	rect, _ := NewRectangle(5.0, 3.0)      // Area = 15
-	circle, _ := NewCircle(2.0)            // Area = 12.57
+	rect, _ := NewRectangle(5.0, 3.0)         // Area = 15
+	circle, _ := NewCircle(2.0)               // Area = 12.57
 	triangle, _ := NewTriangle(3.0, 4.0, 5.0) // Area = 6
-	
+
 	calculator := NewShapeCalculator()
 	shapes := []Shape{rect, circle, triangle}
-	
+
 	// Test ascending order
 	sorted := calculator.SortByArea(shapes, true)
-	
+
 	if len(sorted) != 3 {
 		t.Fatalf("Expected 3 shapes after sorting, got %d", len(sorted))
 	}
-	
+
 	expectedOrder := []Shape{triangle, circle, rect} // Smallest to largest
 	for i, shape := range sorted {
 		if shape.Area() != expectedOrder[i].Area() {
-			t.Errorf("Wrong order in ascending sort at index %d: expected area %.2f, got %.2f", 
+			t.Errorf("Wrong order in ascending sort at index %d: expected area %.2f, got %.2f",
 				i, expectedOrder[i].Area(), shape.Area())
 		}
 	}
-	
+
 	// Test descending order
 	sorted = calculator.SortByArea(shapes, false)
-	
+
 	if len(sorted) != 3 {
 		t.Fatalf("Expected 3 shapes after sorting, got %d", len(sorted))
 	}
-	
+
 	expectedOrder = []Shape{rect, circle, triangle} // Largest to smallest
 	for i, shape := range sorted {
 		if shape.Area() != expectedOrder[i].Area() {
-			t.Errorf("Wrong order in descending sort at index %d: expected area %.2f, got %.2f", 
+			t.Errorf("Wrong order in descending sort at index %d: expected area %.2f, got %.2f",
 				i, expectedOrder[i].Area(), shape.Area())
 		}
 	}
@@ -414,43 +414,43 @@ func TestShapeCalculatorSortByArea(t *testing.T) {
 func TestShapeInterfaceCompliance(t *testing.T) {
 	// This is more of a compile-time check, but let's verify at runtime too
 	var shapes []Shape
-	
+
 	rect, _ := NewRectangle(5.0, 3.0)
 	shapes = append(shapes, rect)
-	
+
 	circle, _ := NewCircle(2.0)
 	shapes = append(shapes, circle)
-	
+
 	triangle, _ := NewTriangle(3.0, 4.0, 5.0)
 	shapes = append(shapes, triangle)
-	
+
 	// No panic means they all implement the interface correctly
 	for i, shape := range shapes {
 		if shape == nil {
 			t.Errorf("Shape at index %d is nil", i)
 		} else {
-			t.Logf("Shape %d: %T, Area: %.2f, Perimeter: %.2f, String: %s", 
+			t.Logf("Shape %d: %T, Area: %.2f, Perimeter: %.2f, String: %s",
 				i, shape, shape.Area(), shape.Perimeter(), shape.String())
 		}
 	}
 }
 
+// ByArea implements sort.Interface for []Shape based on Area
+type ByArea []Shape
+
+func (a ByArea) Len() int           { return len(a) }
+func (a ByArea) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByArea) Less(i, j int) bool { return a[i].Area() < a[j].Area() }
+
 // TestSortingShapes tests that shapes can be sorted using Sort package
 func TestSortingShapes(t *testing.T) {
-	// Implement a simple type that implements sort.Interface for []Shape
-	type ByArea []Shape
-	
-	func (a ByArea) Len() int           { return len(a) }
-	func (a ByArea) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-	func (a ByArea) Less(i, j int) bool { return a[i].Area() < a[j].Area() }
-	
-	rect, _ := NewRectangle(5.0, 3.0)      // Area = 15
-	circle, _ := NewCircle(2.0)            // Area = 12.57
+	rect, _ := NewRectangle(5.0, 3.0)         // Area = 15
+	circle, _ := NewCircle(2.0)               // Area = 12.57
 	triangle, _ := NewTriangle(3.0, 4.0, 5.0) // Area = 6
-	
+
 	shapes := []Shape{rect, circle, triangle}
 	sort.Sort(ByArea(shapes))
-	
+
 	expected := []Shape{triangle, circle, rect} // Smallest to largest
 	if !reflect.DeepEqual(shapes, expected) {
 		t.Errorf("Shapes not sorted correctly by area")
@@ -458,4 +458,4 @@ func TestSortingShapes(t *testing.T) {
 			t.Logf("Shape %d: %T, Area: %.2f", i, shape, shape.Area())
 		}
 	}
-} 
+}
