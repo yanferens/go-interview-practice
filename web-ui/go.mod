@@ -1,3 +1,3 @@
-module github.com/RezaSi/go-interview-practice/web-ui
+module web-ui
 
-go 1.23.3
+go 1.21
