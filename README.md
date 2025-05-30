@@ -4,6 +4,11 @@ Welcome to the **Go Interview Practice** repository! Master Go programming and a
 
 ![Go Interview Practice Web UI](./images/challenges.png)
 
+<div align="center">
+  <img src="./images/challenge.png" alt="Go Interview Practice Web UI - challenge" width="48%" style="margin-right: 2%;">
+  <img src="./images/result.png" alt="Go Interview Practice Web UI - result" width="48%">
+</div>
+
 ## 🌟 Key Features
 
 - **Interactive Web UI** - Code, test, and submit solutions in your browser
