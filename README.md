@@ -65,6 +65,7 @@ Perfect for those new to Go or brushing up on fundamentals
 - **[Challenge 2](./challenge-2)**: Reverse a String
 - **[Challenge 3](./challenge-3)**: Employee Data Management
 - **[Challenge 6](./challenge-6)**: Word Frequency Counter
+- **[Challenge 18](./challenge-18)**: Temperature Converter
 - **[Challenge 21](./challenge-21)**: Binary Search Implementation
 - **[Challenge 22](./challenge-22)**: Greedy Coin Change
 
@@ -89,7 +90,6 @@ Challenging problems that test mastery of Go and computer science concepts
 - **[Challenge 11](./challenge-11)**: Concurrent Web Content Aggregator
 - **[Challenge 12](./challenge-12)**: File Processing Pipeline
 - **[Challenge 15](./challenge-15)**: OAuth2 Authentication
-- **[Challenge 18](./challenge-18)**: Distributed Lock
 - **[Challenge 20](./challenge-20)**: Circuit Breaker Pattern
 - **[Challenge 24](./challenge-24)**: Dynamic Programming - Longest Increasing Subsequence
 - **[Challenge 25](./challenge-25)**: Graph Algorithms - Shortest Path
