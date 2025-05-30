@@ -1,5 +1,17 @@
 # Learning Materials for Microservices with gRPC
 
+## Important Note for This Challenge
+
+This challenge is designed to teach gRPC concepts in an educational, interview-friendly setting. While the learning materials below show real gRPC with Protocol Buffers (which you'll use in production), the challenge implementation uses HTTP as transport to keep the focus on core concepts like:
+
+- Service interfaces and business logic
+- Error handling with gRPC status codes  
+- Client-server communication patterns
+- Interceptors for cross-cutting concerns
+- Microservices architecture principles
+
+This approach allows you to learn the essential patterns without getting bogged down in Protocol Buffer compilation and code generation during an interview setting.
+
 ## Microservices Architecture
 
 Microservices architecture is an approach to application development where a large application is built as a suite of small, independently deployable services. Each service runs in its own process and communicates with other services through well-defined APIs.
