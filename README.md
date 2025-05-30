@@ -2,12 +2,44 @@
 
 Welcome to the **Go Interview Practice** repository! Master Go programming and ace your technical interviews with our interactive coding challenges.
 
-![Go Interview Practice Web UI](./images/challenges.png)
+---
+
+## 🎨 **Visual Overview**
+
+### 📋 Interactive Challenge Platform
+Our comprehensive web interface provides everything you need to practice and master Go programming:
+
+<div align="center">
+  <img src="./images/challenges.png" alt="Go Interview Practice - Challenge Overview" width="90%">
+  <p><em>📊 Complete challenge dashboard with difficulty levels, progress tracking, and performance metrics</em></p>
+</div>
+
+---
+
+### 💻 **Code & Test Experience**
 
 <div align="center">
   <img src="./images/challenge.png" alt="Go Interview Practice Web UI - challenge" width="48%" style="margin-right: 2%;">
   <img src="./images/result.png" alt="Go Interview Practice Web UI - result" width="48%">
 </div>
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center" width="48%">
+        <strong>🔧 Interactive Code Editor</strong><br>
+        <em>Write, edit, and test your Go solutions<br>with syntax highlighting and real-time feedback</em>
+      </td>
+      <td width="4%"></td>
+      <td align="center" width="48%">
+        <strong>📈 Instant Results & Analytics</strong><br>
+        <em>Get immediate test results, performance metrics,<br>and detailed execution analysis</em>
+      </td>
+    </tr>
+  </table>
+</div>
+
+---
 
 ## 🌟 Key Features
 
