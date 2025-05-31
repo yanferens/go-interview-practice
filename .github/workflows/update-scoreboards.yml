@@ -21,6 +21,11 @@ jobs:
         with:
           go-version: '1.21'
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
       - name: Run Tests and Update Scoreboards
         run: |
           for challenge_dir in challenge-*/; do
@@ -89,12 +94,22 @@ jobs:
             fi
           done
 
-      - name: Commit and Push Scoreboards
+      - name: Update Main Scoreboard
+        run: |
+          echo "🏆 Updating main scoreboard in README.md..."
+          mkdir -p scripts
+          python3 scripts/generate_main_scoreboard.py
+
+      - name: Commit and Push All Changes
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add challenge-*/SCOREBOARD.md
-          git commit -m "Update scoreboards [skip ci]" || echo "No changes to commit"
+          git add challenge-*/SCOREBOARD.md README.md
+          git commit -m "📊 Update scoreboards and main leaderboard
+
+          - Updated individual challenge scoreboards
+          - Refreshed main README.md leaderboard
+          - Synchronized completion statistics" || echo "No changes to commit"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

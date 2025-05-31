@@ -1,0 +1,83 @@
+name: Update Main Scoreboard
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'challenge-*/SCOREBOARD.md'
+  schedule:
+    # Run daily at 00:00 UTC to catch any missed updates
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    # Allow manual triggering
+
+permissions:
+  contents: write
+
+jobs:
+  update-main-scoreboard:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Create scripts directory if it doesn't exist
+        run: mkdir -p scripts
+
+      - name: Generate Main Scoreboard
+        run: |
+          echo "🏆 Generating main scoreboard from all challenge scoreboards..."
+          python3 scripts/generate_main_scoreboard.py
+
+      - name: Check for changes
+        id: verify-changed-files
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "📊 Detected changes in scoreboard data"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "✅ No changes detected in scoreboard data"
+          fi
+
+      - name: Commit and push changes
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          git commit -m "🏆 Auto-update main scoreboard
+
+          - Updated leaderboard rankings
+          - Refreshed completion statistics
+          - Synchronized with latest challenge scoreboards"
+          git push
+
+      - name: Create summary
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        run: |
+          echo "## 🏆 Main Scoreboard Updated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The main leaderboard in README.md has been automatically updated with the latest challenge completion data." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Update Details" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Processed all challenge scoreboards" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔄 Updated completion statistics" >> $GITHUB_STEP_SUMMARY
+          echo "- 🏅 Refreshed achievement badges" >> $GITHUB_STEP_SUMMARY
+          echo "- 📈 Calculated new completion rates" >> $GITHUB_STEP_SUMMARY
+
+      - name: No changes summary
+        if: steps.verify-changed-files.outputs.changed == 'false'
+        run: |
+          echo "## ✅ Main Scoreboard Current" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The main leaderboard is already up-to-date with the latest challenge completion data." >> $GITHUB_STEP_SUMMARY 

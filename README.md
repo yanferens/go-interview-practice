@@ -41,6 +41,25 @@ Our comprehensive web interface provides everything you need to practice and mas
 
 ---
 
+## 🏆 **Top 10 Leaderboard**
+
+Our most accomplished Go developers, ranked by number of challenges completed:
+
+| Rank | 👤 Developer | 🎯 Challenges Solved | 📊 Completion Rate | 🏅 Achievement |
+|------|-------------|---------------------|-------------------|----------------|
+| **1** | **RezaSi** | **12** / 28 | 42.9% | 💪 **Advanced** |
+| **2** | **AliNazariii** | **4** / 28 | 14.3% | 🌱 **Beginner** |
+
+*Updated automatically based on 28 available challenges*
+
+### 🎯 **Challenge Progress Overview**
+
+- **Total Challenges Available**: 28
+- **Active Developers**: 2
+- **Most Challenges Solved**: 12 by RezaSi
+
+---
+
 ## 🌟 Key Features
 
 - **Interactive Web UI** - Code, test, and submit solutions in your browser
