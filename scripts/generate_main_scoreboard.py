@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 def parse_scoreboard_file(filepath):
-    """Parse a SCOREBOARD.md file and extract usernames who completed the challenge."""
+    """Parse a SCOREBOARD.md file and extract usernames who completed the challenge (passed ALL tests)."""
     users = set()
     
     try:
@@ -29,12 +29,31 @@ def parse_scoreboard_file(filepath):
             # Parse table row
             if '|' in line:
                 parts = [part.strip() for part in line.split('|')]
-                if len(parts) >= 3:
+                if len(parts) >= 4:  # Username | Passed Tests | Total Tests | (optional extra columns)
                     username = parts[1]
+                    passed_tests_str = parts[2]
+                    total_tests_str = parts[3]
                     
                     # Skip empty usernames or placeholders
-                    if username and username != '------' and not username.isdigit():
-                        users.add(username)
+                    if not username or username == '------' or username.isdigit():
+                        continue
+                    
+                    try:
+                        # Extract numbers from test counts (handles formats like "6", "6 tests", etc.)
+                        passed_tests = int(''.join(filter(str.isdigit, passed_tests_str)))
+                        total_tests = int(''.join(filter(str.isdigit, total_tests_str)))
+                        
+                        # Only count as completed if ALL tests passed
+                        if passed_tests > 0 and passed_tests == total_tests:
+                            users.add(username)
+                            print(f"  ✅ {username}: {passed_tests}/{total_tests} tests passed (COMPLETED)")
+                        else:
+                            print(f"  ❌ {username}: {passed_tests}/{total_tests} tests passed (incomplete)")
+                            
+                    except (ValueError, TypeError):
+                        # If we can't parse test numbers, skip this entry
+                        print(f"  ⚠️  {username}: Could not parse test results")
+                        continue
     
     except FileNotFoundError:
         pass
