@@ -310,6 +310,67 @@
             box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
         }
         
+        /* Username input with help tooltip */
+        .username-container {
+            position: relative;
+        }
+        
+        .username-help-tooltip {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            z-index: 1000;
+            margin-top: 0.25rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .username-help-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid #667eea;
+        }
+        
+        .username-help-tooltip.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .username-help-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            cursor: help;
+            transition: color 0.3s ease;
+            z-index: 5;
+        }
+        
+        .username-help-icon:hover {
+            color: #667eea;
+        }
+        
+        .form-control.has-help {
+            padding-right: 2rem;
+        }
+        
         /* Editor and content */
         .editor-container {
             height: 500px;
@@ -416,7 +477,13 @@
                     </li>
                 </ul>
                 <div class="d-flex">
-                    <input type="text" id="username" class="form-control me-2" placeholder="GitHub Username">
+                    <div class="username-container">
+                        <input type="text" id="username" class="form-control me-2 has-help" placeholder="GitHub Username">
+                        <i class="bi bi-question-circle username-help-icon" id="username-help-icon"></i>
+                        <div class="username-help-tooltip" id="username-help-tooltip">
+                            <i class="bi bi-lightbulb me-1"></i>Enter your GitHub username to track progress
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -441,7 +508,63 @@
         // Store username in localStorage and cookies
         document.addEventListener('DOMContentLoaded', function() {
             const usernameInput = document.getElementById('username');
-            if (usernameInput) {
+            const helpIcon = document.getElementById('username-help-icon');
+            const helpTooltip = document.getElementById('username-help-tooltip');
+            
+            if (usernameInput && helpIcon && helpTooltip) {
+                // Function to show/hide help based on username presence
+                function updateHelpVisibility() {
+                    if (!usernameInput.value.trim()) {
+                        helpIcon.style.display = 'block';
+                        // Auto-show tooltip for empty input (with delay)
+                        setTimeout(() => {
+                            if (!usernameInput.value.trim()) {
+                                helpTooltip.classList.add('show');
+                            }
+                        }, 1000);
+                    } else {
+                        helpIcon.style.display = 'none';
+                        helpTooltip.classList.remove('show');
+                    }
+                }
+                
+                // Show tooltip on help icon hover/click
+                helpIcon.addEventListener('mouseenter', function() {
+                    helpTooltip.classList.add('show');
+                });
+                
+                helpIcon.addEventListener('mouseleave', function() {
+                    if (usernameInput.value.trim()) {
+                        helpTooltip.classList.remove('show');
+                    }
+                });
+                
+                helpIcon.addEventListener('click', function() {
+                    helpTooltip.classList.toggle('show');
+                    usernameInput.focus();
+                });
+                
+                // Hide tooltip when user starts typing
+                usernameInput.addEventListener('input', function() {
+                    updateHelpVisibility();
+                });
+                
+                // Hide tooltip when input gets focus and has value
+                usernameInput.addEventListener('focus', function() {
+                    if (this.value.trim()) {
+                        helpTooltip.classList.remove('show');
+                    }
+                });
+                
+                // Show tooltip when input loses focus and is empty
+                usernameInput.addEventListener('blur', function() {
+                    setTimeout(() => {
+                        if (!this.value.trim() && !helpTooltip.matches(':hover') && !helpIcon.matches(':hover')) {
+                            helpTooltip.classList.add('show');
+                        }
+                    }, 200);
+                });
+                
                 // Load saved username (prefer cookie over localStorage)
                 let savedUsername = '';
                 
@@ -463,6 +586,9 @@
                 if (savedUsername) {
                     usernameInput.value = savedUsername;
                 }
+                
+                // Update help visibility on page load
+                updateHelpVisibility();
                 
                 // Save username when changed
                 usernameInput.addEventListener('change', function() {
