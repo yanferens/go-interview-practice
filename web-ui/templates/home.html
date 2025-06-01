@@ -167,7 +167,7 @@
                                 if (data.scores && data.scores[id] !== undefined) {
                                     const score = data.scores[id];
                                     console.log(`Applying score-based class for challenge ${id}, score: ${score}`); // Debug logging
-                                    if (score >= 80) {
+                                    if (score === 100) {
                                         card.classList.add('attempted-challenge-full');
                                         console.log(`Added full class for challenge ${id}`);
                                     } else if (score >= 40) {
@@ -251,7 +251,7 @@
                                     if (data.scores && data.scores[id] !== undefined) {
                                         const score = data.scores[id];
                                         console.log(`Applying score-based class for challenge ${id}, score: ${score}`); // Debug logging
-                                        if (score >= 80) {
+                                        if (score === 100) {
                                             card.classList.add('attempted-challenge-full');
                                             console.log(`Added full class for challenge ${id}`);
                                         } else if (score >= 40) {
