@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
+	"strings"
 
 	"web-ui/internal/models"
 )
@@ -32,12 +34,16 @@ func (us *UserService) LoadUserAttempts(username string, challenges models.Chall
 	userAttempt := &models.UserAttemptedChallenges{
 		Username:     username,
 		AttemptedIDs: make(map[int]bool),
+		Scores:       make(map[int]int),
 	}
 
 	// Scan all challenge directories for this user's submissions
 	for id := range challenges {
 		if us.hasUserSubmission(username, id) {
 			userAttempt.AttemptedIDs[id] = true
+			// Calculate score based on test results
+			score := us.calculateScore(username, id)
+			userAttempt.Scores[id] = score
 		}
 	}
 
@@ -106,4 +112,48 @@ func (us *UserService) GetUserAttempts(username string, challenges models.Challe
 		return attempts
 	}
 	return us.LoadUserAttempts(username, challenges)
+}
+
+// calculateScore calculates the score for a user's submission for a challenge
+func (us *UserService) calculateScore(username string, challengeID int) int {
+	// Read the scoreboard file for this challenge
+	scoreboardPath := filepath.Join("..", fmt.Sprintf("challenge-%d", challengeID), "SCOREBOARD.md")
+	content, err := ioutil.ReadFile(scoreboardPath)
+	if err != nil {
+		// Try alternative path
+		scoreboardPath = filepath.Join(fmt.Sprintf("challenge-%d", challengeID), "SCOREBOARD.md")
+		content, err = ioutil.ReadFile(scoreboardPath)
+		if err != nil {
+			// No scoreboard file, return default score
+			return 50
+		}
+	}
+
+	scoreboardContent := string(content)
+
+	// Parse the scoreboard to find this user's results
+	lines := strings.Split(scoreboardContent, "\n")
+	for _, line := range lines {
+		// Look for lines that contain the username
+		if strings.Contains(line, username) && strings.Contains(line, "|") {
+			// Parse the table row: | Username | Passed Tests | Total Tests |
+			parts := strings.Split(line, "|")
+			if len(parts) >= 4 {
+				passedStr := strings.TrimSpace(parts[2])
+				totalStr := strings.TrimSpace(parts[3])
+
+				passed, err1 := strconv.Atoi(passedStr)
+				total, err2 := strconv.Atoi(totalStr)
+
+				if err1 == nil && err2 == nil && total > 0 {
+					// Calculate percentage score
+					score := (passed * 100) / total
+					return score
+				}
+			}
+		}
+	}
+
+	// User not found in scoreboard, return 0
+	return 0
 }

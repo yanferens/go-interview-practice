@@ -1,14 +1,28 @@
 {{define "content"}}
+<!-- Hero Section -->
 <div class="row mb-4">
     <div class="col">
-        <div class="text-center py-4">
-            <h1 class="display-4">Go Interview Practice</h1>
-            <p class="lead">Master Go programming with hands-on coding challenges</p>
-            <div class="d-flex justify-content-center gap-2 mt-3">
-                <a href="#challenges" class="btn btn-primary">Browse Challenges</a>
-                <a href="https://github.com/RezaSi/go-interview-practice" class="btn btn-outline-dark">
-                    <i class="bi bi-github"></i> GitHub
-                </a>
+        <div class="hero-section text-center py-4">
+            <div class="hero-content">
+                <h1 class="display-5 fw-bold mb-3">Go Interview Practice</h1>
+                <p class="lead mb-4">Master Go programming with hands-on coding challenges</p>
+                
+                <!-- Main Action Buttons -->
+                <div class="d-flex justify-content-center flex-wrap gap-2 mb-4">
+                    <a href="#challenges" class="btn btn-light px-4">
+                        <i class="bi bi-play-circle me-2"></i>Browse Challenges
+                    </a>
+                    <a href="https://github.com/RezaSi/go-interview-practice" class="btn btn-outline-light px-4" target="_blank">
+                        <i class="bi bi-github me-2"></i>View Source
+                    </a>
+                </div>
+                
+                <!-- GitHub Stars Only -->
+                <div class="github-stats d-inline-flex align-items-center">
+                    <i class="bi bi-star-fill text-warning me-2"></i>
+                    <iframe src="https://ghbtns.com/github-btn.html?user=RezaSi&repo=go-interview-practice&type=star&count=true" 
+                            frameborder="0" scrolling="0" width="100" height="20" title="GitHub Stars"></iframe>
+                </div>
             </div>
         </div>
     </div>
@@ -65,7 +79,7 @@
 <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4" id="challenges-container">
     {{range .Challenges}}
     <div class="col challenge-item" data-difficulty="{{.Difficulty}}" data-id="{{.ID}}" data-attempted="{{if and $.UserAttempts (index $.UserAttempts.AttemptedIDs .ID)}}true{{else}}false{{end}}">
-        <div class="card h-100 shadow-sm hover-shadow {{if and $.UserAttempts (index $.UserAttempts.AttemptedIDs .ID)}}border-success bg-light{{end}}">
+        <div class="card h-100 shadow-sm hover-shadow {{if and $.UserAttempts (index $.UserAttempts.AttemptedIDs .ID)}}attempted-challenge{{end}}">
             <div class="card-header py-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="badge {{if eq .Difficulty "Beginner"}}bg-success{{else if eq .Difficulty "Intermediate"}}bg-warning{{else}}bg-danger{{end}} rounded-pill">{{.Difficulty}}</span>
@@ -80,9 +94,6 @@
                 <div class="d-flex mt-3 gap-2">
                     <span class="badge bg-light text-dark border"><i class="bi bi-book"></i> Learning Materials</span>
                     <span class="badge bg-light text-dark border"><i class="bi bi-code-slash"></i> Test Cases</span>
-                    {{if and $.UserAttempts (index $.UserAttempts.AttemptedIDs .ID)}}
-                    <span class="badge bg-success text-white border"><i class="bi bi-check-circle"></i> Attempted</span>
-                    {{end}}
                 </div>
             </div>
             <div class="card-footer bg-transparent">
@@ -130,22 +141,16 @@
             })
             .then(response => response.json())
             .then(data => {
+                console.log("API Response:", data); // Debug logging
                 if (data.success) {
                     // Reset all cards first
                     challengeItems.forEach(item => {
                         const id = parseInt(item.getAttribute('data-id'));
                         const card = item.querySelector('.card');
-                        const badges = item.querySelector('.d-flex.mt-3.gap-2');
                         
                         // Remove existing attempt markers
                         item.setAttribute('data-attempted', 'false');
-                        card.classList.remove('border-success', 'bg-light');
-                        
-                        // Remove existing attempt badge if any
-                        const existingBadge = badges.querySelector('.badge.bg-success.text-white');
-                        if (existingBadge && existingBadge.innerHTML.includes('Attempted')) {
-                            existingBadge.remove();
-                        }
+                        card.classList.remove('attempted-challenge', 'attempted-challenge-full', 'attempted-challenge-partial');
                     });
                     
                     // Add attempt markers for attempted challenges
@@ -156,15 +161,26 @@
                                 // Mark as attempted
                                 item.setAttribute('data-attempted', 'true');
                                 const card = item.querySelector('.card');
-                                card.classList.add('border-success', 'bg-light');
                                 
-                                // Add attempted badge if not exists
-                                const badges = item.querySelector('.d-flex.mt-3.gap-2');
-                                if (!badges.querySelector('.badge.bg-success.text-white')) {
-                                    const badge = document.createElement('span');
-                                    badge.className = 'badge bg-success text-white border';
-                                    badge.innerHTML = '<i class="bi bi-check-circle"></i> Attempted';
-                                    badges.appendChild(badge);
+                                // Apply appropriate class based on score
+                                console.log(`Challenge ${id}: score = ${data.scores ? data.scores[id] : 'undefined'}`); // Debug logging
+                                if (data.scores && data.scores[id] !== undefined) {
+                                    const score = data.scores[id];
+                                    console.log(`Applying score-based class for challenge ${id}, score: ${score}`); // Debug logging
+                                    if (score >= 80) {
+                                        card.classList.add('attempted-challenge-full');
+                                        console.log(`Added full class for challenge ${id}`);
+                                    } else if (score >= 40) {
+                                        card.classList.add('attempted-challenge-partial');
+                                        console.log(`Added partial class for challenge ${id}`);
+                                    } else {
+                                        card.classList.add('attempted-challenge');
+                                        console.log(`Added basic class for challenge ${id}`);
+                                    }
+                                } else {
+                                    // Fallback when no score data
+                                    console.log(`No score data for challenge ${id}, using fallback`);
+                                    card.classList.add('attempted-challenge');
                                 }
                             }
                         }
@@ -206,6 +222,7 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log("API Response:", data); // Debug logging
                     if (data.success) {
                         // Update UI to reflect new attempts
                         console.log("Refreshed attempts:", data.attemptedIds);
@@ -214,17 +231,10 @@
                         challengeItems.forEach(item => {
                             const id = parseInt(item.getAttribute('data-id'));
                             const card = item.querySelector('.card');
-                            const badges = item.querySelector('.d-flex.mt-3.gap-2');
                             
                             // Remove existing attempt markers
                             item.setAttribute('data-attempted', 'false');
-                            card.classList.remove('border-success', 'bg-light');
-                            
-                            // Remove existing attempt badge if any
-                            const existingBadge = badges.querySelector('.badge.bg-success.text-white');
-                            if (existingBadge && existingBadge.innerHTML.includes('Attempted')) {
-                                existingBadge.remove();
-                            }
+                            card.classList.remove('attempted-challenge', 'attempted-challenge-full', 'attempted-challenge-partial');
                         });
                         
                         // Add attempt markers for attempted challenges
@@ -235,15 +245,26 @@
                                     // Mark as attempted
                                     item.setAttribute('data-attempted', 'true');
                                     const card = item.querySelector('.card');
-                                    card.classList.add('border-success', 'bg-light');
                                     
-                                    // Add attempted badge if not exists
-                                    const badges = item.querySelector('.d-flex.mt-3.gap-2');
-                                    if (!badges.querySelector('.badge.bg-success.text-white')) {
-                                        const badge = document.createElement('span');
-                                        badge.className = 'badge bg-success text-white border';
-                                        badge.innerHTML = '<i class="bi bi-check-circle"></i> Attempted';
-                                        badges.appendChild(badge);
+                                    // Apply appropriate class based on score
+                                    console.log(`Challenge ${id}: score = ${data.scores ? data.scores[id] : 'undefined'}`); // Debug logging
+                                    if (data.scores && data.scores[id] !== undefined) {
+                                        const score = data.scores[id];
+                                        console.log(`Applying score-based class for challenge ${id}, score: ${score}`); // Debug logging
+                                        if (score >= 80) {
+                                            card.classList.add('attempted-challenge-full');
+                                            console.log(`Added full class for challenge ${id}`);
+                                        } else if (score >= 40) {
+                                            card.classList.add('attempted-challenge-partial');
+                                            console.log(`Added partial class for challenge ${id}`);
+                                        } else {
+                                            card.classList.add('attempted-challenge');
+                                            console.log(`Added basic class for challenge ${id}`);
+                                        }
+                                    } else {
+                                        // Fallback when no score data
+                                        console.log(`No score data for challenge ${id}, using fallback`);
+                                        card.classList.add('attempted-challenge');
                                     }
                                 }
                             }

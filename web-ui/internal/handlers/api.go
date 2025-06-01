@@ -254,10 +254,12 @@ func (h *APIHandler) RefreshUserAttempts(w http.ResponseWriter, r *http.Request)
 	response := struct {
 		Username     string       `json:"username"`
 		AttemptedIDs map[int]bool `json:"attemptedIds"`
+		Scores       map[int]int  `json:"scores"`
 		Success      bool         `json:"success"`
 	}{
 		Username:     request.Username,
 		AttemptedIDs: attempts.AttemptedIDs,
+		Scores:       attempts.Scores,
 		Success:      true,
 	}
 

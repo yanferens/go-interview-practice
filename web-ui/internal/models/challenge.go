@@ -37,6 +37,7 @@ type ScoreboardEntry struct {
 type UserAttemptedChallenges struct {
 	Username     string       `json:"username"`
 	AttemptedIDs map[int]bool `json:"attemptedIds"`
+	Scores       map[int]int  `json:"scores"` // Scores (0-100) for each attempted challenge
 }
 
 // ChallengeMap is a type alias for the challenges map
