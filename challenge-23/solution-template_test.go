@@ -86,7 +86,7 @@ func TestRabinKarpSearch(t *testing.T) {
 		{"Both empty", "", "", []int{}},
 		{"Pattern longer than text", "ABC", "ABCDEF", []int{}},
 		{"Pattern is the entire text", "ABCDEF", "ABCDEF", []int{0}},
-		{"Large text", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi.", "sit", []int{17}},
+		{"Large text", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi.", "sit", []int{18}},
 	}
 
 	for _, tt := range tests {
