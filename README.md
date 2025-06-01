@@ -47,7 +47,7 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 
 | Rank | 👤 Developer | 🎯 Challenges Solved | 📊 Completion Rate | 🏅 Achievement |
 |------|-------------|---------------------|-------------------|----------------|
-| **1** | **RezaSi** | **11** / 28 | 39.3% | 💪 **Advanced** |
+| **1** | **RezaSi** | **12** / 28 | 42.9% | 💪 **Advanced** |
 | **2** | **AliNazariii** | **4** / 28 | 14.3% | 🌱 **Beginner** |
 
 *Updated automatically based on 28 available challenges*
@@ -56,7 +56,7 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 
 - **Total Challenges Available**: 28
 - **Active Developers**: 2
-- **Most Challenges Solved**: 11 by RezaSi
+- **Most Challenges Solved**: 12 by RezaSi
 
 ---
 
