@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"web-ui/internal/models"
 	"web-ui/internal/services"
@@ -98,8 +99,19 @@ func (h *WebHandler) ChallengePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get username and existing solution
+	// Get username from cookie first
 	username := h.getUsernameFromCookie(r)
+
+	// If no username from cookie, try to get it from Git config
+	if username == "" {
+		gitInfo := utils.GetGitUsername()
+		if gitInfo.Username != "" {
+			username = gitInfo.Username
+			// Set the cookie for future requests
+			h.setUsernameCookie(w, username)
+		}
+	}
+
 	existingSolution := ""
 	hasAttempted := false
 
@@ -211,4 +223,18 @@ func (h *WebHandler) getUsernameFromCookie(r *http.Request) string {
 		return ""
 	}
 	return cookie.Value
+}
+
+// setUsernameCookie sets the username cookie
+func (h *WebHandler) setUsernameCookie(w http.ResponseWriter, username string) {
+	// Cookie expires in 30 days
+	expiration := time.Now().Add(30 * 24 * time.Hour)
+	cookie := http.Cookie{
+		Name:     "username",
+		Value:    username,
+		Expires:  expiration,
+		Path:     "/",
+		HttpOnly: false, // Allow JavaScript to access it
+	}
+	http.SetCookie(w, &cookie)
 }
