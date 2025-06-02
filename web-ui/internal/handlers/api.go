@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
@@ -9,6 +11,7 @@ import (
 
 	"web-ui/internal/models"
 	"web-ui/internal/services"
+	"web-ui/internal/utils"
 )
 
 // APIHandler handles all API endpoints
@@ -267,6 +270,31 @@ func (h *APIHandler) RefreshUserAttempts(w http.ResponseWriter, r *http.Request)
 	json.NewEncoder(w).Encode(response)
 }
 
+// GetGitUsername returns the username extracted from git configuration
+func (h *APIHandler) GetGitUsername(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	gitInfo := utils.GetGitUsername()
+
+	response := struct {
+		Username string `json:"username"`
+		Email    string `json:"email"`
+		Source   string `json:"source"`
+		Success  bool   `json:"success"`
+	}{
+		Username: gitInfo.Username,
+		Email:    gitInfo.Email,
+		Source:   gitInfo.Source,
+		Success:  gitInfo.Username != "",
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
 // setUsernameCookie sets the username cookie
 func (h *APIHandler) setUsernameCookie(w http.ResponseWriter, username string) {
 	// Cookie expires in 30 days
@@ -279,4 +307,104 @@ func (h *APIHandler) setUsernameCookie(w http.ResponseWriter, username string) {
 		HttpOnly: false, // Allow JavaScript to access it
 	}
 	http.SetCookie(w, &cookie)
+}
+
+// GetMainScoreboardRank returns the user's rank in the main scoreboard
+func (h *APIHandler) GetMainScoreboardRank(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	username := r.URL.Query().Get("username")
+	if username == "" {
+		http.Error(w, "Username parameter required", http.StatusBadRequest)
+		return
+	}
+
+	// Calculate user's rank in main scoreboard
+	rank := h.calculateMainScoreboardRank(username)
+
+	response := struct {
+		Username string `json:"username"`
+		Rank     int    `json:"rank"`
+		Success  bool   `json:"success"`
+	}{
+		Username: username,
+		Rank:     rank,
+		Success:  true,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+// calculateMainScoreboardRank calculates the user's rank based on completed challenges
+func (h *APIHandler) calculateMainScoreboardRank(username string) int {
+	// Get all users and their completion counts (only count if ALL tests passed)
+	challenges := h.challengeService.GetChallenges()
+	userCompletions := make(map[string]int)
+
+	// Process all challenge scoreboards to count actual completions
+	for challengeID := range challenges {
+		// Read scoreboard file directly to check test results
+		scoreboardPath := fmt.Sprintf("../challenge-%d/SCOREBOARD.md", challengeID)
+		content, err := ioutil.ReadFile(scoreboardPath)
+		if err != nil {
+			// Try alternative path
+			scoreboardPath = fmt.Sprintf("challenge-%d/SCOREBOARD.md", challengeID)
+			content, err = ioutil.ReadFile(scoreboardPath)
+			if err != nil {
+				continue
+			}
+		}
+
+		// Parse scoreboard to find users who passed ALL tests
+		lines := strings.Split(string(content), "\n")
+		for _, line := range lines {
+			// Skip header and separator lines
+			if !strings.Contains(line, "|") || strings.Contains(line, "Username") || strings.Contains(line, "---") {
+				continue
+			}
+
+			parts := strings.Split(line, "|")
+			if len(parts) < 4 {
+				continue
+			}
+
+			username := strings.TrimSpace(parts[1])
+			passedTestsStr := strings.TrimSpace(parts[2])
+			totalTestsStr := strings.TrimSpace(parts[3])
+
+			// Skip empty usernames or placeholders
+			if username == "" || username == "------" {
+				continue
+			}
+
+			// Parse test counts
+			passedTests, err1 := strconv.Atoi(passedTestsStr)
+			totalTests, err2 := strconv.Atoi(totalTestsStr)
+
+			// Only count as completed if ALL tests passed
+			if err1 == nil && err2 == nil && passedTests > 0 && passedTests == totalTests {
+				userCompletions[username]++
+			}
+		}
+	}
+
+	// Get the target user's completion count
+	targetCompletions := userCompletions[username]
+	if targetCompletions == 0 {
+		return 0 // User is unranked
+	}
+
+	// Count how many users have more completions (following Python script logic)
+	rank := 1
+	for user, completions := range userCompletions {
+		if user != username && completions > targetCompletions {
+			rank++
+		}
+	}
+
+	return rank
 }

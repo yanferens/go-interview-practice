@@ -56,10 +56,6 @@
                 <h2 class="mb-0">Challenge Library</h2>
             </div>
             <div class="d-flex gap-2">
-                <button id="refresh-attempts" class="btn btn-sm btn-outline-primary me-2">
-                    <span class="spinner-border spinner-border-sm d-none" id="refresh-spinner"></span>
-                    <span id="refresh-text">Refresh Attempts</span>
-                </button>
                 <div class="btn-group" role="group">
                     <button class="btn btn-sm btn-outline-secondary active" id="filter-all">All</button>
                     <button class="btn btn-sm btn-outline-success" id="filter-beginner">Beginner</button>
@@ -116,14 +112,16 @@
         const challengeItems = document.querySelectorAll('.challenge-item');
         const sortSelect = document.getElementById('sort-select');
         const challengesContainer = document.getElementById('challenges-container');
-        const refreshButton = document.getElementById('refresh-attempts');
-        const refreshSpinner = document.getElementById('refresh-spinner');
-        const refreshText = document.getElementById('refresh-text');
         const usernameInput = document.getElementById('username');
 
         // Auto-refresh attempts on page load if username is set
         function autoRefreshAttempts() {
-            const username = usernameInput?.value;
+            // Get username from either input field or profile component
+            let username = usernameInput?.value;
+            if (!username) {
+                const profileUsername = document.getElementById('profile-username');
+                username = profileUsername?.textContent;
+            }
             
             if (!username) {
                 return;
@@ -143,48 +141,7 @@
             .then(data => {
                 console.log("API Response:", data); // Debug logging
                 if (data.success) {
-                    // Reset all cards first
-                    challengeItems.forEach(item => {
-                        const id = parseInt(item.getAttribute('data-id'));
-                        const card = item.querySelector('.card');
-                        
-                        // Remove existing attempt markers
-                        item.setAttribute('data-attempted', 'false');
-                        card.classList.remove('attempted-challenge', 'attempted-challenge-full', 'attempted-challenge-partial');
-                    });
-                    
-                    // Add attempt markers for attempted challenges
-                    Object.keys(data.attemptedIds).forEach(id => {
-                        if (data.attemptedIds[id]) {
-                            const item = document.querySelector(`.challenge-item[data-id="${id}"]`);
-                            if (item) {
-                                // Mark as attempted
-                                item.setAttribute('data-attempted', 'true');
-                                const card = item.querySelector('.card');
-                                
-                                // Apply appropriate class based on score
-                                console.log(`Challenge ${id}: score = ${data.scores ? data.scores[id] : 'undefined'}`); // Debug logging
-                                if (data.scores && data.scores[id] !== undefined) {
-                                    const score = data.scores[id];
-                                    console.log(`Applying score-based class for challenge ${id}, score: ${score}`); // Debug logging
-                                    if (score === 100) {
-                                        card.classList.add('attempted-challenge-full');
-                                        console.log(`Added full class for challenge ${id}`);
-                                    } else if (score >= 40) {
-                                        card.classList.add('attempted-challenge-partial');
-                                        console.log(`Added partial class for challenge ${id}`);
-                                    } else {
-                                        card.classList.add('attempted-challenge');
-                                        console.log(`Added basic class for challenge ${id}`);
-                                    }
-                                } else {
-                                    // Fallback when no score data
-                                    console.log(`No score data for challenge ${id}, using fallback`);
-                                    card.classList.add('attempted-challenge');
-                                }
-                            }
-                        }
-                    });
+                    updateChallengeDisplay(data);
                 }
             })
             .catch(error => {
@@ -192,106 +149,64 @@
             });
         }
         
-        // Run auto-refresh after short delay
-        setTimeout(autoRefreshAttempts, 500);
-        
-        // Handle refresh attempts button
-        if (refreshButton) {
-            refreshButton.addEventListener('click', function() {
-                const username = document.getElementById('username')?.value;
+        // Function to update challenge display (shared between auto-refresh and manual refresh)
+        function updateChallengeDisplay(data) {
+            // Reset all cards first
+            challengeItems.forEach(item => {
+                const id = parseInt(item.getAttribute('data-id'));
+                const card = item.querySelector('.card');
                 
-                if (!username) {
-                    alert('Please enter your GitHub username first');
-                    return;
-                }
-                
-                // Disable button and show spinner
-                refreshButton.disabled = true;
-                refreshSpinner.classList.remove('d-none');
-                refreshText.textContent = 'Refreshing...';
-                
-                // Call API to refresh attempts
-                fetch('/api/refresh-attempts', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        username: username
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("API Response:", data); // Debug logging
-                    if (data.success) {
-                        // Update UI to reflect new attempts
-                        console.log("Refreshed attempts:", data.attemptedIds);
-                        
-                        // Reset all cards first
-                        challengeItems.forEach(item => {
-                            const id = parseInt(item.getAttribute('data-id'));
-                            const card = item.querySelector('.card');
-                            
-                            // Remove existing attempt markers
-                            item.setAttribute('data-attempted', 'false');
-                            card.classList.remove('attempted-challenge', 'attempted-challenge-full', 'attempted-challenge-partial');
-                        });
-                        
-                        // Add attempt markers for attempted challenges
-                        Object.keys(data.attemptedIds).forEach(id => {
-                            if (data.attemptedIds[id]) {
-                                const item = document.querySelector(`.challenge-item[data-id="${id}"]`);
-                                if (item) {
-                                    // Mark as attempted
-                                    item.setAttribute('data-attempted', 'true');
-                                    const card = item.querySelector('.card');
-                                    
-                                    // Apply appropriate class based on score
-                                    console.log(`Challenge ${id}: score = ${data.scores ? data.scores[id] : 'undefined'}`); // Debug logging
-                                    if (data.scores && data.scores[id] !== undefined) {
-                                        const score = data.scores[id];
-                                        console.log(`Applying score-based class for challenge ${id}, score: ${score}`); // Debug logging
-                                        if (score === 100) {
-                                            card.classList.add('attempted-challenge-full');
-                                            console.log(`Added full class for challenge ${id}`);
-                                        } else if (score >= 40) {
-                                            card.classList.add('attempted-challenge-partial');
-                                            console.log(`Added partial class for challenge ${id}`);
-                                        } else {
-                                            card.classList.add('attempted-challenge');
-                                            console.log(`Added basic class for challenge ${id}`);
-                                        }
-                                    } else {
-                                        // Fallback when no score data
-                                        console.log(`No score data for challenge ${id}, using fallback`);
-                                        card.classList.add('attempted-challenge');
-                                    }
-                                }
-                            }
-                        });
-                        
-                        // Show success message
-                        alert('Successfully refreshed your attempted challenges');
-                    } else {
-                        alert('Failed to refresh attempts');
-                    }
-                    
-                    // Re-enable button and hide spinner
-                    refreshButton.disabled = false;
-                    refreshSpinner.classList.add('d-none');
-                    refreshText.textContent = 'Refresh Attempts';
-                })
-                .catch(error => {
-                    console.error("Error refreshing attempts:", error);
-                    alert('Error refreshing attempts. Please try again.');
-                    
-                    // Re-enable button and hide spinner
-                    refreshButton.disabled = false;
-                    refreshSpinner.classList.add('d-none');
-                    refreshText.textContent = 'Refresh Attempts';
-                });
+                // Remove existing attempt markers
+                item.setAttribute('data-attempted', 'false');
+                card.classList.remove('attempted-challenge', 'attempted-challenge-full', 'attempted-challenge-partial');
             });
+            
+            // Add attempt markers for attempted challenges
+            Object.keys(data.attemptedIds).forEach(id => {
+                if (data.attemptedIds[id]) {
+                    const item = document.querySelector(`.challenge-item[data-id="${id}"]`);
+                    if (item) {
+                        // Mark as attempted
+                        item.setAttribute('data-attempted', 'true');
+                        const card = item.querySelector('.card');
+                        
+                        // Apply appropriate class based on score
+                        console.log(`Challenge ${id}: score = ${data.scores ? data.scores[id] : 'undefined'}`); // Debug logging
+                        if (data.scores && data.scores[id] !== undefined) {
+                            const score = data.scores[id];
+                            console.log(`Applying score-based class for challenge ${id}, score: ${score}`); // Debug logging
+                            if (score === 100) {
+                                card.classList.add('attempted-challenge-full');
+                                console.log(`Added full class for challenge ${id}`);
+                            } else if (score >= 40) {
+                                card.classList.add('attempted-challenge-partial');
+                                console.log(`Added partial class for challenge ${id}`);
+                            } else {
+                                card.classList.add('attempted-challenge');
+                                console.log(`Added basic class for challenge ${id}`);
+                            }
+                        } else {
+                            // Fallback when no score data
+                            console.log(`No score data for challenge ${id}, using fallback`);
+                            card.classList.add('attempted-challenge');
+                        }
+                    }
+                }
+            });
+            
+            // Update profile statistics if the function is available (from base.html)
+            if (typeof window.updateProfileStatistics === 'function') {
+                window.updateProfileStatistics(data.attemptedIds, data.scores || {});
+            }
         }
+        
+        // Make autoRefreshAttempts and updateChallengeDisplay available globally
+        // so base.html can call them
+        window.autoRefreshAttempts = autoRefreshAttempts;
+        window.updateChallengeDisplay = updateChallengeDisplay;
+        
+        // Run auto-refresh after short delay to ensure DOM is ready
+        setTimeout(autoRefreshAttempts, 1000);
 
         // Sort challenges by default by difficulty
         sortChallenges('difficulty');
