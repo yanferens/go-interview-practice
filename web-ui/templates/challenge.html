@@ -18,16 +18,16 @@
                 <span class="badge bg-primary badge-{{.Challenge.Difficulty | lower}}">{{.Challenge.Difficulty}}</span>
             </div>
             <div class="card-body">
-                <div class="markdown-content" id="challenge-description"></div>
-                
                 {{if .HasAttempted}}
-                <div class="alert alert-success mt-3">
+                <div class="alert alert-success mb-3">
                     <i class="bi bi-check-circle-fill"></i> You've previously attempted this challenge.
                     {{if .ExistingSolution}}
                     <br>Your existing solution has been loaded in the editor.
                     {{end}}
                 </div>
                 {{end}}
+                
+                <div class="markdown-content" id="challenge-description"></div>
             </div>
         </div>
     </div>
