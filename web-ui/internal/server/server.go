@@ -69,6 +69,7 @@ func (s *Server) SetupRoutes() *http.ServeMux {
 	mux.HandleFunc("/api/refresh-attempts", apiHandler.RefreshUserAttempts)
 	mux.HandleFunc("/api/git-username", apiHandler.GetGitUsername)
 	mux.HandleFunc("/api/main-scoreboard-rank", apiHandler.GetMainScoreboardRank)
+	mux.HandleFunc("/api/main-leaderboard", apiHandler.GetMainLeaderboard)
 
 	// Web routes
 	mux.HandleFunc("/", webHandler.HomePage)

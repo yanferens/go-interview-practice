@@ -408,3 +408,136 @@ func (h *APIHandler) calculateMainScoreboardRank(username string) int {
 
 	return rank
 }
+
+// GetMainLeaderboard returns the main leaderboard data
+func (h *APIHandler) GetMainLeaderboard(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Calculate leaderboard data
+	leaderboard := h.calculateMainLeaderboard()
+
+	response := struct {
+		Leaderboard []LeaderboardUser `json:"leaderboard"`
+		Success     bool              `json:"success"`
+	}{
+		Leaderboard: leaderboard,
+		Success:     true,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+// LeaderboardUser represents a user in the leaderboard
+type LeaderboardUser struct {
+	Username            string       `json:"username"`
+	CompletedCount      int          `json:"completedCount"`
+	CompletionRate      float64      `json:"completionRate"`
+	CompletedChallenges map[int]bool `json:"completedChallenges"`
+	Achievement         string       `json:"achievement"`
+	Rank                int          `json:"rank"`
+}
+
+// calculateMainLeaderboard calculates the main leaderboard data
+func (h *APIHandler) calculateMainLeaderboard() []LeaderboardUser {
+	challenges := h.challengeService.GetChallenges()
+	totalChallenges := len(challenges)
+	userCompletions := make(map[string]map[int]bool)
+
+	// Process all challenge scoreboards to find completions
+	for challengeID := range challenges {
+		// Read scoreboard file directly to check test results
+		scoreboardPath := fmt.Sprintf("../challenge-%d/SCOREBOARD.md", challengeID)
+		content, err := ioutil.ReadFile(scoreboardPath)
+		if err != nil {
+			// Try alternative path
+			scoreboardPath = fmt.Sprintf("challenge-%d/SCOREBOARD.md", challengeID)
+			content, err = ioutil.ReadFile(scoreboardPath)
+			if err != nil {
+				continue
+			}
+		}
+
+		// Parse scoreboard to find users who passed ALL tests
+		lines := strings.Split(string(content), "\n")
+		for _, line := range lines {
+			// Skip header and separator lines
+			if !strings.Contains(line, "|") || strings.Contains(line, "Username") || strings.Contains(line, "---") {
+				continue
+			}
+
+			parts := strings.Split(line, "|")
+			if len(parts) < 4 {
+				continue
+			}
+
+			username := strings.TrimSpace(parts[1])
+			passedTestsStr := strings.TrimSpace(parts[2])
+			totalTestsStr := strings.TrimSpace(parts[3])
+
+			// Skip empty usernames or placeholders
+			if username == "" || username == "------" {
+				continue
+			}
+
+			// Parse test counts
+			passedTests, err1 := strconv.Atoi(passedTestsStr)
+			totalTests, err2 := strconv.Atoi(totalTestsStr)
+
+			// Only count as completed if ALL tests passed
+			if err1 == nil && err2 == nil && passedTests > 0 && passedTests == totalTests {
+				if userCompletions[username] == nil {
+					userCompletions[username] = make(map[int]bool)
+				}
+				userCompletions[username][challengeID] = true
+			}
+		}
+	}
+
+	// Convert to leaderboard format
+	var leaderboard []LeaderboardUser
+	for username, completions := range userCompletions {
+		completedCount := len(completions)
+		completionRate := float64(completedCount) / float64(totalChallenges) * 100
+
+		// Determine achievement
+		achievement := "🌱 Beginner"
+		if completedCount >= 20 {
+			achievement = "🔥 Master"
+		} else if completedCount >= 15 {
+			achievement = "⭐ Expert"
+		} else if completedCount >= 10 {
+			achievement = "💪 Advanced"
+		} else if completedCount >= 5 {
+			achievement = "🚀 Intermediate"
+		}
+
+		leaderboard = append(leaderboard, LeaderboardUser{
+			Username:            username,
+			CompletedCount:      completedCount,
+			CompletionRate:      completionRate,
+			CompletedChallenges: completions,
+			Achievement:         achievement,
+		})
+	}
+
+	// Sort by completion count (descending), then by username
+	for i := 0; i < len(leaderboard); i++ {
+		for j := i + 1; j < len(leaderboard); j++ {
+			if leaderboard[j].CompletedCount > leaderboard[i].CompletedCount ||
+				(leaderboard[j].CompletedCount == leaderboard[i].CompletedCount && leaderboard[j].Username < leaderboard[i].Username) {
+				leaderboard[i], leaderboard[j] = leaderboard[j], leaderboard[i]
+			}
+		}
+	}
+
+	// Assign ranks
+	for i := range leaderboard {
+		leaderboard[i].Rank = i + 1
+	}
+
+	return leaderboard
+}
