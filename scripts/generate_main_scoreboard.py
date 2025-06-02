@@ -137,6 +137,8 @@ def generate_main_scoreboard():
         "",
         "Our most accomplished Go developers, ranked by number of challenges completed:",
         "",
+        "> 📝 **Note**: The data below is automatically updated by GitHub Actions when challenge scoreboards change.",
+        "",
         "| Rank | 👤 Developer | 🎯 Challenges Solved | 📊 Completion Rate | 🏅 Achievement |",
         "|------|-------------|---------------------|-------------------|----------------|"
     ]

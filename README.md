@@ -54,7 +54,7 @@ Our comprehensive web interface provides everything you need to practice and mas
 
 Our most accomplished Go developers, ranked by number of challenges completed:
 
-> 📝 **Note**: The data below is automatically updated by GitHub Actions when challenge scoreboards change. The image above shows the visual interface design.
+> 📝 **Note**: The data below is automatically updated by GitHub Actions when challenge scoreboards change.
 
 | Rank | 👤 Developer | 🎯 Challenges Solved | 📊 Completion Rate | 🏅 Achievement |
 |------|-------------|---------------------|-------------------|----------------|
