@@ -41,9 +41,20 @@ Our comprehensive web interface provides everything you need to practice and mas
 
 ---
 
+### 🏆 **Competitive Leaderboard**
+
+<div align="center">
+  <img src="./images/scoreboard.png" alt="Go Interview Practice - Main Leaderboard" width="90%">
+  <p><em>🏅 Beautiful leaderboard showcasing top developers with challenge completion indicators, rankings, and achievements</em></p>
+</div>
+
+---
+
 ## 🏆 **Top 10 Leaderboard**
 
 Our most accomplished Go developers, ranked by number of challenges completed:
+
+> 📝 **Note**: The data below is automatically updated by GitHub Actions when challenge scoreboards change. The image above shows the visual interface design.
 
 | Rank | 👤 Developer | 🎯 Challenges Solved | 📊 Completion Rate | 🏅 Achievement |
 |------|-------------|---------------------|-------------------|----------------|
