@@ -45,6 +45,11 @@
                         <a class="nav-link" id="results-tab" data-bs-toggle="tab" href="#results" role="tab">Results</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" id="scoreboard-tab" data-bs-toggle="tab" href="#scoreboard" role="tab">
+                            <i class="bi bi-trophy me-1"></i>Scoreboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" id="learning-tab" data-bs-toggle="tab" href="#learning" role="tab">Learning Materials</a>
                     </li>
                 </ul>
@@ -60,6 +65,34 @@
                     <div class="tab-pane fade" id="results" role="tabpanel">
                         <div id="test-results" class="p-3">
                             <div class="alert alert-info">Run your code to see test results.</div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="scoreboard" role="tabpanel">
+                        <div id="scoreboard-content" class="p-3">
+                            <div class="text-center mb-4">
+                                <div class="mb-3">
+                                    <i class="bi bi-trophy" style="font-size: 2.5rem; color: #ffd700;"></i>
+                                </div>
+                                <h5 class="mb-2">Challenge {{.Challenge.ID}} Scoreboard</h5>
+                                <p class="text-muted mb-3">Developers who solved this challenge</p>
+                            </div>
+
+                            <!-- Mini Scoreboard -->
+                            <div id="mini-scoreboard-container">
+                                <div class="text-center py-4" id="loading-mini-scoreboard">
+                                    <div class="spinner-border text-primary mb-2" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="text-muted small">Loading participants...</p>
+                                </div>
+                            </div>
+
+                            <!-- View Full Scoreboard Button -->
+                            <div class="text-center mt-4">
+                                <a href="/scoreboard/{{.Challenge.ID}}" class="btn btn-primary">
+                                    <i class="bi bi-eye me-2"></i>View Full Scoreboard
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="learning" role="tabpanel">
@@ -120,7 +153,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize Markdown for description
         const descriptionElement = document.getElementById('challenge-description');
-        renderMarkdown(challengeData.description, descriptionElement);
+        renderMarkdownAndCleanup(challengeData.description, descriptionElement);
 
         // Initialize Markdown for learning materials
         const learningElement = document.getElementById('learning-materials');
@@ -288,6 +321,136 @@
         const submitSpinner = document.getElementById('submit-spinner');
         const submitText = document.getElementById('submit-text');
         
+        // Handle Scoreboard tab loading
+        const scoreboardTab = document.getElementById('scoreboard-tab');
+        let scoreboardLoaded = false;
+        
+        if (scoreboardTab) {
+            scoreboardTab.addEventListener('click', function() {
+                if (!scoreboardLoaded) {
+                    loadMiniScoreboard();
+                    scoreboardLoaded = true;
+                }
+            });
+        }
+        
+        function loadMiniScoreboard() {
+            const container = document.getElementById('mini-scoreboard-container');
+            const loadingDiv = document.getElementById('loading-mini-scoreboard');
+            
+            // Fetch scoreboard data
+            fetch(`/api/scoreboard/${challengeData.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    loadingDiv.style.display = 'none';
+                    
+                    if (data.length === 0) {
+                        container.innerHTML = `
+                            <div class="text-center py-4">
+                                <i class="bi bi-trophy-fill text-muted" style="font-size: 2rem;"></i>
+                                <p class="text-muted mt-2 mb-0">No submissions yet</p>
+                                <small class="text-muted">Be the first to solve this challenge!</small>
+                            </div>
+                        `;
+                    } else {
+                        let scoreboardHtml = `
+                            <div class="mb-3">
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="text-primary">
+                                            <i class="bi bi-people-fill"></i>
+                                        </div>
+                                        <div class="fw-bold">${data.length}</div>
+                                        <small class="text-muted">Participants</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-success">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                        </div>
+                                        <div class="fw-bold">100%</div>
+                                        <small class="text-muted">Success Rate</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-warning">
+                                            <i class="bi bi-speedometer2"></i>
+                                        </div>
+                                        <div class="fw-bold">${challengeData.difficulty || 'Medium'}</div>
+                                        <small class="text-muted">Difficulty</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border rounded">
+                        `;
+                        
+                        // Show top 5 participants
+                        const topParticipants = data.slice(0, 5);
+                        topParticipants.forEach((participant, index) => {
+                            const rank = index + 1;
+                            let rankBadge = '';
+                            
+                            if (rank === 1) rankBadge = '🥇';
+                            else if (rank === 2) rankBadge = '🥈';
+                            else if (rank === 3) rankBadge = '🥉';
+                            else rankBadge = `#${rank}`;
+                            
+                            const borderClass = index < topParticipants.length - 1 ? 'border-bottom' : '';
+                            
+                            scoreboardHtml += `
+                                <div class="p-3 ${borderClass}">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3 text-center" style="min-width: 40px;">
+                                            <span class="badge bg-primary">${rankBadge}</span>
+                                        </div>
+                                        <img src="https://github.com/${participant.username}.png" 
+                                             class="rounded-circle me-3" 
+                                             style="width: 32px; height: 32px;" 
+                                             alt="${participant.username}">
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">${participant.username}</div>
+                                            <small class="text-muted">${formatDate(participant.submittedAt)}</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge bg-success">SOLVED</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        
+                        scoreboardHtml += '</div>';
+                        
+                        if (data.length > 5) {
+                            scoreboardHtml += `
+                                <div class="text-center mt-3">
+                                    <small class="text-muted">... and ${data.length - 5} more participants</small>
+                                </div>
+                            `;
+                        }
+                        
+                        container.innerHTML = scoreboardHtml;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading mini scoreboard:', error);
+                    loadingDiv.style.display = 'none';
+                    container.innerHTML = `
+                        <div class="text-center py-4">
+                            <i class="bi bi-exclamation-triangle text-warning" style="font-size: 2rem;"></i>
+                            <p class="text-muted mt-2 mb-0">Error loading scoreboard</p>
+                            <small class="text-muted">Please try refreshing the page</small>
+                        </div>
+                    `;
+                });
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
         submitButton.addEventListener('click', function() {
             const code = editor.getValue();
             const username = document.getElementById('username').value;
@@ -461,6 +624,27 @@ $ git push origin main</code></pre>
             });
         });
         
+        // Enhanced renderMarkdown function that cleans up scoreboard links
+        function renderMarkdownAndCleanup(markdownText, targetElement) {
+            if (!markdownText || !targetElement) return;
+            
+            // Clean up scoreboard-related content from the markdown
+            let cleanedMarkdown = markdownText
+                // Remove "View the Scoreboard" links (case insensitive)
+                .replace(/\[view\s+the\s+scoreboard\]/gi, '')
+                .replace(/\(\s*scoreboard\.md\s*\)/gi, '')
+                // Remove standalone scoreboard references
+                .replace(/^.*scoreboard\.md.*$/gmi, '')
+                // Remove empty lines that might be left behind
+                .replace(/\n\s*\n\s*\n/g, '\n\n')
+                // Clean up any remaining scoreboard links
+                .replace(/\[.*?scoreboard.*?\]\(.*?\)/gi, '')
+                .trim();
+            
+            // Use the existing renderMarkdown function
+            renderMarkdown(cleanedMarkdown, targetElement);
+        }
+
         // Helper function to escape HTML
         function escapeHtml(unsafe) {
             return unsafe

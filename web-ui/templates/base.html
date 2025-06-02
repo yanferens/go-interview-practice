@@ -738,10 +738,10 @@
                             <span class="loading-text">Detecting username...</span>
                         </div>
                         <div class="username-input-container" id="username-input-container" style="display: none;">
-                            <input type="text" id="username" class="form-control me-2 has-help" placeholder="GitHub Username">
-                            <i class="bi bi-question-circle username-help-icon" id="username-help-icon"></i>
-                            <div class="username-help-tooltip" id="username-help-tooltip">
-                                <i class="bi bi-lightbulb me-1"></i>Enter your GitHub username to track progress
+                        <input type="text" id="username" class="form-control me-2 has-help" placeholder="GitHub Username">
+                        <i class="bi bi-question-circle username-help-icon" id="username-help-icon"></i>
+                        <div class="username-help-tooltip" id="username-help-tooltip">
+                            <i class="bi bi-lightbulb me-1"></i>Enter your GitHub username to track progress
                             </div>
                         </div>
                     </div>
@@ -885,7 +885,7 @@
                     // Start with loading state
                     showLoading('Detecting username...');
                     
-                    let savedUsername = '';
+                let savedUsername = '';
                     let source = 'manual';
                     
                     // First try to get from git configuration
@@ -907,30 +907,30 @@
                     // If no git username found, check for cookie
                     if (!savedUsername) {
                         showLoading('Checking saved username...');
-                        const cookies = document.cookie.split(';');
-                        for (let i = 0; i < cookies.length; i++) {
-                            const cookie = cookies[i].trim();
-                            if (cookie.startsWith('username=')) {
-                                savedUsername = cookie.substring('username='.length);
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith('username=')) {
+                        savedUsername = cookie.substring('username='.length);
                                 source = 'cookie';
-                                break;
+                        break;
                             }
-                        }
                     }
-                    
-                    // If no cookie, check localStorage
-                    if (!savedUsername) {
-                        savedUsername = localStorage.getItem('githubUsername');
+                }
+                
+                // If no cookie, check localStorage
+                if (!savedUsername) {
+                    savedUsername = localStorage.getItem('githubUsername');
                         if (savedUsername) {
                             source = 'localStorage';
                         }
-                    }
+                }
                     
                     // Small delay for better UX (avoid flashing)
                     await new Promise(resolve => setTimeout(resolve, 500));
-                    
-                    if (savedUsername) {
-                        usernameInput.value = savedUsername;
+                
+                if (savedUsername) {
+                    usernameInput.value = savedUsername;
                         showProfile(savedUsername, source);
                     } else {
                         showInput();
