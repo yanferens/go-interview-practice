@@ -56,20 +56,16 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 
 > 📝 **Note**: The data below is automatically updated by GitHub Actions when challenge scoreboards change.
 
-<div align="center">
-
-| 🏅 | 👤 **Developer** | 🎯 **Solved** | 📊 **Rate** | 🏅 **Achievement** | 📈 **Progress** |
-|:---:|:---|:---:|:---:|:---:|:---|
-| 🥇 | <img src="https://github.com/RezaSi.png" width="32" height="32" style="border-radius: 50%;"> **[RezaSi](https://github.com/RezaSi)** | **12**/28 | **42.9%** | 💪 **Advanced** | 🟢🟢🟢⚫🟢🟢⚫⚫⚫🟢⚫⚫⚫⚫⚫ |
-| 🥈 | <img src="https://github.com/AliNazariii.png" width="32" height="32" style="border-radius: 50%;"> **[AliNazariii](https://github.com/AliNazariii)** | **4**/28 | **14.3%** | 🌱 **Beginner** | 🟢🟢🟢🟢⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫ |
-
-</div>
+| 🏅 | Developer | Solved | Rate | Achievement | Progress |
+|:---:|:---:|:---:|:---:|:---:|:---|
+| 🥇 | <img src="https://github.com/RezaSi.png" width="24" height="24" style="border-radius: 50%;"><br/>**[RezaSi](https://github.com/RezaSi)** | **12**/28 | **42.9%** | 💪 Advanced | ✅✅✅⬜✅✅⬜⬜⬜✅⬜⬜⬜⬜<br/>⬜⬜✅✅✅⬜✅✅✅⬜⬜⬜⬜⬜ |
+| 🥈 | <img src="https://github.com/AliNazariii.png" width="24" height="24" style="border-radius: 50%;"><br/>**[AliNazariii](https://github.com/AliNazariii)** | **4**/28 | **14.3%** | 🌱 Beginner | ✅✅✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 
 <div align="center">
 
-🟢 **Completed** • ⚫ **Not Completed**
+✅ Completed • ⬜ Not Completed
 
-*🎯 Showing first 15 challenges out of 28 total*
+*All 28 challenges shown in two rows*
 
 </div>
 

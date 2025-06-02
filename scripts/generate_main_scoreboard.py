@@ -177,12 +177,10 @@ def generate_html_leaderboard(top_users, total_challenges, challenge_dirs):
     # Get list of challenge numbers for indicators
     challenge_numbers = sorted([int(d.name.replace('challenge-', '')) for d in challenge_dirs])
     
-    # Start with the table header
+    # Start with the table header - simple markdown format
     markdown_lines = [
-        '<div align="center">',
-        '',
-        '| 🏅 | 👤 **Developer** | 🎯 **Solved** | 📊 **Rate** | 🏅 **Achievement** | 📈 **Progress** |',
-        '|:---:|:---|:---:|:---:|:---:|:---|'
+        '| 🏅 | Developer | Solved | Rate | Achievement | Progress |',
+        '|:---:|:---:|:---:|:---:|:---:|:---|'
     ]
     
     for i, (username, data) in enumerate(top_users, 1):
@@ -191,15 +189,15 @@ def generate_html_leaderboard(top_users, total_challenges, challenge_dirs):
         
         # Determine achievement badge
         if count >= 20:
-            achievement = "🔥 **Master**"
+            achievement = "🔥 Master"
         elif count >= 15:
-            achievement = "⭐ **Expert**"
+            achievement = "⭐ Expert"
         elif count >= 10:
-            achievement = "💪 **Advanced**"
+            achievement = "💪 Advanced"
         elif count >= 5:
-            achievement = "🚀 **Intermediate**"
+            achievement = "🚀 Intermediate"
         else:
-            achievement = "🌱 **Beginner**"
+            achievement = "🌱 Beginner"
         
         # Rank badge with medal emojis
         if i == 1:
@@ -209,27 +207,41 @@ def generate_html_leaderboard(top_users, total_challenges, challenge_dirs):
         elif i == 3:
             rank_badge = "🥉"
         else:
-            rank_badge = f"**{i}**"
+            rank_badge = f"{i}"
         
-        # Generate challenge indicators (limit to avoid too long lines)
+        # Generate challenge indicators - show all challenges in two rows
         completed_challenges = {ch['num'] for ch in data['challenges']}
-        indicators = ""
         
-        # Show first 15 challenges to avoid overwhelming the table
-        display_challenges = challenge_numbers[:15]
-        for ch_num in display_challenges:
+        # Split challenges into two rows for better display
+        first_half = challenge_numbers[:14]  # First 14 challenges
+        second_half = challenge_numbers[14:] # Remaining challenges
+        
+        # First row indicators
+        first_row = ""
+        for ch_num in first_half:
             if ch_num in completed_challenges:
-                indicators += "🟢"
+                first_row += "✅"
             else:
-                indicators += "⚫"
+                first_row += "⬜"
         
-        # Create developer profile with avatar and link
-        profile_cell = f'<img src="https://github.com/{username}.png" width="32" height="32" style="border-radius: 50%;"> **[{username}](https://github.com/{username})**'
+        # Second row indicators  
+        second_row = ""
+        for ch_num in second_half:
+            if ch_num in completed_challenges:
+                second_row += "✅"
+            else:
+                second_row += "⬜"
         
-        # Create solved count with emphasis
+        # Combine both rows with line break
+        indicators = f"{first_row}<br/>{second_row}"
+        
+        # Create simple profile with GitHub avatar - centered
+        profile_cell = f'<img src="https://github.com/{username}.png" width="24" height="24" style="border-radius: 50%;"><br/>**[{username}](https://github.com/{username})**'
+        
+        # Create solved count
         solved_cell = f"**{count}**/{total_challenges}"
         
-        # Create completion rate with color
+        # Create completion rate
         rate_cell = f"**{completion_rate}**"
         
         # Add row to table
@@ -237,16 +249,14 @@ def generate_html_leaderboard(top_users, total_challenges, challenge_dirs):
             f"| {rank_badge} | {profile_cell} | {solved_cell} | {rate_cell} | {achievement} | {indicators} |"
         )
     
-    # Close the table and add legend
+    # Add centered legend
     markdown_lines.extend([
-        '',
-        '</div>',
         '',
         '<div align="center">',
         '',
-        '🟢 **Completed** • ⚫ **Not Completed**',
+        '✅ Completed • ⬜ Not Completed',
         '',
-        f'*🎯 Showing first 15 challenges out of {total_challenges} total*',
+        f'*All {total_challenges} challenges shown in two rows*',
         '',
         '</div>'
     ])
