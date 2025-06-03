@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"web-ui/internal/models"
@@ -69,9 +70,13 @@ func (es *ExecutionService) RunCode(code string, challenge *models.Challenge) Ex
 		}
 	}
 
-	// Install dependencies for challenge 14 (gRPC)
-	if challenge.ID == 14 {
-		es.installGRPCDependencies(tempDir)
+	// Automatically detect and install dependencies based on imports
+	err = es.installDependencies(tempDir, code, challenge.ID)
+	if err != nil {
+		return ExecutionResult{
+			Passed: false,
+			Output: fmt.Sprintf("Failed to install dependencies: %v", err),
+		}
 	}
 
 	// Run tests
@@ -112,20 +117,162 @@ func (es *ExecutionService) initGoModule(tempDir string, challengeID int) error 
 	return cmd.Run()
 }
 
-// installGRPCDependencies installs gRPC dependencies for challenge 14
-func (es *ExecutionService) installGRPCDependencies(tempDir string) {
-	// Install gRPC packages
-	grpcCmd := exec.Command("go", "get", "google.golang.org/grpc")
-	grpcCmd.Dir = tempDir
-	grpcCmd.Run() // Ignore errors, just try
+// installDependencies installs dependencies for the given challenge
+func (es *ExecutionService) installDependencies(tempDir string, code string, challengeID int) error {
+	// Detect imports from the code
+	requiredPackages := es.detectRequiredPackages(code, challengeID)
 
-	codesCmd := exec.Command("go", "get", "google.golang.org/grpc/codes")
-	codesCmd.Dir = tempDir
-	codesCmd.Run() // Ignore errors, just try
+	if len(requiredPackages) == 0 {
+		return nil // No external dependencies needed
+	}
 
-	statusCmd := exec.Command("go", "get", "google.golang.org/grpc/status")
-	statusCmd.Dir = tempDir
-	statusCmd.Run() // Ignore errors, just try
+	// Install each required package
+	for _, pkg := range requiredPackages {
+		fmt.Printf("Installing dependency: %s\n", pkg)
+		cmd := exec.Command("go", "get", pkg)
+		cmd.Dir = tempDir
+
+		output, err := cmd.CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("failed to install package %s: %v\nOutput: %s", pkg, err, string(output))
+		}
+	}
+
+	// Run go mod tidy to clean up dependencies
+	tidyCmd := exec.Command("go", "mod", "tidy")
+	tidyCmd.Dir = tempDir
+	tidyCmd.Run() // Ignore errors for tidy
+
+	return nil
+}
+
+// detectRequiredPackages analyzes the code to detect required external packages
+func (es *ExecutionService) detectRequiredPackages(code string, challengeID int) []string {
+	packages := make(map[string]bool)
+
+	// Common package mappings for known dependencies
+	knownPackages := map[string][]string{
+		"github.com/mattn/go-sqlite3": {"github.com/mattn/go-sqlite3"},
+		"database/sql":                {"github.com/mattn/go-sqlite3"}, // SQLite driver needed for database/sql
+		"google.golang.org/grpc":      {"google.golang.org/grpc", "google.golang.org/grpc/codes", "google.golang.org/grpc/status"},
+		"github.com/google/uuid":      {"github.com/google/uuid"},
+		"github.com/gorilla/mux":      {"github.com/gorilla/mux"},
+		"github.com/gin-gonic/gin":    {"github.com/gin-gonic/gin"},
+		"github.com/stretchr/testify": {"github.com/stretchr/testify"},
+		"go.mongodb.org/mongo-driver": {"go.mongodb.org/mongo-driver/mongo", "go.mongodb.org/mongo-driver/bson"},
+		"github.com/redis/go-redis":   {"github.com/redis/go-redis/v9"},
+		"gorm.io/gorm":                {"gorm.io/gorm", "gorm.io/driver/sqlite"},
+	}
+
+	// Challenge-specific package requirements
+	challengePackages := map[int][]string{
+		13: {"github.com/mattn/go-sqlite3"},                                                             // SQL Database Operations
+		14: {"google.golang.org/grpc", "google.golang.org/grpc/codes", "google.golang.org/grpc/status"}, // gRPC
+		9:  {"github.com/google/uuid"},                                                                  // RESTful API with UUID
+	}
+
+	// Add challenge-specific packages
+	if challengePkgs, exists := challengePackages[challengeID]; exists {
+		for _, pkg := range challengePkgs {
+			packages[pkg] = true
+		}
+	}
+
+	// Scan code for import statements
+	lines := strings.Split(code, "\n")
+	inImportBlock := false
+
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+
+		// Handle import blocks
+		if strings.HasPrefix(line, "import (") {
+			inImportBlock = true
+			continue
+		}
+		if inImportBlock && line == ")" {
+			inImportBlock = false
+			continue
+		}
+
+		// Handle single import statements
+		if strings.HasPrefix(line, "import ") || inImportBlock {
+			// Extract import path
+			importPath := es.extractImportPath(line)
+			if importPath != "" {
+				// Check if this import requires external packages
+				if deps, exists := knownPackages[importPath]; exists {
+					for _, dep := range deps {
+						packages[dep] = true
+					}
+				} else if es.isExternalPackage(importPath) {
+					packages[importPath] = true
+				}
+			}
+		}
+	}
+
+	// Convert map to slice
+	result := make([]string, 0, len(packages))
+	for pkg := range packages {
+		result = append(result, pkg)
+	}
+
+	return result
+}
+
+// extractImportPath extracts the import path from an import line
+func (es *ExecutionService) extractImportPath(line string) string {
+	// Remove 'import' keyword
+	line = strings.TrimPrefix(line, "import")
+	line = strings.TrimSpace(line)
+
+	// Remove quotes and comments
+	if strings.Contains(line, "\"") {
+		parts := strings.Split(line, "\"")
+		if len(parts) >= 2 {
+			return parts[1]
+		}
+	}
+
+	return ""
+}
+
+// isExternalPackage determines if an import path is an external package
+func (es *ExecutionService) isExternalPackage(importPath string) bool {
+	// Standard library packages (don't need go get)
+	standardLibs := map[string]bool{
+		"fmt": true, "strings": true, "strconv": true, "time": true,
+		"os": true, "io": true, "bufio": true, "bytes": true,
+		"encoding/json": true, "encoding/xml": true, "encoding/csv": true,
+		"net/http": true, "net/url": true, "net": true,
+		"database/sql": true, "context": true, "sync": true,
+		"regexp": true, "sort": true, "math": true, "crypto": true,
+		"log": true, "errors": true, "flag": true, "path": true,
+		"path/filepath": true, "testing": true, "reflect": true,
+	}
+
+	// Check if it's a standard library package
+	if standardLibs[importPath] {
+		return false
+	}
+
+	// Check if it starts with standard library prefixes
+	standardPrefixes := []string{
+		"crypto/", "encoding/", "net/", "os/", "path/",
+		"text/", "html/", "image/", "go/", "runtime/",
+		"unicode/", "mime/", "archive/", "compress/",
+		"container/", "debug/", "index/", "internal/",
+	}
+
+	for _, prefix := range standardPrefixes {
+		if strings.HasPrefix(importPath, prefix) {
+			return false
+		}
+	}
+
+	// If it contains a dot, it's likely an external package
+	return strings.Contains(importPath, ".")
 }
 
 // SaveSubmissionRequest represents a request to save a submission to filesystem

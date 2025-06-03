@@ -1,183 +1,479 @@
 package main
 
 import (
+	"context"
+	"errors"
+	"fmt"
+	"sync"
 	"testing"
+	"time"
 )
 
-func TestCountCharacters(t *testing.T) {
-	tests := []struct {
-		name     string
-		text     string
-		expected int
-	}{
-		{"Empty string", "", 0},
-		{"Single word", "Go", 2},
-		{"Multiple words", "Go is awesome", 12},
-		{"With newlines", "Go\nis\nawesome", 12},
-		{"With punctuation", "Hello, World!", 13},
-		{"Complex text", "The Go programming language is an open source project to make programmers more productive.", 90},
+// Test helper functions and mocks
+type mockOperation struct {
+	shouldFail bool
+	delay      time.Duration
+	callCount  int
+	mutex      sync.Mutex
+}
+
+func (m *mockOperation) execute() (interface{}, error) {
+	m.mutex.Lock()
+	m.callCount++
+	m.mutex.Unlock()
+
+	if m.delay > 0 {
+		time.Sleep(m.delay)
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result := CountCharacters(tt.text)
-			if result != tt.expected {
-				t.Errorf("CountCharacters(%q) = %d, expected %d", tt.text, result, tt.expected)
+	if m.shouldFail {
+		return nil, errors.New("operation failed")
+	}
+	return "success", nil
+}
+
+func (m *mockOperation) getCallCount() int {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	return m.callCount
+}
+
+func (m *mockOperation) reset() {
+	m.mutex.Lock()
+	m.callCount = 0
+	m.mutex.Unlock()
+}
+
+// Basic functionality tests
+func TestNewCircuitBreaker(t *testing.T) {
+	config := Config{
+		MaxRequests: 3,
+		Interval:    time.Minute,
+		Timeout:     30 * time.Second,
+		ReadyToTrip: func(m Metrics) bool {
+			return m.ConsecutiveFailures >= 5
+		},
+	}
+
+	cb := NewCircuitBreaker(config)
+	if cb == nil {
+		t.Fatal("NewCircuitBreaker should return a non-nil circuit breaker")
+	}
+
+	if cb.GetState() != StateClosed {
+		t.Errorf("Expected initial state to be Closed, got %v", cb.GetState())
+	}
+
+	metrics := cb.GetMetrics()
+	if metrics.Requests != 0 || metrics.Successes != 0 || metrics.Failures != 0 {
+		t.Errorf("Expected initial metrics to be zero, got %+v", metrics)
+	}
+}
+
+func TestCircuitBreakerDefaults(t *testing.T) {
+	// Test with empty config to verify defaults
+	cb := NewCircuitBreaker(Config{})
+	if cb == nil {
+		t.Fatal("NewCircuitBreaker should handle empty config with defaults")
+	}
+}
+
+func TestSuccessfulOperations(t *testing.T) {
+	config := Config{
+		MaxRequests: 3,
+		Timeout:     100 * time.Millisecond,
+		ReadyToTrip: func(m Metrics) bool {
+			return m.ConsecutiveFailures >= 3
+		},
+	}
+
+	cb := NewCircuitBreaker(config)
+	ctx := context.Background()
+	op := &mockOperation{shouldFail: false}
+
+	// Execute successful operations
+	for i := 0; i < 5; i++ {
+		result, err := cb.Call(ctx, op.execute)
+		if err != nil {
+			t.Errorf("Expected no error for successful operation, got %v", err)
+		}
+		if result != "success" {
+			t.Errorf("Expected result 'success', got %v", result)
+		}
+	}
+
+	// Verify state remains closed
+	if cb.GetState() != StateClosed {
+		t.Errorf("State should remain Closed after successful operations, got %v", cb.GetState())
+	}
+
+	// Verify metrics
+	metrics := cb.GetMetrics()
+	if metrics.Requests != 5 || metrics.Successes != 5 || metrics.Failures != 0 {
+		t.Errorf("Expected 5 requests, 5 successes, 0 failures, got %+v", metrics)
+	}
+}
+
+func TestCircuitOpening(t *testing.T) {
+	config := Config{
+		MaxRequests: 3,
+		Timeout:     100 * time.Millisecond,
+		ReadyToTrip: func(m Metrics) bool {
+			return m.ConsecutiveFailures >= 3
+		},
+	}
+
+	cb := NewCircuitBreaker(config)
+	ctx := context.Background()
+	op := &mockOperation{shouldFail: true}
+
+	// Execute failing operations to trip the circuit
+	for i := 0; i < 3; i++ {
+		result, err := cb.Call(ctx, op.execute)
+		if result != nil {
+			t.Errorf("Expected nil result for failed operation, got %v", result)
+		}
+		// The actual error might be the operation error or wrapped
+	}
+
+	// Circuit should be open now
+	if cb.GetState() != StateOpen {
+		t.Errorf("Expected state to be Open after consecutive failures, got %v", cb.GetState())
+	}
+
+	// Verify metrics
+	metrics := cb.GetMetrics()
+	if metrics.ConsecutiveFailures < 3 {
+		t.Errorf("Expected at least 3 consecutive failures, got %d", metrics.ConsecutiveFailures)
+	}
+}
+
+func TestFastFailWhenOpen(t *testing.T) {
+	config := Config{
+		MaxRequests: 3,
+		Timeout:     200 * time.Millisecond,
+		ReadyToTrip: func(m Metrics) bool {
+			return m.ConsecutiveFailures >= 2
+		},
+	}
+
+	cb := NewCircuitBreaker(config)
+	ctx := context.Background()
+	op := &mockOperation{shouldFail: true}
+
+	// Trip the circuit
+	for i := 0; i < 2; i++ {
+		cb.Call(ctx, op.execute)
+	}
+
+	// Verify circuit is open
+	if cb.GetState() != StateOpen {
+		t.Errorf("Expected state to be Open, got %v", cb.GetState())
+	}
+
+	op.reset()
+	startTime := time.Now()
+
+	// This should fail fast without calling the operation
+	result, err := cb.Call(ctx, op.execute)
+	elapsed := time.Since(startTime)
+
+	if err == nil {
+		t.Error("Expected error when circuit is open")
+	}
+	if result != nil {
+		t.Errorf("Expected nil result when circuit is open, got %v", result)
+	}
+	if elapsed > 10*time.Millisecond {
+		t.Errorf("Expected fast fail, but took %v", elapsed)
+	}
+	if op.getCallCount() > 0 {
+		t.Error("Operation should not be called when circuit is open")
+	}
+}
+
+func TestHalfOpenTransition(t *testing.T) {
+	config := Config{
+		MaxRequests: 2,
+		Timeout:     50 * time.Millisecond,
+		ReadyToTrip: func(m Metrics) bool {
+			return m.ConsecutiveFailures >= 2
+		},
+	}
+
+	cb := NewCircuitBreaker(config)
+	ctx := context.Background()
+	op := &mockOperation{shouldFail: true}
+
+	// Trip the circuit
+	for i := 0; i < 2; i++ {
+		cb.Call(ctx, op.execute)
+	}
+
+	// Verify circuit is open
+	if cb.GetState() != StateOpen {
+		t.Errorf("Expected state to be Open, got %v", cb.GetState())
+	}
+
+	// Wait for timeout to elapse
+	time.Sleep(60 * time.Millisecond)
+
+	// Next call should transition to half-open
+	op.shouldFail = false // Make operation succeed
+	result, err := cb.Call(ctx, op.execute)
+
+	// The state should be either half-open (during execution) or closed (after success)
+	state := cb.GetState()
+	if state != StateHalfOpen && state != StateClosed {
+		t.Errorf("Expected state to be HalfOpen or Closed after timeout, got %v", state)
+	}
+
+	if err != nil {
+		t.Errorf("Expected successful operation in half-open state, got error: %v", err)
+	}
+	if result != "success" {
+		t.Errorf("Expected 'success' result, got %v", result)
+	}
+}
+
+func TestHalfOpenToClosedTransition(t *testing.T) {
+	config := Config{
+		MaxRequests: 2,
+		Timeout:     50 * time.Millisecond,
+		ReadyToTrip: func(m Metrics) bool {
+			return m.ConsecutiveFailures >= 2
+		},
+	}
+
+	cb := NewCircuitBreaker(config)
+	ctx := context.Background()
+	op := &mockOperation{shouldFail: true}
+
+	// Trip the circuit
+	for i := 0; i < 2; i++ {
+		cb.Call(ctx, op.execute)
+	}
+
+	// Wait for timeout
+	time.Sleep(60 * time.Millisecond)
+
+	// Make operation succeed to close the circuit
+	op.shouldFail = false
+	cb.Call(ctx, op.execute)
+
+	// Circuit should be closed after successful operation in half-open state
+	if cb.GetState() != StateClosed {
+		t.Errorf("Expected state to be Closed after successful half-open operation, got %v", cb.GetState())
+	}
+}
+
+func TestHalfOpenToOpenTransition(t *testing.T) {
+	config := Config{
+		MaxRequests: 2,
+		Timeout:     50 * time.Millisecond,
+		ReadyToTrip: func(m Metrics) bool {
+			return m.ConsecutiveFailures >= 2
+		},
+	}
+
+	cb := NewCircuitBreaker(config)
+	ctx := context.Background()
+	op := &mockOperation{shouldFail: true}
+
+	// Trip the circuit
+	for i := 0; i < 2; i++ {
+		cb.Call(ctx, op.execute)
+	}
+
+	// Wait for timeout
+	time.Sleep(60 * time.Millisecond)
+
+	// Keep operation failing - should go back to open
+	cb.Call(ctx, op.execute)
+
+	// Circuit should be open again after failed operation in half-open state
+	if cb.GetState() != StateOpen {
+		t.Errorf("Expected state to be Open after failed half-open operation, got %v", cb.GetState())
+	}
+}
+
+func TestMaxRequestsInHalfOpen(t *testing.T) {
+	config := Config{
+		MaxRequests: 2,
+		Timeout:     50 * time.Millisecond,
+		ReadyToTrip: func(m Metrics) bool {
+			return m.ConsecutiveFailures >= 2
+		},
+	}
+
+	cb := NewCircuitBreaker(config)
+	ctx := context.Background()
+	op := &mockOperation{shouldFail: true, delay: 100 * time.Millisecond}
+
+	// Trip the circuit
+	for i := 0; i < 2; i++ {
+		cb.Call(ctx, op.execute)
+	}
+
+	// Wait for timeout
+	time.Sleep(60 * time.Millisecond)
+
+	// Start multiple concurrent requests in half-open state
+	var wg sync.WaitGroup
+	results := make([]error, 5)
+
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+		go func(index int) {
+			defer wg.Done()
+			_, err := cb.Call(ctx, op.execute)
+			results[index] = err
+		}(i)
+	}
+
+	wg.Wait()
+
+	// Some requests should be rejected due to MaxRequests limit
+	rejectedCount := 0
+	for _, err := range results {
+		if err != nil && err.Error() == ErrTooManyRequests.Error() {
+			rejectedCount++
+		}
+	}
+
+	if rejectedCount == 0 {
+		t.Error("Expected some requests to be rejected due to MaxRequests limit in half-open state")
+	}
+}
+
+func TestConcurrentAccess(t *testing.T) {
+	config := Config{
+		MaxRequests: 10,
+		Timeout:     100 * time.Millisecond,
+		ReadyToTrip: func(m Metrics) bool {
+			return m.ConsecutiveFailures >= 5
+		},
+	}
+
+	cb := NewCircuitBreaker(config)
+	ctx := context.Background()
+
+	var wg sync.WaitGroup
+	numGoroutines := 100
+	numCallsPerGoroutine := 10
+
+	for i := 0; i < numGoroutines; i++ {
+		wg.Add(1)
+		go func(shouldFail bool) {
+			defer wg.Done()
+			op := &mockOperation{shouldFail: shouldFail}
+			for j := 0; j < numCallsPerGoroutine; j++ {
+				cb.Call(ctx, op.execute)
 			}
-		})
+		}(i%2 == 0) // Half succeed, half fail
+	}
+
+	wg.Wait()
+
+	// Verify metrics consistency
+	metrics := cb.GetMetrics()
+	if metrics.Requests != metrics.Successes+metrics.Failures {
+		t.Errorf("Inconsistent metrics: requests=%d, successes=%d, failures=%d",
+			metrics.Requests, metrics.Successes, metrics.Failures)
 	}
 }
 
-func TestCountWords(t *testing.T) {
-	tests := []struct {
-		name     string
-		text     string
-		expected int
-	}{
-		{"Empty string", "", 0},
-		{"Single word", "Go", 1},
-		{"Multiple words", "Go is awesome", 3},
-		{"With newlines", "Go\nis\nawesome", 3},
-		{"With punctuation", "Hello, World!", 2},
-		{"Multiple spaces", "This   has   multiple   spaces", 4},
-		{"Complex text", "The Go programming language is an open source project to make programmers more productive.", 14},
+func TestStateChangeCallback(t *testing.T) {
+	var stateChanges []string
+	config := Config{
+		MaxRequests: 2,
+		Timeout:     50 * time.Millisecond,
+		ReadyToTrip: func(m Metrics) bool {
+			return m.ConsecutiveFailures >= 2
+		},
+		OnStateChange: func(name string, from State, to State) {
+			stateChanges = append(stateChanges, fmt.Sprintf("%s->%s", from, to))
+		},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result := CountWords(tt.text)
-			if result != tt.expected {
-				t.Errorf("CountWords(%q) = %d, expected %d", tt.text, result, tt.expected)
-			}
-		})
-	}
-}
+	cb := NewCircuitBreaker(config)
+	ctx := context.Background()
+	op := &mockOperation{shouldFail: true}
 
-func TestCountLines(t *testing.T) {
-	tests := []struct {
-		name     string
-		text     string
-		expected int
-	}{
-		{"Empty string", "", 1},
-		{"Single line", "Go is awesome", 1},
-		{"Two lines", "Go is awesome\nGo is cool", 2},
-		{"Three lines", "Go\nis\nawesome", 3},
-		{"Trailing newline", "Go is awesome\n", 2},
-		{"Multiple newlines", "Go\n\nis\n\nawesome", 5},
-		{"Complex text", "The Go programming language is an open source project to make programmers more productive.\n\nGo is expressive, concise, clean, and efficient.", 3},
+	// Trip the circuit (should trigger Closed->Open)
+	for i := 0; i < 2; i++ {
+		cb.Call(ctx, op.execute)
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result := CountLines(tt.text)
-			if result != tt.expected {
-				t.Errorf("CountLines(%q) = %d, expected %d", tt.text, result, tt.expected)
-			}
-		})
+	// Wait for timeout and make successful call (should trigger Open->HalfOpen->Closed)
+	time.Sleep(60 * time.Millisecond)
+	op.shouldFail = false
+	cb.Call(ctx, op.execute)
+
+	// Verify state change callbacks were called
+	if len(stateChanges) == 0 {
+		t.Error("Expected state change callbacks to be called")
 	}
 }
 
-func TestCountWordOccurrences(t *testing.T) {
-	tests := []struct {
-		name     string
-		text     string
-		word     string
-		expected int
-	}{
-		{"Empty string", "", "go", 0},
-		{"Word not found", "Hello, World!", "go", 0},
-		{"Single occurrence", "Go is awesome", "go", 1},
-		{"Multiple occurrences", "Go is cool. I love Go. Let's Go!", "go", 3},
-		{"Case insensitive", "GO is not the same as go or Go or gO", "go", 4},
-		{"Word boundaries", "Golang is not the same as Go language", "go", 1},
-		{"Complex text with multiple occurrences", "The Go programming language is an open source project. Go is expressive and Go is efficient.", "go", 3},
+func TestContextCancellation(t *testing.T) {
+	config := Config{
+		ReadyToTrip: func(m Metrics) bool {
+			return false // Never trip
+		},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result := CountWordOccurrences(tt.text, tt.word)
-			if result != tt.expected {
-				t.Errorf("CountWordOccurrences(%q, %q) = %d, expected %d", tt.text, tt.word, result, tt.expected)
-			}
-		})
+	cb := NewCircuitBreaker(config)
+	ctx, cancel := context.WithCancel(context.Background())
+
+	// Cancel context immediately
+	cancel()
+
+	op := &mockOperation{shouldFail: false, delay: 100 * time.Millisecond}
+	result, err := cb.Call(ctx, op.execute)
+
+	// Should respect context cancellation
+	if err == nil {
+		t.Error("Expected error due to context cancellation")
 	}
-}
-
-func TestWithExampleText(t *testing.T) {
-	// First example from the challenge description
-	example1 := `Go is an open source programming language that makes it easy to build
-simple, reliable, and efficient software.`
-
-	if count := CountCharacters(example1); count != 107 {
-		t.Errorf("CountCharacters on example 1 = %d, expected 107", count)
-	}
-
-	if count := CountWords(example1); count != 17 {
-		t.Errorf("CountWords on example 1 = %d, expected 17", count)
-	}
-
-	if count := CountLines(example1); count != 2 {
-		t.Errorf("CountLines on example 1 = %d, expected 2", count)
-	}
-
-	if count := CountWordOccurrences(example1, "go"); count != 1 {
-		t.Errorf("CountWordOccurrences(example1, \"go\") = %d, expected 1", count)
-	}
-
-	// Second example from the challenge description
-	example2 := `The Go programming language is an open source project to make programmers more productive.
-
-Go is expressive, concise, clean, and efficient. Its concurrency mechanisms make it easy to
-write programs that get the most out of multicore and networked machines, while its novel type
-system enables flexible and modular program construction.`
-
-	if count := CountCharacters(example2); count != 313 {
-		t.Errorf("CountCharacters on example 2 = %d, expected 313", count)
-	}
-
-	if count := CountWords(example2); count != 52 {
-		t.Errorf("CountWords on example 2 = %d, expected 52", count)
-	}
-
-	if count := CountLines(example2); count != 4 {
-		t.Errorf("CountLines on example 2 = %d, expected 4", count)
-	}
-
-	if count := CountWordOccurrences(example2, "go"); count != 3 {
-		t.Errorf("CountWordOccurrences(example2, \"go\") = %d, expected 3", count)
+	if result != nil {
+		t.Errorf("Expected nil result due to context cancellation, got %v", result)
 	}
 }
 
-func TestSampleFile(t *testing.T) {
-	// Create a sample file in memory
-	sampleFile := `This is a sample text file.
-It has multiple lines.
-We can count characters, words, and lines.
-Go is a great programming language to work with text.
-Go makes string processing easy and efficient.
-`
+func TestMetricsAccuracy(t *testing.T) {
+	config := Config{
+		ReadyToTrip: func(m Metrics) bool {
+			return false // Never trip to test metrics in closed state
+		},
+	}
 
-	// Test all functions with the sample file
-	t.Run("Sample file tests", func(t *testing.T) {
-		if count := CountCharacters(sampleFile); count != 187 {
-			t.Errorf("CountCharacters = %d, expected 187", count)
-		}
+	cb := NewCircuitBreaker(config)
+	ctx := context.Background()
 
-		if count := CountWords(sampleFile); count != 34 {
-			t.Errorf("CountWords = %d, expected 34", count)
-		}
+	// Execute 5 successful operations
+	successOp := &mockOperation{shouldFail: false}
+	for i := 0; i < 5; i++ {
+		cb.Call(ctx, successOp.execute)
+	}
 
-		if count := CountLines(sampleFile); count != 6 {
-			t.Errorf("CountLines = %d, expected 6", count)
-		}
+	// Execute 3 failed operations
+	failOp := &mockOperation{shouldFail: true}
+	for i := 0; i < 3; i++ {
+		cb.Call(ctx, failOp.execute)
+	}
 
-		if count := CountWordOccurrences(sampleFile, "go"); count != 2 {
-			t.Errorf("CountWordOccurrences(\"go\") = %d, expected 2", count)
-		}
-
-		if count := CountWordOccurrences(sampleFile, "line"); count != 2 {
-			t.Errorf("CountWordOccurrences(\"line\") = %d, expected 2", count)
-		}
-	})
+	metrics := cb.GetMetrics()
+	if metrics.Requests != 8 {
+		t.Errorf("Expected 8 total requests, got %d", metrics.Requests)
+	}
+	if metrics.Successes != 5 {
+		t.Errorf("Expected 5 successes, got %d", metrics.Successes)
+	}
+	if metrics.Failures != 3 {
+		t.Errorf("Expected 3 failures, got %d", metrics.Failures)
+	}
+	if metrics.ConsecutiveFailures != 3 {
+		t.Errorf("Expected 3 consecutive failures, got %d", metrics.ConsecutiveFailures)
+	}
 }

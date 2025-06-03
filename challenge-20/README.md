@@ -1,78 +1,113 @@
 [View the Scoreboard](SCOREBOARD.md)
 
-# Challenge 20: File Counter
+# Challenge 20: Circuit Breaker Pattern
 
 ## Problem Statement
 
-Write a program that reads a text file and counts the occurrences of various statistics:
+Implement the **Circuit Breaker Pattern** to build resilient systems that can handle failures gracefully. A circuit breaker monitors calls to external services and prevents cascading failures when those services become unavailable.
 
-1. The total number of characters
-2. The total number of words
-3. The total number of lines
-4. The occurrences of a specific word (case-insensitive)
+The circuit breaker has three states:
+- **Closed**: Normal operation, requests pass through
+- **Open**: Service is failing, requests are blocked and fail fast
+- **Half-Open**: Testing if service has recovered
 
-You'll implement the following functions:
+You'll implement a flexible circuit breaker that can wrap any function call and provide automatic failure detection and recovery.
 
 ## Function Signatures
 
 ```go
-func CountCharacters(text string) int
-func CountWords(text string) int
-func CountLines(text string) int
-func CountWordOccurrences(text string, word string) int
+type CircuitBreaker interface {
+    Call(ctx context.Context, operation func() (interface{}, error)) (interface{}, error)
+    GetState() State
+    GetMetrics() Metrics
+}
+
+type State int
+const (
+    StateClosed State = iota
+    StateOpen
+    StateHalfOpen
+)
+
+type Metrics struct {
+    Requests          int64
+    Successes         int64
+    Failures          int64
+    ConsecutiveFailures int64
+    LastFailureTime     time.Time
+}
+
+func NewCircuitBreaker(config Config) CircuitBreaker
 ```
 
-## Input Format
+## Configuration
 
-- For all functions, a string `text` containing the file contents.
-- For `CountWordOccurrences`, an additional string `word` to count.
-
-## Output Format
-
-- For all functions, an integer representing the count.
+```go
+type Config struct {
+    MaxRequests      uint32        // Max requests allowed in half-open state
+    Interval         time.Duration // Statistical window for closed state
+    Timeout          time.Duration // Time to wait before half-open
+    ReadyToTrip      func(Metrics) bool // Function to determine when to trip
+    OnStateChange    func(name string, from State, to State) // State change callback
+}
+```
 
 ## Requirements
 
-1. `CountCharacters` should count all characters in the text, including whitespace and punctuation.
-2. `CountWords` should count all words separated by whitespace.
-3. `CountLines` should count all lines in the text (separated by newline characters).
-4. `CountWordOccurrences` should count how many times a specific word appears in the text, ignoring case.
+### 1. State Management
+- **Closed → Open**: When `ReadyToTrip` returns true
+- **Open → Half-Open**: After `Timeout` duration
+- **Half-Open → Closed**: When operation succeeds
+- **Half-Open → Open**: When operation fails
 
-## Sample Input and Output
+### 2. Request Handling
+- **Closed**: Allow all requests, track metrics
+- **Open**: Reject requests immediately with `ErrCircuitBreakerOpen`
+- **Half-Open**: Allow up to `MaxRequests`, then decide state
 
-### Sample Input 1
+### 3. Metrics Tracking
+- Count total requests, successes, failures
+- Track consecutive failures
+- Record last failure time
+- Reset metrics when transitioning to closed state
 
+## Sample Usage
+
+```go
+// Create circuit breaker for external API calls
+cb := NewCircuitBreaker(Config{
+    MaxRequests: 3,
+    Interval:    time.Minute,
+    Timeout:     30 * time.Second,
+    ReadyToTrip: func(m Metrics) bool {
+        return m.ConsecutiveFailures >= 5
+    },
+})
+
+// Use circuit breaker to wrap API calls
+result, err := cb.Call(ctx, func() (interface{}, error) {
+    return httpClient.Get("https://api.example.com/data")
+})
 ```
-Go is an open source programming language that makes it easy to build
-simple, reliable, and efficient software.
-```
 
-### Sample Output 1
+## Test Scenarios
 
-```
-CountCharacters: 107
-CountWords: 17
-CountLines: 2
-CountWordOccurrences("go"): 1
-```
+Your implementation will be tested with:
 
-### Sample Input 2
+1. **Normal Operation**: Circuit remains closed for successful calls
+2. **Failure Detection**: Circuit opens after consecutive failures
+3. **Fast Fail**: Requests fail immediately when circuit is open
+4. **Recovery Testing**: Circuit transitions to half-open after timeout
+5. **Full Recovery**: Circuit closes after successful half-open requests
+6. **Concurrent Safety**: Multiple goroutines using the same circuit breaker
 
-```
-The Go programming language is an open source project to make programmers more productive.
+## Error Types
 
-Go is expressive, concise, clean, and efficient. Its concurrency mechanisms make it easy to
-write programs that get the most out of multicore and networked machines, while its novel type
-system enables flexible and modular program construction.
-```
-
-### Sample Output 2
-
-```
-CountCharacters: 313
-CountWords: 52
-CountLines: 4
-CountWordOccurrences("go"): 3
+```go
+var (
+    ErrCircuitBreakerOpen    = errors.New("circuit breaker is open")
+    ErrTooManyRequests      = errors.New("too many requests in half-open state")
+)
 ```
 
 ## Instructions
@@ -81,7 +116,7 @@ CountWordOccurrences("go"): 3
 - **Clone** your fork to your local machine.
 - **Create** a directory named after your GitHub username inside `challenge-20/submissions/`.
 - **Copy** the `solution-template.go` file into your submission directory.
-- **Implement** the required functions.
+- **Implement** the Circuit Breaker pattern with all required functionality.
 - **Test** your solution locally by running the test file.
 - **Commit** and **push** your code to your fork.
 - **Create** a pull request to submit your solution.
@@ -91,5 +126,14 @@ CountWordOccurrences("go"): 3
 Run the following command in the `challenge-20/` directory:
 
 ```bash
-go test -v
-``` 
+go test -v -race
+```
+
+## Difficulty: 🔶 Intermediate
+
+This challenge tests your understanding of:
+- Design patterns for resilience
+- State management and concurrency
+- Error handling strategies
+- Metrics collection
+- Thread-safe programming 
