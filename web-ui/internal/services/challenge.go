@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"web-ui/internal/models"
 )
@@ -97,7 +98,7 @@ func (cs *ChallengeService) loadSingleChallenge(id int, dir string) (*models.Cha
 	challenge := &models.Challenge{
 		ID:                id,
 		Title:             title,
-		Description:       string(readmeContent),
+		Description:       cs.filterWebUIDescription(string(readmeContent)),
 		Difficulty:        difficulty,
 		Template:          string(templateContent),
 		TestFile:          string(testContent),
@@ -132,6 +133,42 @@ func (cs *ChallengeService) determineDifficulty(id int) string {
 	default:
 		return "Advanced"
 	}
+}
+
+// filterWebUIDescription removes manual instructions that are not relevant for web-ui users
+func (cs *ChallengeService) filterWebUIDescription(content string) string {
+	lines := strings.Split(content, "\n")
+	var filteredLines []string
+	skipSection := false
+
+	for _, line := range lines {
+		trimmedLine := strings.TrimSpace(line)
+
+		// Check if we're starting a section to skip
+		if strings.HasPrefix(trimmedLine, "## Instructions") ||
+			strings.HasPrefix(trimmedLine, "## Testing Your Solution Locally") ||
+			(strings.HasPrefix(trimmedLine, "## ") && strings.Contains(strings.ToLower(trimmedLine), "testing") && strings.Contains(strings.ToLower(trimmedLine), "locally")) {
+			skipSection = true
+			continue
+		}
+
+		// Check if we're starting a new section (stop skipping)
+		if skipSection && strings.HasPrefix(trimmedLine, "## ") {
+			skipSection = false
+		}
+
+		// Add line if we're not skipping
+		if !skipSection {
+			filteredLines = append(filteredLines, line)
+		}
+	}
+
+	// Clean up extra blank lines at the end
+	for len(filteredLines) > 0 && strings.TrimSpace(filteredLines[len(filteredLines)-1]) == "" {
+		filteredLines = filteredLines[:len(filteredLines)-1]
+	}
+
+	return strings.Join(filteredLines, "\n")
 }
 
 // GetChallenges returns all challenges
