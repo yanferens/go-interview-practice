@@ -497,24 +497,84 @@
                     
                     // Add file system submission instructions
                     outputHtml += `<div class="alert alert-info mb-3">
-                        <h5>Complete Your Submission:</h5>
+                        <h5>🚀 Next Steps: Create a Pull Request</h5>
+                        <p class="mb-3">To contribute your solution to the project and appear on the public scoreboard, follow these steps:</p>
+                        
                         <div class="d-flex gap-2 mb-3">
-                            <button class="btn btn-primary" id="save-filesystem-btn">Save to Filesystem</button>
-                            <button class="btn btn-secondary" id="copy-commands-btn">Copy Commands</button>
+                            <button class="btn btn-primary" id="save-filesystem-btn">💾 Save to Filesystem</button>
+                            <button class="btn btn-secondary" id="copy-commands-btn">📋 Copy Git Commands</button>
                         </div>
-                        <p>Manual commands to save your solution and create a pull request:</p>
-                        <div class="bg-dark text-light p-3 rounded">
-                            <pre><code>$ ./create_submission.sh ${challengeData.id}
+                        
+                        <div class="accordion" id="submissionAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#step1" aria-expanded="true">
+                                        <strong>Step 1: Save Your Solution Locally</strong>
+                                    </button>
+                                </h2>
+                                <div id="step1" class="accordion-collapse collapse show" data-bs-parent="#submissionAccordion">
+                                    <div class="accordion-body">
+                                        <p>Click "💾 Save to Filesystem" above, or run these commands manually:</p>
+                                        <div class="bg-dark text-light p-3 rounded">
+                                            <pre><code>$ ./create_submission.sh ${challengeData.id}
 $ cd challenge-${challengeData.id}/submissions/${username}/
 $ cat > solution-template.go << 'EOL'
 ${escapeHtml(code)}
-EOL
-$ cd ../../../
+EOL</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step2">
+                                        <strong>Step 2: Commit and Push to Your Fork</strong>
+                                    </button>
+                                </h2>
+                                <div id="step2" class="accordion-collapse collapse" data-bs-parent="#submissionAccordion">
+                                    <div class="accordion-body">
+                                        <p>Run these Git commands to save your changes to your forked repository:</p>
+                                        <div class="bg-dark text-light p-3 rounded">
+                                            <pre><code>$ cd ../../../
 $ git add challenge-${challengeData.id}/submissions/${username}/
-$ git commit -m "Add solution for Challenge ${challengeData.id}"
+$ git commit -m "Add solution for Challenge ${challengeData.id} by ${username}"
 $ git push origin main</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step3">
+                                        <strong>Step 3: Create Pull Request on GitHub</strong>
+                                    </button>
+                                </h2>
+                                <div id="step3" class="accordion-collapse collapse" data-bs-parent="#submissionAccordion">
+                                    <div class="accordion-body">
+                                        <ol>
+                                            <li>Go to your forked repository on GitHub: <code>https://github.com/${username}/go-interview-practice</code></li>
+                                            <li>You should see a banner saying "This branch is X commits ahead of RezaSi:main"</li>
+                                            <li>Click the <strong>"Contribute"</strong> button next to it</li>
+                                            <li>Click <strong>"Open pull request"</strong></li>
+                                            <li>Add a title like: <code>Add solution for Challenge ${challengeData.id}</code></li>
+                                            <li>Click <strong>"Create pull request"</strong></li>
+                                        </ol>
+                                        <div class="alert alert-success mt-3">
+                                            <strong>🎉 That's it!</strong> Your solution will be reviewed and merged, appearing on the public scoreboard.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <p class="mt-2">Then create a pull request on GitHub to complete your submission.</p>
+                        
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <strong>💡 Tip:</strong> Make sure you forked the repository first. If you cloned the original repository directly, 
+                                you won't be able to push changes or create pull requests.
+                            </small>
+                        </div>
                     </div>`;
                 } else {
                     outputHtml += `<div class="alert alert-warning mb-3">
@@ -582,15 +642,39 @@ $ git push origin main</code></pre>
                             if (data.success) {
                                 showToast('Success', 'Solution saved to filesystem!', 'success');
                                 
-                                // Show git commands
-                                let gitCommandsHtml = '<div class="mt-3"><h6>Complete the submission with these Git commands:</h6><ol>';
-                                data.gitCommands.forEach(cmd => {
-                                    gitCommandsHtml += `<li><code>${escapeHtml(cmd)}</code></li>`;
-                                });
-                                gitCommandsHtml += '</ol></div>';
+                                // Show comprehensive next steps including PR creation
+                                let nextStepsHtml = `
+                                    <div class="mt-3 p-3 bg-light rounded">
+                                        <h6>✅ Solution Saved! Next Steps:</h6>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="text-primary">1. Commit & Push to Your Fork:</h6>
+                                                <div class="bg-dark text-light p-2 rounded small">
+                                                    <pre><code>cd ../../../
+git add challenge-${challengeData.id}/submissions/${username}/
+git commit -m "Add solution for Challenge ${challengeData.id} by ${username}"
+git push origin main</code></pre>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6 class="text-success">2. Create Pull Request:</h6>
+                                                <ol class="small">
+                                                    <li>Go to <a href="https://github.com/${username}/go-interview-practice" target="_blank">your fork on GitHub</a></li>
+                                                    <li>Click the "Contribute" button</li>
+                                                    <li>Click "Open pull request"</li>
+                                                    <li>Add title: "Add solution for Challenge ${challengeData.id}"</li>
+                                                    <li>Submit your PR! 🎉</li>
+                                                </ol>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-info mt-2 small">
+                                            <strong>🔗 Direct Link:</strong> After pushing, GitHub will often show a banner with a direct "Compare & pull request" button for convenience.
+                                        </div>
+                                    </div>
+                                `;
                                 
                                 // Insert after the button
-                                this.parentNode.insertAdjacentHTML('afterend', gitCommandsHtml);
+                                this.parentNode.insertAdjacentHTML('afterend', nextStepsHtml);
                             } else {
                                 showToast('Error', data.message || 'Failed to save to filesystem', 'error');
                             }

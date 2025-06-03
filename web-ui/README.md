@@ -105,6 +105,50 @@ Contributions to improve the web UI are welcome! Please feel free to submit pull
 
 This project is licensed under the MIT License - see the LICENSE file for details. 
 
+## 🔄 Complete Workflow: From Fork to Pull Request
+
+### Prerequisites
+1. **Fork the repository** on GitHub (click the "Fork" button)
+2. **Clone your fork** locally: `git clone https://github.com/yourusername/go-interview-practice.git`
+3. **Start the web UI** as described above
+
+### Solving and Submitting Challenges
+
+1. **Choose a challenge** from the homepage
+2. **Write your solution** in the code editor
+3. **Test your code** using the "Run Tests" button
+4. **Submit your solution** when tests pass
+
+### After Successful Submission
+
+The web UI will guide you through these steps:
+
+1. **Save to Filesystem**: Click the button to save your solution locally
+2. **Commit and Push**: 
+   ```bash
+   git add challenge-X/submissions/yourusername/
+   git commit -m "Add solution for Challenge X by yourusername"
+   git push origin main
+   ```
+3. **Create Pull Request**:
+   - Go to your fork on GitHub
+   - Click "Contribute" → "Open pull request"
+   - Add a descriptive title
+   - Submit the PR
+
+### What Happens Next
+
+- Your pull request will be reviewed
+- Once merged, your solution appears on the public scoreboard
+- You get credit for solving the challenge
+- Other developers can learn from your approach
+
+This workflow ensures:
+- ✅ Your solutions are properly tracked
+- ✅ You contribute to the community
+- ✅ Your GitHub profile shows your contributions
+- ✅ You appear on the public leaderboards
+
 ## Submission Process
 
 The web UI provides two ways to submit your solution:

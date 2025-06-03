@@ -91,29 +91,43 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 
 ## 🚀 Quick Start
 
+> ⚠️ **Important**: You must fork this repository first before cloning, otherwise you won't be able to push your solutions or create pull requests!
+
 ### Option 1: Web UI (Recommended)
 
 ```bash
-# Clone the repository
+# 1. First, fork this repository on GitHub
+#    Go to https://github.com/RezaSi/go-interview-practice
+#    Click the "Fork" button in the top-right corner
+
+# 2. Clone your forked repository (replace 'yourusername' with your GitHub username)
 git clone https://github.com/yourusername/go-interview-practice.git
 cd go-interview-practice
 
-# Start the web interface
+# 3. Start the web interface
 cd web-ui
 go run main.go
 
-# Open http://localhost:8080 in your browser
+# 4. Open http://localhost:8080 in your browser
 ```
+
+**After solving challenges and submitting solutions:**
+- Your solutions will be automatically saved to your local repository
+- Follow the provided Git commands to commit and push your changes
+- Create a pull request to contribute your solutions back to the main project
 
 ### Option 2: Command Line
 
 ```bash
-# Set up a challenge workspace
+# 1. Fork the repository first (see step 1 above)
+# 2. Clone your fork and set up a challenge workspace
+git clone https://github.com/yourusername/go-interview-practice.git
+cd go-interview-practice
 ./create_submission.sh 1  # For challenge #1
 
-# Implement your solution in the editor of your choice
+# 3. Implement your solution in the editor of your choice
 
-# Run tests
+# 4. Run tests
 cd challenge-1
 ./run_tests.sh
 ```
