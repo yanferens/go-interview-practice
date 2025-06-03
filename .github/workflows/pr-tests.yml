@@ -25,8 +25,9 @@ jobs:
         id: pr-info
         run: |
           USERNAME="${{ github.event.pull_request.user.login }}"
-          echo "pr_username=$USERNAME" >> $GITHUB_OUTPUT
-          echo "PR submitted by: $USERNAME"
+          USERNAME_LOWER=$(echo "$USERNAME" | tr '[:upper:]' '[:lower:]')
+          echo "pr_username=$USERNAME_LOWER" >> $GITHUB_OUTPUT
+          echo "PR submitted by: $USERNAME (normalized to: $USERNAME_LOWER)"
 
       - name: Check modified submission directories
         id: validate-dirs
@@ -52,10 +53,14 @@ jobs:
           echo "Modified submission directories:"
           echo "$MODIFIED_SUBMISSION_DIRS"
           
-          # Validate each modified submission directory
+          # Validate each modified submission directory (case-insensitive comparison)
           INVALID_DIRS=""
           for DIR in $MODIFIED_SUBMISSION_DIRS; do
-            if [ "$DIR" != "$USERNAME" ]; then
+            DIR_LOWER=$(echo "$DIR" | tr '[:upper:]' '[:lower:]')
+            USERNAME_LOWER=$(echo "$USERNAME" | tr '[:upper:]' '[:lower:]')
+            echo "Comparing: '$DIR' (normalized: '$DIR_LOWER') vs username '$USERNAME' (normalized: '$USERNAME_LOWER')"
+            
+            if [ "$DIR_LOWER" != "$USERNAME_LOWER" ]; then
               INVALID_DIRS="$INVALID_DIRS $DIR"
             fi
           done
