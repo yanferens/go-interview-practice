@@ -97,17 +97,26 @@ jobs:
               # Run tests and capture output
               (cd "$challenge_dir" && timeout 60 go test -v) > "$submission_dir/test_results.txt" 2>&1 || true
 
-              # Parse test results
-              PASS_COUNT=$(grep -c "^[[:space:]]*--- PASS: " "$submission_dir/test_results.txt" || echo "0")
-              FAIL_COUNT=$(grep -c "^[[:space:]]*--- FAIL: " "$submission_dir/test_results.txt" || echo "0")
+              # Parse test results - ensure clean integer values
+              PASS_COUNT=$(grep -c "^[[:space:]]*--- PASS: " "$submission_dir/test_results.txt" 2>/dev/null || echo "0")
+              FAIL_COUNT=$(grep -c "^[[:space:]]*--- FAIL: " "$submission_dir/test_results.txt" 2>/dev/null || echo "0")
+              
+              # Clean variables and ensure they're integers
+              PASS_COUNT=$(echo "$PASS_COUNT" | tr -d '[:space:]' | grep -o '[0-9]*' | head -1)
+              FAIL_COUNT=$(echo "$FAIL_COUNT" | tr -d '[:space:]' | grep -o '[0-9]*' | head -1)
+              
+              # Default to 0 if empty
+              PASS_COUNT=${PASS_COUNT:-0}
+              FAIL_COUNT=${FAIL_COUNT:-0}
+              
               TOTAL_TESTS=$((PASS_COUNT + FAIL_COUNT))
 
               # If no tests found, check for other indicators
               if [ "$TOTAL_TESTS" -eq 0 ]; then
-                if grep -q "PASS" "$submission_dir/test_results.txt"; then
+                if grep -q "PASS" "$submission_dir/test_results.txt" 2>/dev/null; then
                   TOTAL_TESTS=1
                   PASS_COUNT=1
-                elif grep -q "FAIL\|panic\|error" "$submission_dir/test_results.txt"; then
+                elif grep -q "FAIL\|panic\|error" "$submission_dir/test_results.txt" 2>/dev/null; then
                   TOTAL_TESTS=1
                   PASS_COUNT=0
                 fi
