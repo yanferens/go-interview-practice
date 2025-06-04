@@ -128,7 +128,7 @@ func (cs *ChallengeService) determineDifficulty(id int) string {
 	switch {
 	case id <= 3 || id == 6 || id == 18 || id == 21 || id == 22:
 		return "Beginner"
-	case id == 4 || id == 5 || id == 7 || id == 10 || id == 13 || id == 14 || id == 16 || id == 17 || id == 19 || id == 20 || id == 23:
+	case id == 4 || id == 5 || id == 7 || id == 10 || id == 13 || id == 14 || id == 16 || id == 17 || id == 19 || id == 20 || id == 23 || id == 27 || id == 30:
 		return "Intermediate"
 	default:
 		return "Advanced"
