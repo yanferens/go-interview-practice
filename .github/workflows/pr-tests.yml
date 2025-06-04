@@ -114,6 +114,7 @@ jobs:
           - challenge-27
           - challenge-28
           - challenge-29
+          - challenge-30
 
     steps:
       - name: Checkout repository

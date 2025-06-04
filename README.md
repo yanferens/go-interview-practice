@@ -58,23 +58,23 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 
 | 🏅 | Developer | Solved | Rate | Achievement | Progress |
 |:---:|:---:|:---:|:---:|:---:|:---|
-| 🥇 | <img src="https://github.com/RezaSi.png" width="24" height="24" style="border-radius: 50%;"><br/>**[RezaSi](https://github.com/RezaSi)** | **14**/29 | **48.3%** | 💪 Advanced | ✅✅✅✅✅✅⬜⬜⬜✅⬜⬜✅⬜⬜<br/>⬜✅✅✅⬜✅✅✅⬜⬜⬜⬜⬜⬜ |
-| 🥈 | <img src="https://github.com/AliNazariii.png" width="24" height="24" style="border-radius: 50%;"><br/>**[AliNazariii](https://github.com/AliNazariii)** | **4**/29 | **13.8%** | 🌱 Beginner | ✅✅✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
-| 🥉 | <img src="https://github.com/setarehabhari.png" width="24" height="24" style="border-radius: 50%;"><br/>**[setarehabhari](https://github.com/setarehabhari)** | **1**/29 | **3.4%** | 🌱 Beginner | ✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 🥇 | <img src="https://github.com/RezaSi.png" width="24" height="24" style="border-radius: 50%;"><br/>**[RezaSi](https://github.com/RezaSi)** | **14**/30 | **46.7%** | 💪 Advanced | ✅✅✅✅✅✅⬜⬜⬜✅⬜⬜✅⬜⬜<br/>⬜✅✅✅⬜✅✅✅⬜⬜⬜⬜⬜⬜⬜ |
+| 🥈 | <img src="https://github.com/AliNazariii.png" width="24" height="24" style="border-radius: 50%;"><br/>**[AliNazariii](https://github.com/AliNazariii)** | **4**/30 | **13.3%** | 🌱 Beginner | ✅✅✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 🥉 | <img src="https://github.com/setarehabhari.png" width="24" height="24" style="border-radius: 50%;"><br/>**[setarehabhari](https://github.com/setarehabhari)** | **1**/30 | **3.3%** | 🌱 Beginner | ✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 
 <div align="center">
 
 ✅ Completed • ⬜ Not Completed
 
-*All 29 challenges shown in two rows*
+*All 30 challenges shown in two rows*
 
 </div>
 
-*Updated automatically based on 29 available challenges*
+*Updated automatically based on 30 available challenges*
 
 ### 🎯 **Challenge Progress Overview**
 
-- **Total Challenges Available**: 29
+- **Total Challenges Available**: 30
 - **Active Developers**: 3
 - **Most Challenges Solved**: 14 by RezaSi
 
@@ -168,6 +168,7 @@ For developers familiar with Go who want to deepen their knowledge
 - **[Challenge 20](./challenge-20)**: Circuit Breaker Pattern
 - **[Challenge 23](./challenge-23)**: String Pattern Matching
 - **[Challenge 27](./challenge-27)**: Go Generics Data Structures
+- **[Challenge 30](./challenge-30)**: Context Management Implementation
 
 ### 🔴 Advanced
 Challenging problems that test mastery of Go and computer science concepts
