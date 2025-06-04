@@ -23,7 +23,7 @@ func main() {
 // ReverseString returns the reversed string of s.
 func ReverseString(s string) string {
 	// TODO: Implement the function
-	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+	for i, j := 0, len(s)-2; i < j; i, j = i+1, j-1 {
 		s = swap(s, i, j)
 	}
 
