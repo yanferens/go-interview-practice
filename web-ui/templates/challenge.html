@@ -490,7 +490,7 @@
                         <h4 class="alert-heading">Solution Submitted Successfully! 🎉</h4>
                         <p>All tests passed. Execution time: ${data.executionMs}ms</p>
                         <hr>
-                        <p class="mb-0">Your solution has been added to the scoreboard.</p>
+                        <p class="mb-0">Follow the instructions below to submit your solution to the public scoreboard.</p>
                     </div>`;
                     
                     showToast('Success', 'Your solution was submitted successfully and all tests passed!', 'success');
@@ -514,14 +514,7 @@
                                 </h2>
                                 <div id="step1" class="accordion-collapse collapse show" data-bs-parent="#submissionAccordion">
                                     <div class="accordion-body">
-                                        <p>Click "💾 Save to Filesystem" above, or run these commands manually:</p>
-                                        <div class="bg-dark text-light p-3 rounded">
-                                            <pre><code>$ ./create_submission.sh ${challengeData.id}
-$ cd challenge-${challengeData.id}/submissions/${username}/
-$ cat > solution-template.go << 'EOL'
-${escapeHtml(code)}
-EOL</code></pre>
-                                        </div>
+                                        <p>Click "💾 Save to Filesystem" above to save your solution directly to the correct location.</p>
                                     </div>
                                 </div>
                             </div>
