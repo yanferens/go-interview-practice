@@ -94,22 +94,16 @@ jobs:
             fi
           done
 
-      - name: Update Main Scoreboard
-        run: |
-          echo "🏆 Updating main scoreboard in README.md..."
-          mkdir -p scripts
-          python3 scripts/generate_main_scoreboard.py
-
-      - name: Commit and Push All Changes
+      - name: Commit and Push Scoreboard Changes
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add challenge-*/SCOREBOARD.md README.md
-          git commit -m "📊 Update scoreboards and main leaderboard
+          git add challenge-*/SCOREBOARD.md
+          git commit -m "📊 Update individual challenge scoreboards
 
-          - Updated individual challenge scoreboards
-          - Refreshed main README.md leaderboard
-          - Synchronized completion statistics" || echo "No changes to commit"
+          - Updated test results for all submissions
+          - Refreshed completion statistics
+          - Sorted by performance" || echo "No changes to commit"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
