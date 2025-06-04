@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'challenge-*/submissions/**'
 
 permissions:
   contents: write
@@ -15,95 +17,160 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2  # Need to compare with previous commit
 
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
           go-version: '1.21'
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-      - name: Run Tests and Update Scoreboards
+      - name: Detect changed challenges
+        id: detect-changes
         run: |
-          for challenge_dir in challenge-*/; do
-            [ -d "$challenge_dir" ] || continue
-            challenge_name=$(basename "$challenge_dir")
-            echo "Processing $challenge_name"
+          # Get list of changed files in this push
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+          
+          # Extract unique challenge directories that have submission changes
+          CHANGED_CHALLENGES=$(echo "$CHANGED_FILES" | grep -E "challenge-[0-9]+/submissions/" | cut -d'/' -f1 | sort -u || true)
+          
+          if [ -z "$CHANGED_CHALLENGES" ]; then
+            echo "No challenge submissions were modified"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "Challenges with submission changes:"
+          echo "$CHANGED_CHALLENGES"
+          
+          # Save challenges to file to avoid subshell issues
+          echo "$CHANGED_CHALLENGES" > /tmp/changed_challenges.txt
+          echo "has_changes=true" >> $GITHUB_OUTPUT
 
-            # Ensure go.mod exists
+      - name: Update scoreboards for changed challenges
+        if: steps.detect-changes.outputs.has_changes == 'true'
+        run: |
+          echo "📊 Processing changed challenges..."
+          
+          # Read challenges from file (avoids subshell issues)
+          while IFS= read -r challenge_dir; do
+            [ -n "$challenge_dir" ] || continue
+            echo "📊 Processing $challenge_dir"
+            
+            # Ensure go.mod exists and handle dependencies
             if [ ! -f "$challenge_dir/go.mod" ]; then
-              (cd "$challenge_dir" && go mod init "$challenge_name")
+              echo "Creating go.mod for $challenge_dir"
+              (cd "$challenge_dir" && go mod init "$challenge_dir")
             fi
+            
+            # Run go mod tidy to ensure dependencies are correct
+            (cd "$challenge_dir" && go mod tidy 2>/dev/null || true)
 
             # Initialize scoreboard
             scoreboard="$challenge_dir/SCOREBOARD.md"
-            echo "# Scoreboard for $challenge_name" > "$scoreboard"
+            echo "# Scoreboard for $challenge_dir" > "$scoreboard"
             echo "| Username   | Passed Tests | Total Tests |" >> "$scoreboard"
             echo "|------------|--------------|-------------|" >> "$scoreboard"
 
-            # Run tests for all submissions
+            # Check if submissions directory exists
+            if [ ! -d "$challenge_dir/submissions" ]; then
+              echo "⚠️  No submissions directory found for $challenge_dir"
+              continue
+            fi
+
+            # Run tests for all submissions in this challenge
             for submission_dir in "$challenge_dir"/submissions/*/; do
-              # Skip if not a directory
               [ -d "$submission_dir" ] || continue
 
               USERNAME=$(basename "$submission_dir")
-              echo "Testing submission from $USERNAME"
+              echo "🧪 Testing submission from $USERNAME"
 
-              # Copy participant's *.go files
-              cp "$submission_dir"/*.go "$challenge_dir/" 2>/dev/null || true
+              # Backup existing solution files to avoid conflicts
+              temp_dir=$(mktemp -d)
+              cp "$challenge_dir"/*.go "$temp_dir/" 2>/dev/null || true
+
+              # Copy participant's *.go files (excluding test files)
+              find "$submission_dir" -name "*.go" ! -name "*_test.go" -exec cp {} "$challenge_dir/" \; 2>/dev/null || true
 
               # Run tests and capture output
-              (cd "$challenge_dir" && go test -v) > "$submission_dir/test_results.txt" 2>&1 || true
-
-              # Show logs
-              echo "Test results for $USERNAME:"
-              cat "$submission_dir/test_results.txt"
+              (cd "$challenge_dir" && timeout 60 go test -v) > "$submission_dir/test_results.txt" 2>&1 || true
 
               # Parse test results
-              PASS_COUNT=$(grep -c "^[[:space:]]*--- PASS: " "$submission_dir/test_results.txt" || true)
-              FAIL_COUNT=$(grep -c "^[[:space:]]*--- FAIL: " "$submission_dir/test_results.txt" || true)
+              PASS_COUNT=$(grep -c "^[[:space:]]*--- PASS: " "$submission_dir/test_results.txt" || echo "0")
+              FAIL_COUNT=$(grep -c "^[[:space:]]*--- FAIL: " "$submission_dir/test_results.txt" || echo "0")
               TOTAL_TESTS=$((PASS_COUNT + FAIL_COUNT))
 
+              # If no tests found, check for other indicators
+              if [ "$TOTAL_TESTS" -eq 0 ]; then
+                if grep -q "PASS" "$submission_dir/test_results.txt"; then
+                  TOTAL_TESTS=1
+                  PASS_COUNT=1
+                elif grep -q "FAIL\|panic\|error" "$submission_dir/test_results.txt"; then
+                  TOTAL_TESTS=1
+                  PASS_COUNT=0
+                fi
+              fi
+
+              echo "   Results: $PASS_COUNT/$TOTAL_TESTS tests passed"
+              
               # Update scoreboard
               echo "| $USERNAME | $PASS_COUNT | $TOTAL_TESTS |" >> "$scoreboard"
 
-              # Clean up copied participant files, keep any _test.go
-              for f in "$challenge_dir"/*.go; do
-                case "$f" in
-                  *_test.go)
-                    # Keep official test file
-                    ;;
-                  *.go)
-                    rm -f "$f"
-                    ;;
-                esac
-              done
+              # Restore original files
+              rm -f "$challenge_dir"/*.go
+              cp "$temp_dir"/*.go "$challenge_dir/" 2>/dev/null || true
+              rm -rf "$temp_dir"
             done
 
-            # Sort scoreboard by Passed Tests desc; skip the first 3 lines (header)
-            if [ -s "$scoreboard" ]; then
+            # Sort scoreboard by passed tests (descending)
+            if [ -s "$scoreboard" ] && [ $(wc -l < "$scoreboard") -gt 3 ]; then
               temp_sorted=$(mktemp)
               head -n 3 "$scoreboard" > "$temp_sorted"
-              tail -n +4 "$scoreboard" \
-                | sort -t '|' -k3,3nr \
-                >> "$temp_sorted"
+              tail -n +4 "$scoreboard" | sort -t '|' -k3,3nr >> "$temp_sorted"
               mv "$temp_sorted" "$scoreboard"
             fi
-          done
+            
+            echo "✅ Completed $challenge_dir"
+          done < /tmp/changed_challenges.txt
 
-      - name: Commit and Push Scoreboard Changes
+      - name: Commit scoreboard changes
+        if: steps.detect-changes.outputs.has_changes == 'true'
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add challenge-*/SCOREBOARD.md
-          git commit -m "📊 Update individual challenge scoreboards
+          
+          # Get list of changed challenges
+          CHALLENGE_LIST=$(cat /tmp/changed_challenges.txt | tr '\n' ' ')
+          
+          # Add only the scoreboards for changed challenges
+          while IFS= read -r challenge_dir; do
+            [ -n "$challenge_dir" ] || continue
+            git add "$challenge_dir/SCOREBOARD.md"
+          done < /tmp/changed_challenges.txt
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "📊 Update scoreboards for: $CHALLENGE_LIST
 
-          - Updated test results for all submissions
-          - Refreshed completion statistics
-          - Sorted by performance" || echo "No changes to commit"
-          git push
+            - Updated test results for modified submissions
+            - Refreshed completion statistics"
+            git push
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        if: steps.detect-changes.outputs.has_changes == 'true'
+        run: |
+          CHALLENGE_COUNT=$(wc -l < /tmp/changed_challenges.txt)
+          echo "## 📊 Scoreboards Updated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Successfully updated scoreboards for **$CHALLENGE_COUNT** challenge(s):" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          while IFS= read -r challenge_dir; do
+            [ -n "$challenge_dir" ] || continue
+            echo "- $challenge_dir" >> $GITHUB_STEP_SUMMARY
+          done < /tmp/changed_challenges.txt
