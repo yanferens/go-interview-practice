@@ -1,55 +1,59 @@
 #!/bin/bash
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+# Script to run tests for a participant's submission
 
-# Get username
-if [ $# -eq 1 ]; then
-    USERNAME=$1
-else
-    read -p "Enter your GitHub username: " USERNAME
-fi
+# Function to display usage
+usage() {
+    echo "Usage: $0"
+    exit 1
+}
 
-# Check if submission directory exists
-if [ ! -d "submissions/$USERNAME" ]; then
-    echo -e "${RED}Directory submissions/$USERNAME does not exist.${NC}"
-    echo -e "${YELLOW}Use the create_submission.sh script from the root directory to set up your submission.${NC}"
+# Verify that we are in a challenge directory
+if [ ! -f "solution-template_test.go" ]; then
+    echo "Error: solution-template_test.go not found. Please run this script from a challenge directory."
     exit 1
 fi
 
-# Check if solution file exists
-if [ ! -f "submissions/$USERNAME/solution-template.go" ]; then
-    echo -e "${RED}Solution file submissions/$USERNAME/solution-template.go does not exist.${NC}"
+# Prompt for GitHub username
+read -p "Enter your GitHub username: " USERNAME
+
+SUBMISSION_DIR="submissions/$USERNAME"
+SUBMISSION_FILE="$SUBMISSION_DIR/solution-template.go"
+
+# Check if the submission file exists
+if [ ! -f "$SUBMISSION_FILE" ]; then
+    echo "Error: Solution file '$SUBMISSION_FILE' not found."
     exit 1
 fi
 
-# Create a temporary file with a unique name for testing
-TEMP_FILE="temp_solution_$(date +%s).go"
+# Create a temporary directory to avoid modifying the original files
+TEMP_DIR=$(mktemp -d)
 
-# Copy the solution file to the temporary file
-cp "submissions/$USERNAME/solution-template.go" "$TEMP_FILE"
+# Copy the participant's solution and the test file to the temporary directory
+cp "$SUBMISSION_FILE" "solution-template_test.go" "$TEMP_DIR/"
 
-# Hide the original solution-template.go file by renaming it temporarily
-mv solution-template.go solution-template.go.bak
+echo "Running tests for user '$USERNAME'..."
 
-# Run tests
-echo -e "${YELLOW}Running tests...${NC}"
+# Navigate to the temporary directory
+pushd "$TEMP_DIR" > /dev/null
+
+# Initialize a new Go module in the temporary directory
+go mod init "challenge" || {
+  echo "Failed to initialize Go module."
+  popd > /dev/null
+  rm -rf "$TEMP_DIR"
+  exit 1
+}
+
+# Run the tests
 go test -v
-TEST_RESULT=$?
 
-# Restore the original solution-template.go file
-mv solution-template.go.bak solution-template.go
+TEST_EXIT_CODE=$?
 
-# Clean up
-rm -f "$TEMP_FILE"
+# Return to the original directory
+popd > /dev/null
 
-# Check if tests passed and show appropriate message
-if [ $TEST_RESULT -eq 0 ]; then
-    echo -e "${GREEN}All tests passed! You can submit your solution.${NC}"
-else
-    echo -e "${RED}Tests failed. Please fix the issues and try again.${NC}"
-    exit $TEST_RESULT
-fi 
+# Clean up the temporary directory
+rm -rf "$TEMP_DIR"
+
+exit $TEST_EXIT_CODE 
