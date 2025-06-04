@@ -58,23 +58,23 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 
 | 🏅 | Developer | Solved | Rate | Achievement | Progress |
 |:---:|:---:|:---:|:---:|:---:|:---|
-| 🥇 | <img src="https://github.com/RezaSi.png" width="24" height="24" style="border-radius: 50%;"><br/>**[RezaSi](https://github.com/RezaSi)** | **14**/28 | **50.0%** | 💪 Advanced | ✅✅✅✅✅✅⬜⬜⬜✅⬜⬜✅⬜<br/>⬜⬜✅✅✅⬜✅✅✅⬜⬜⬜⬜⬜ |
-| 🥈 | <img src="https://github.com/AliNazariii.png" width="24" height="24" style="border-radius: 50%;"><br/>**[AliNazariii](https://github.com/AliNazariii)** | **4**/28 | **14.3%** | 🌱 Beginner | ✅✅✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
-| 🥉 | <img src="https://github.com/setarehabhari.png" width="24" height="24" style="border-radius: 50%;"><br/>**[setarehabhari](https://github.com/setarehabhari)** | **1**/28 | **3.6%** | 🌱 Beginner | ✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 🥇 | <img src="https://github.com/RezaSi.png" width="24" height="24" style="border-radius: 50%;"><br/>**[RezaSi](https://github.com/RezaSi)** | **14**/29 | **48.3%** | 💪 Advanced | ✅✅✅✅✅✅⬜⬜⬜✅⬜⬜✅⬜⬜<br/>⬜✅✅✅⬜✅✅✅⬜⬜⬜⬜⬜⬜ |
+| 🥈 | <img src="https://github.com/AliNazariii.png" width="24" height="24" style="border-radius: 50%;"><br/>**[AliNazariii](https://github.com/AliNazariii)** | **4**/29 | **13.8%** | 🌱 Beginner | ✅✅✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 🥉 | <img src="https://github.com/setarehabhari.png" width="24" height="24" style="border-radius: 50%;"><br/>**[setarehabhari](https://github.com/setarehabhari)** | **1**/29 | **3.4%** | 🌱 Beginner | ✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 
 <div align="center">
 
 ✅ Completed • ⬜ Not Completed
 
-*All 28 challenges shown in two rows*
+*All 29 challenges shown in two rows*
 
 </div>
 
-*Updated automatically based on 28 available challenges*
+*Updated automatically based on 29 available challenges*
 
 ### 🎯 **Challenge Progress Overview**
 
-- **Total Challenges Available**: 28
+- **Total Challenges Available**: 29
 - **Active Developers**: 3
 - **Most Challenges Solved**: 14 by RezaSi
 
@@ -180,6 +180,7 @@ Challenging problems that test mastery of Go and computer science concepts
 - **[Challenge 25](./challenge-25)**: Graph Algorithms - Shortest Path
 - **[Challenge 26](./challenge-26)**: Regular Expression Text Processor
 - **[Challenge 28](./challenge-28)**: Cache Implementation with Multiple Eviction Policies
+- **[Challenge 29](./challenge-29)**: Rate Limiter Implementation
 
 ## 💡 How to Use This Repository
 

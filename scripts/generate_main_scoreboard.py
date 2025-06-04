@@ -213,9 +213,9 @@ def generate_html_leaderboard(top_users, total_challenges, challenge_dirs):
         completed_challenges = {ch['num'] for ch in data['challenges']}
         
         # Split challenges into two rows for better display
-        first_half = challenge_numbers[:14]  # First 14 challenges
-        second_half = challenge_numbers[14:] # Remaining challenges
-        
+        first_half = challenge_numbers[:len(challenge_numbers)//2]  # First 14 challenges
+        second_half = challenge_numbers[len(challenge_numbers)//2:] # Remaining challenges
+
         # First row indicators
         first_row = ""
         for ch_num in first_half:
