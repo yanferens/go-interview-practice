@@ -11,9 +11,6 @@ on:
 
 jobs:
   validate-submission-security:
-    outputs:
-      validation_needed: ${{ steps.validate-dirs.outputs.validation_needed }}
-      validation_passed: ${{ steps.validate-dirs.outputs.validation_passed }}
     runs-on: ubuntu-latest
     name: Validate Submission Security
     
@@ -72,7 +69,6 @@ jobs:
             echo "❌ SECURITY VIOLATION: User '$USERNAME' attempted to modify submission directories for other users:$INVALID_DIRS"
             echo "✅ You can only modify submissions in directories named after your GitHub username: $USERNAME"
             echo "validation_passed=false" >> $GITHUB_OUTPUT
-            echo "validation_needed=true" >> $GITHUB_OUTPUT
             exit 1
           else
             echo "✅ Security validation passed: User '$USERNAME' only modified their own submission directory"
