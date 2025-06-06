@@ -83,7 +83,7 @@ jobs:
   test-submissions:
     runs-on: ubuntu-latest
     needs: validate-submission-security
-    if: needs.validate-submission-security.outputs.validation_needed == 'false' || needs.validate-submission-security.outputs.validation_passed == 'true'
+    if: needs.validate-submission-security.outputs.validation_passed == 'true'
 
     strategy:
       matrix:
