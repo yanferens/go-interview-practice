@@ -77,9 +77,8 @@ jobs:
           else
             echo "✅ Security validation passed: User '$USERNAME' only modified their own submission directory"
             echo "validation_passed=true" >> $GITHUB_OUTPUT
+            echo "validation_needed=false" >> $GITHUB_OUTPUT
           fi
-          
-          echo "validation_needed=true" >> $GITHUB_OUTPUT
 
   test-submissions:
     runs-on: ubuntu-latest
