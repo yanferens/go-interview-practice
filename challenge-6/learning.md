@@ -102,30 +102,22 @@ When processing large texts:
 
 3. **Single-pass Processing**: Avoid multiple iterations over the same data when possible
 
-## Example: Improved Word Frequency Counter
+## Word Frequency Counter Concepts
 
-```go
-func CountWordFrequency(text string) map[string]int {
-    // Convert to lowercase once
-    text = strings.ToLower(text)
-    
-    // Use regex to replace all non-alphanumeric characters with spaces
-    re := regexp.MustCompile(`[^a-zA-Z0-9]+`)
-    text = re.ReplaceAllString(text, " ")
-    
-    // Split by spaces and count
-    words := strings.Fields(text)  // Fields splits by whitespace
-    wordFrequency := make(map[string]int, len(words)/2)
-    
-    for _, word := range words {
-        if word != "" {
-            wordFrequency[word]++
-        }
-    }
-    
-    return wordFrequency
-}
-```
+Key concepts to understand when implementing word frequency counting:
+
+- **Text normalization**: Converting text to consistent format (lowercase, removing punctuation)
+- **Word boundary detection**: Identifying where words start and end
+- **Character filtering**: Deciding which characters are valid for words
+- **Frequency tracking**: Using maps to count occurrences efficiently
+- **Memory optimization**: Pre-allocating maps when possible
+
+### Processing Steps
+1. Normalize input text (case conversion)
+2. Clean text by removing/replacing unwanted characters
+3. Split text into individual words
+4. Count frequency of each word using a map
+5. Handle edge cases (empty strings, whitespace)
 
 ## Related Go Concepts
 

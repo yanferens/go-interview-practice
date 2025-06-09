@@ -55,68 +55,23 @@ func (e *InsufficientFundsError) Error() string {
     return fmt.Sprintf("insufficient funds: balance $%.2f, attempted to withdraw $%.2f", 
         e.Balance, e.Amount)
 }
-
-// Usage in a function
-func (a *Account) Withdraw(amount float64) error {
-    if a.Balance < amount {
-        return &InsufficientFundsError{
-            Balance: a.Balance,
-            Amount:  amount,
-        }
-    }
-    a.Balance -= amount
-    return nil
-}
-
-// Type checking for specific errors
-err := account.Withdraw(1000)
-if err != nil {
-    if insufficientFunds, ok := err.(*InsufficientFundsError); ok {
-        fmt.Printf("You need $%.2f more\n", insufficientFunds.Amount - insufficientFunds.Balance)
-    } else {
-        fmt.Println("Unknown error:", err)
-    }
-}
 ```
+
+**Key concepts for custom errors:**
+- Implement the `Error() string` method
+- Include relevant context in error fields
+- Use pointer receivers when checking error types
+- Type assertion with `ok` pattern for error type checking
 
 ### Error Wrapping (Go 1.13+)
 
 Go 1.13 introduced error wrapping for better error context:
 
-```go
-// Wrapping an error
-func processAccount(id string) error {
-    account, err := getAccount(id)
-    if err != nil {
-        return fmt.Errorf("failed to get account %s: %w", id, err)
-    }
-    
-    err = account.Withdraw(100)
-    if err != nil {
-        return fmt.Errorf("withdrawal failed: %w", err)
-    }
-    
-    return nil
-}
-
-// Unwrapping errors
-err := processAccount("12345")
-if err != nil {
-    // Check if it's a specific error type
-    var insufficientFunds *InsufficientFundsError
-    if errors.As(err, &insufficientFunds) {
-        fmt.Printf("You need $%.2f more\n", 
-            insufficientFunds.Amount - insufficientFunds.Balance)
-    }
-    
-    // Check for a specific error value
-    if errors.Is(err, ErrAccountNotFound) {
-        fmt.Println("Account not found, please check the ID")
-    }
-    
-    fmt.Println("Error chain:", err)
-}
-```
+**Key concepts:**
+- Use `fmt.Errorf` with `%w` verb to wrap errors
+- Use `errors.As()` to check for specific error types in a chain
+- Use `errors.Is()` to check for specific error values in a chain
+- Preserve original error context while adding meaningful information
 
 ### Sentinel Errors
 
@@ -125,195 +80,88 @@ Predefined errors that can be compared directly:
 ```go
 // Define sentinel errors as package-level variables
 var (
-    ErrAccountNotFound      = errors.New("account not found")
-    ErrInsufficientFunds    = errors.New("insufficient funds")
-    ErrInvalidAmount        = errors.New("invalid amount")
+    ErrAccountNotFound   = errors.New("account not found")
+    ErrInsufficientFunds = errors.New("insufficient funds")
+    ErrInvalidAmount     = errors.New("invalid amount")
 )
-
-// Using sentinel errors
-func (a *Account) Withdraw(amount float64) error {
-    if amount <= 0 {
-        return ErrInvalidAmount
-    }
-    
-    if a.Balance < amount {
-        return ErrInsufficientFunds
-    }
-    
-    a.Balance -= amount
-    return nil
-}
-
-// Checking for sentinel errors
-err := account.Withdraw(-50)
-if err == ErrInvalidAmount {
-    fmt.Println("Please enter a positive amount")
-} else if err == ErrInsufficientFunds {
-    fmt.Println("Not enough money in your account")
-}
 ```
+
+**Key concepts:**
+- Use package-level variables for reusable errors
+- Compare errors using `==` or `errors.Is()`
+- Provide clear, descriptive error messages
 
 ### Error Handling Patterns
 
 #### 1. Return Early Pattern
+Validate inputs first and return errors immediately to avoid deep nesting.
 
-```go
-func processTransaction(tx *Transaction) error {
-    // Validate inputs first
-    if tx == nil {
-        return errors.New("nil transaction")
-    }
-    
-    if tx.Amount <= 0 {
-        return errors.New("invalid transaction amount")
-    }
-    
-    // Process after validation passes
-    return processValidTransaction(tx)
-}
-```
+#### 2. Error Handler Functions
+Create functions that can handle multiple error-prone operations in sequence.
 
-#### 2. Error Handler Function
+#### 3. Error Context
+Always provide meaningful context when returning or wrapping errors.
 
-```go
-type errHandler func() error
+### Banking Application Specific Considerations
 
-func handleErrors(handlers ...errHandler) error {
-    for _, h := range handlers {
-        if err := h(); err != nil {
-            return err
-        }
-    }
-    return nil
-}
+#### Account Operations
+- **Balance validation**: Check sufficient funds before withdrawal
+- **Amount validation**: Ensure positive amounts for deposits/withdrawals
+- **Account existence**: Verify account exists before operations
+- **Input sanitization**: Validate all user inputs
 
-// Usage
-err := handleErrors(
-    func() error { return validateAccount(account) },
-    func() error { return checkBalance(account, amount) },
-    func() error { return performTransfer(account, amount) },
-)
-```
-
-### Panic and Recover
-
-While Go prefers explicit error handling, `panic` and `recover` are available for exceptional cases:
-
-```go
-func doSomething() (err error) {
-    // Set up a recovery
-    defer func() {
-        if r := recover(); r != nil {
-            // Convert panic to error
-            err = fmt.Errorf("panic occurred: %v", r)
-        }
-    }()
-    
-    // This might panic
-    processSomething()
-    return nil
-}
-```
+#### Error Types for Banking
+- **InsufficientFundsError**: Specific error for balance issues
+- **InvalidAmountError**: For negative or zero amounts
+- **AccountNotFoundError**: When account lookup fails
+- **ValidationError**: For input validation failures
 
 ### Thread Safety in Banking Applications
 
 Banking applications need to handle concurrent access:
 
-```go
-type Account struct {
-    ID      string
-    Owner   string
-    Balance float64
-    mu      sync.Mutex // Protects account operations
-}
-
-func (a *Account) Withdraw(amount float64) error {
-    a.mu.Lock()
-    defer a.mu.Unlock()
-    
-    if a.Balance < amount {
-        return &InsufficientFundsError{
-            Balance: a.Balance,
-            Amount:  amount,
-        }
-    }
-    
-    a.Balance -= amount
-    return nil
-}
-
-func (a *Account) Deposit(amount float64) error {
-    a.mu.Lock()
-    defer a.mu.Unlock()
-    
-    if amount <= 0 {
-        return errors.New("deposit amount must be positive")
-    }
-    
-    a.Balance += amount
-    return nil
-}
-```
+**Key concepts:**
+- Use `sync.Mutex` to protect account operations
+- Lock before checking balance and modifying it
+- Use `defer` to ensure mutex is always unlocked
+- Consider read/write locks for read-heavy operations
 
 ### Testing Error Scenarios
 
 Testing error handling is critical:
 
-```go
-func TestAccountWithdraw(t *testing.T) {
-    // Test insufficient funds
-    account := &Account{Balance: 100}
-    err := account.Withdraw(150)
-    
-    // Check error type
-    insufficientFunds, ok := err.(*InsufficientFundsError)
-    if !ok {
-        t.Fatalf("expected InsufficientFundsError, got %T", err)
-    }
-    
-    // Check error details
-    if insufficientFunds.Balance != 100 || insufficientFunds.Amount != 150 {
-        t.Errorf("wrong error details: %v", insufficientFunds)
-    }
-    
-    // Successful withdrawal
-    err = account.Withdraw(50)
-    if err != nil {
-        t.Errorf("unexpected error: %v", err)
-    }
-    
-    if account.Balance != 50 {
-        t.Errorf("expected balance 50, got %.2f", account.Balance)
-    }
-}
-```
+**Testing strategies:**
+- Test each error condition separately
+- Verify error types and messages
+- Test successful operations after handling errors
+- Use table-driven tests for multiple error scenarios
+- Mock dependencies to simulate error conditions
 
 ### Error Logging and Reporting
 
 Proper error logging is essential:
 
-```go
-func processTransaction(tx *Transaction) error {
-    account, err := getAccount(tx.AccountID)
-    if err != nil {
-        log.Printf("Error retrieving account %s: %v", tx.AccountID, err)
-        return fmt.Errorf("account retrieval failed: %w", err)
-    }
-    
-    err = account.Withdraw(tx.Amount)
-    if err != nil {
-        // Log with context
-        log.Printf("Withdrawal of $%.2f failed for account %s: %v", 
-            tx.Amount, tx.AccountID, err)
-        return err
-    }
-    
-    // Log success
-    log.Printf("Successfully processed withdrawal of $%.2f from account %s",
-        tx.Amount, tx.AccountID)
-    return nil
-}
-```
+**Logging best practices:**
+- Log errors with sufficient context
+- Include relevant IDs (account, transaction, user)
+- Log at appropriate levels (error, warning, info)
+- Don't log the same error multiple times in the call stack
+- Structure logs for easy parsing and monitoring
+
+### Panic and Recover
+
+While Go prefers explicit error handling, `panic` and `recover` are available for exceptional cases:
+
+**When to use panic:**
+- Unrecoverable errors that indicate programmer mistakes
+- Initialization failures that prevent the program from working
+- Internal consistency violations
+
+**Recovery patterns:**
+- Use `defer` with `recover()` to catch panics
+- Convert panics to errors when appropriate
+- Log panics for debugging
+- Only recover at appropriate boundaries
 
 ## Further Reading
 

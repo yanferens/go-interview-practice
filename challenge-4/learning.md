@@ -172,91 +172,29 @@ case result := <-resultChan:
 
 ### Graph Traversal with BFS
 
-Breadth-First Search visits all vertices at the current depth before moving to the next level:
+Breadth-First Search visits all vertices at the current depth before moving to the next level. Key concepts:
 
-```go
-func BFS(graph map[string][]string, start string) []string {
-    visited := make(map[string]bool)
-    queue := []string{start}
-    visited[start] = true
-    var result []string
-    
-    for len(queue) > 0 {
-        // Dequeue
-        node := queue[0]
-        queue = queue[1:]
-        result = append(result, node)
-        
-        // Visit all neighbors
-        for _, neighbor := range graph[node] {
-            if !visited[neighbor] {
-                visited[neighbor] = true
-                queue = append(queue, neighbor)
-            }
-        }
-    }
-    
-    return result
-}
-```
+- **Queue-based approach**: Use a queue data structure to track nodes to visit
+- **Visited tracking**: Keep track of visited nodes to avoid cycles
+- **Level-by-level processing**: Process all nodes at current distance before moving to next
 
-### Concurrent BFS
+### Concurrent BFS Considerations
 
 When implementing concurrent BFS, consider:
 
-1. Using a goroutine pool for processing nodes at each level
-2. Using channels to communicate between workers
-3. Using a sync.WaitGroup to wait for each level to complete
-4. Using a mutex to protect the visited map if shared across goroutines
+1. **Goroutine coordination**: Using a goroutine pool for processing nodes at each level
+2. **Communication patterns**: Using channels to communicate between workers
+3. **Synchronization**: Using sync.WaitGroup to wait for each level to complete
+4. **Shared state protection**: Using mutex to protect the visited map if shared across goroutines
+5. **Work distribution**: How to divide the graph traversal work among goroutines
+6. **Result aggregation**: How to collect results from multiple goroutines safely
 
-```go
-func ConcurrentBFS(graph map[string][]string, start string) []string {
-    visited := make(map[string]bool)
-    var mu sync.Mutex
-    
-    // Create a queue channel
-    queue := make(chan string, len(graph))
-    queue <- start
-    
-    mu.Lock()
-    visited[start] = true
-    mu.Unlock()
-    
-    var result []string
-    var resultMu sync.Mutex
-    
-    // Process the queue
-    for {
-        select {
-        case node := <-queue:
-            // Process this node
-            resultMu.Lock()
-            result = append(result, node)
-            resultMu.Unlock()
-            
-            // Start a goroutine for each neighbor
-            go func(n string) {
-                for _, neighbor := range graph[n] {
-                    mu.Lock()
-                    if !visited[neighbor] {
-                        visited[neighbor] = true
-                        mu.Unlock()
-                        queue <- neighbor
-                    } else {
-                        mu.Unlock()
-                    }
-                }
-            }(node)
-            
-        default:
-            // Queue is empty, we're done
-            if len(queue) == 0 {
-                return result
-            }
-        }
-    }
-}
-```
+### Important Concurrency Patterns for BFS
+
+- **Worker pools**: Fixed number of workers processing BFS tasks
+- **Level synchronization**: Ensuring all nodes at one level are processed before moving to next
+- **Shared state management**: Protecting visited nodes map across goroutines
+- **Channel communication**: Using channels for distributing work and collecting results
 
 ### Concurrency Gotchas
 

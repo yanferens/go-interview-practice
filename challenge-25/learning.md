@@ -31,44 +31,6 @@ BFS is used to find the shortest path in an **unweighted graph**. It works by ex
 - **Time Complexity**: O(V + E) where V is the number of vertices and E is the number of edges
 - **Space Complexity**: O(V) for the queue and visited array
 
-#### Example:
-
-```go
-func BreadthFirstSearch(graph [][]int, source int) ([]int, []int) {
-    n := len(graph)
-    distances := make([]int, n)
-    predecessors := make([]int, n)
-    visited := make([]bool, n)
-    
-    // Initialize distances and predecessors
-    for i := 0; i < n; i++ {
-        distances[i] = 1e9 // Infinity
-        predecessors[i] = -1
-    }
-    
-    distances[source] = 0
-    visited[source] = true
-    
-    queue := []int{source}
-    
-    for len(queue) > 0 {
-        curr := queue[0]
-        queue = queue[1:]
-        
-        for _, neighbor := range graph[curr] {
-            if !visited[neighbor] {
-                visited[neighbor] = true
-                distances[neighbor] = distances[curr] + 1
-                predecessors[neighbor] = curr
-                queue = append(queue, neighbor)
-            }
-        }
-    }
-    
-    return distances, predecessors
-}
-```
-
 #### Applications:
 
 - Social network friend recommendations (shortest connection between users)
@@ -94,53 +56,11 @@ Dijkstra's algorithm is used to find the shortest path in a **weighted graph wit
 - **Time Complexity**: O((V + E) log V) using a binary heap-based priority queue
 - **Space Complexity**: O(V) for the distance array, predecessor array, and priority queue
 
-#### Example:
-
-```go
-func Dijkstra(graph [][]int, weights [][]int, source int) ([]int, []int) {
-    n := len(graph)
-    distances := make([]int, n)
-    predecessors := make([]int, n)
-    visited := make([]bool, n)
-    
-    // Initialize distances and predecessors
-    for i := 0; i < n; i++ {
-        distances[i] = 1e9 // Infinity
-        predecessors[i] = -1
-    }
-    
-    distances[source] = 0
-    
-    // Priority queue implementation with a simple loop
-    // In practice, use a proper min-heap priority queue
-    for i := 0; i < n; i++ {
-        // Find vertex with minimum distance
-        u := -1
-        for v := 0; v < n; v++ {
-            if !visited[v] && (u == -1 || distances[v] < distances[u]) {
-                u = v
-            }
-        }
-        
-        if u == -1 || distances[u] == 1e9 {
-            break // All remaining vertices are unreachable
-        }
-        
-        visited[u] = true
-        
-        // Update distances to adjacent vertices
-        for i, v := range graph[u] {
-            weight := weights[u][i]
-            if !visited[v] && distances[u] + weight < distances[v] {
-                distances[v] = distances[u] + weight
-                predecessors[v] = u
-            }
-        }
-    }
-    
-    return distances, predecessors
-}
-```
+#### Key Concepts:
+- **Greedy approach**: Always select the closest unvisited vertex
+- **Relaxation**: Update distance if a shorter path is found
+- **Priority queue**: Use to efficiently get the minimum distance vertex
+- **Non-negative weights**: Algorithm doesn't work with negative edge weights
 
 #### Applications:
 
@@ -168,128 +88,45 @@ The Bellman-Ford algorithm is used to find the shortest path in a **weighted gra
 - **Time Complexity**: O(V * E) where V is the number of vertices and E is the number of edges
 - **Space Complexity**: O(V) for the distance and predecessor arrays
 
-#### Example:
-
-```go
-func BellmanFord(graph [][]int, weights [][]int, source int) ([]int, []bool, []int) {
-    n := len(graph)
-    distances := make([]int, n)
-    hasPath := make([]bool, n)
-    predecessors := make([]int, n)
-    
-    // Initialize distances and predecessors
-    for i := 0; i < n; i++ {
-        distances[i] = 1e9 // Infinity
-        predecessors[i] = -1
-        hasPath[i] = false
-    }
-    
-    distances[source] = 0
-    hasPath[source] = true
-    
-    // Relax all edges |V| - 1 times
-    for i := 0; i < n-1; i++ {
-        for u := 0; u < n; u++ {
-            for j, v := range graph[u] {
-                weight := weights[u][j]
-                if distances[u] != 1e9 && distances[u] + weight < distances[v] {
-                    distances[v] = distances[u] + weight
-                    predecessors[v] = u
-                    hasPath[v] = true
-                }
-            }
-        }
-    }
-    
-    // Check for negative weight cycles
-    for u := 0; u < n; u++ {
-        for j, v := range graph[u] {
-            weight := weights[u][j]
-            if distances[u] != 1e9 && distances[u] + weight < distances[v] {
-                // Negative weight cycle detected
-                hasPath[v] = false
-                // Mark all vertices in the cycle as having no valid path
-                markCycleVertices(graph, v, &hasPath)
-            }
-        }
-    }
-    
-    return distances, hasPath, predecessors
-}
-
-func markCycleVertices(graph [][]int, start int, hasPath *[]bool) {
-    visited := make([]bool, len(graph))
-    queue := []int{start}
-    
-    for len(queue) > 0 {
-        curr := queue[0]
-        queue = queue[1:]
-        
-        if visited[curr] {
-            continue
-        }
-        
-        visited[curr] = true
-        (*hasPath)[curr] = false
-        
-        for _, neighbor := range graph[curr] {
-            queue = append(queue, neighbor)
-        }
-    }
-}
-```
+#### Key Concepts:
+- **Edge relaxation**: Core operation that updates shortest distances
+- **V-1 iterations**: Maximum number of edges in any shortest path
+- **Negative cycle detection**: Additional iteration to detect negative cycles
+- **Dynamic programming**: Bottom-up approach to shortest paths
 
 #### Applications:
 
-- Arbitrage detection in currency exchange
-- Network routing with reliable negative feedback
-- Systems with constraints that can be modeled as negative edges
+- Currency arbitrage detection
+- Network routing with negative weights
+- Finding shortest paths in graphs with negative edge weights
+- Distributed systems algorithms
 
-## Comparison of Algorithms
+## General Concepts
 
-| Algorithm | Suitable For | Time Complexity | Space Complexity | Handles Negative Weights | Detects Negative Cycles |
-|-----------|--------------|-----------------|------------------|--------------------------|-------------------------|
-| BFS | Unweighted graphs | O(V + E) | O(V) | N/A | N/A |
-| Dijkstra | Weighted graphs with non-negative weights | O((V + E) log V) | O(V) | No | No |
-| Bellman-Ford | Weighted graphs, including negative weights | O(V * E) | O(V) | Yes | Yes |
+### Graph Representation
 
-## Retrieving the Actual Path
+Graphs can be represented in several ways:
 
-All three algorithms track predecessors, which allows us to reconstruct the actual shortest path from the source to any destination:
+1. **Adjacency Matrix**: 2D array where `matrix[i][j]` represents the weight of edge from vertex i to vertex j
+2. **Adjacency List**: Array of lists where each list contains the neighbors of a vertex
+3. **Edge List**: List of all edges in the graph
 
-```go
-func reconstructPath(predecessors []int, destination int) []int {
-    if predecessors[destination] == -1 {
-        return []int{destination} // Only the destination itself
-    }
-    
-    path := []int{destination}
-    for current := predecessors[destination]; current != -1; current = predecessors[current] {
-        path = append([]int{current}, path...) // Prepend to maintain order
-    }
-    
-    return path
-}
-```
+### Path Reconstruction
 
-## Common Optimization Techniques
+To reconstruct the actual shortest path:
+1. Use a predecessor array to track the previous vertex in the shortest path
+2. Start from the destination and follow predecessors back to the source
+3. Reverse the path to get the correct order
 
-1. **Bidirectional Search**: For BFS, start searching from both source and destination simultaneously.
-2. **A* Algorithm**: An extension of Dijkstra that uses heuristics to guide the search towards the destination.
-3. **Johnson's Algorithm**: For all-pairs shortest paths in sparse graphs with negative edges (runs Bellman-Ford once, then Dijkstra for each vertex).
-4. **Early Termination**: If only interested in the shortest path to a specific destination, terminate the algorithm once that destination is processed.
+### When to Use Each Algorithm
 
-## Real-World Applications
+- **BFS**: Unweighted graphs or when all edges have the same weight
+- **Dijkstra**: Weighted graphs with non-negative weights
+- **Bellman-Ford**: Weighted graphs that may contain negative weights or when you need to detect negative cycles
 
-1. **Navigation Systems**: Google Maps, Waze, and other GPS applications use variants of these algorithms.
-2. **Network Routing**: OSPF (Open Shortest Path First) protocol uses Dijkstra's algorithm.
-3. **Social Networks**: Finding the shortest connection between users ("degrees of separation").
-4. **AI and Robotics**: Pathfinding for autonomous vehicles and robots.
-5. **Telecommunications**: Routing data through the fastest or most reliable path.
+## Further Reading
 
-## Common Pitfalls and Considerations
-
-1. **Edge Weights Precision**: Floating-point imprecision can lead to incorrect results. Consider scaling to integers if possible.
-2. **Negative Cycles**: Bellman-Ford can detect them, but no shortest path exists in graphs with negative cycles.
-3. **Very Large Graphs**: For extremely large graphs, consider approximation algorithms or hierarchical approaches.
-4. **Dynamic Graphs**: If the graph changes frequently, incremental updates to the shortest paths might be more efficient than recalculating. 
+- [Introduction to Algorithms (CLRS)](https://mitpress.mit.edu/books/introduction-algorithms-third-edition)
+- [Graph Algorithms Visualization](https://visualgo.net/en/sssp)
+- [Dijkstra's Algorithm Explained](https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/)
+- [Bellman-Ford Algorithm](https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23/) 

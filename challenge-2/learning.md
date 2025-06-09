@@ -37,28 +37,7 @@ fmt.Println(utf8.RuneCountInString(s))  // Prints 9 (number of characters)
 When reversing a string in Go, there are a few approaches to consider:
 
 1. **Byte-by-byte reversal**: Simple, but can break UTF-8 encoding for non-ASCII characters
-
-```go
-func reverseASCII(s string) string {
-    bytes := []byte(s)
-    for i, j := 0, len(bytes)-1; i < j; i, j = i+1, j-1 {
-        bytes[i], bytes[j] = bytes[j], bytes[i]
-    }
-    return string(bytes)
-}
-```
-
 2. **Rune-by-rune reversal**: Preserves UTF-8 encoding, correct for all characters
-
-```go
-func reverseString(s string) string {
-    runes := []rune(s)
-    for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
-        runes[i], runes[j] = runes[j], runes[i]
-    }
-    return string(runes)
-}
-```
 
 ### String Conversion and Slices
 
@@ -94,6 +73,13 @@ for i := 0; i < len(runes); i++ {
     fmt.Printf("%c ", runes[i])
 }
 ```
+
+### Important Concepts for String Reversal
+
+- **Two-pointer technique**: A common algorithm pattern for reversing sequences
+- **Slice manipulation**: Understanding how to work with slices of runes or bytes
+- **Unicode considerations**: Ensuring your solution handles non-ASCII characters correctly
+- **String immutability**: Strings can't be modified in place, so you need to create new ones
 
 ### Common String Operations
 

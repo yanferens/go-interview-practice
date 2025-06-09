@@ -14,99 +14,34 @@ Binary search is a fundamental algorithm in computer science that efficiently fi
 
 Binary search has a time complexity of O(log n), which is much more efficient than linear search (O(n)) for large datasets.
 
-### Iterative Implementation
+### Implementation Approaches
 
-Here's how to implement binary search iteratively in Go:
+**Iterative Implementation:**
+- Use a loop with left and right pointers
+- Calculate middle index in each iteration
+- Adjust pointers based on comparison with target
+- Continue until element is found or search space is exhausted
 
+**Recursive Implementation:**
+- Base case: search space is empty (left > right)
+- Calculate middle index and compare with target
+- Recursively search appropriate half based on comparison
+- Return result from recursive call
+
+### Key Implementation Concepts
+
+**Middle Index Calculation:**
 ```go
-func binarySearch(arr []int, target int) int {
-    left := 0
-    right := len(arr) - 1
-    
-    for left <= right {
-        mid := left + (right - left) / 2  // Avoid potential overflow
-        
-        if arr[mid] == target {
-            return mid  // Found the target
-        }
-        
-        if arr[mid] < target {
-            left = mid + 1  // Target is in the right half
-        } else {
-            right = mid - 1  // Target is in the left half
-        }
-    }
-    
-    return -1  // Target not found
-}
+mid := left + (right - left) / 2  // Avoid potential overflow
 ```
+This approach prevents integer overflow that could occur with `(left + right) / 2` for large arrays.
 
-### Recursive Implementation
+**Loop Condition:**
+Use `left <= right` for the loop condition to ensure all elements are checked.
 
-Binary search can also be implemented recursively:
-
-```go
-func binarySearchRecursive(arr []int, target int, left int, right int) int {
-    // Base case: element not found
-    if left > right {
-        return -1
-    }
-    
-    // Calculate mid point
-    mid := left + (right - left) / 2
-    
-    // Check if target is at mid
-    if arr[mid] == target {
-        return mid
-    }
-    
-    // If target is smaller, search in left half
-    if arr[mid] > target {
-        return binarySearchRecursive(arr, target, left, mid - 1)
-    }
-    
-    // If target is greater, search in right half
-    return binarySearchRecursive(arr, target, mid + 1, right)
-}
-```
-
-### Finding Insertion Position
-
-A common variant of the binary search problem is to find the position where an element should be inserted to maintain the sorted order:
-
-```go
-func findInsertPosition(arr []int, target int) int {
-    left := 0
-    right := len(arr) - 1
-    
-    // Handle empty array or target larger than all elements
-    if len(arr) == 0 || target > arr[right] {
-        return len(arr)
-    }
-    
-    // Handle target smaller than all elements
-    if target < arr[0] {
-        return 0
-    }
-    
-    for left <= right {
-        mid := left + (right - left) / 2
-        
-        if arr[mid] == target {
-            return mid  // Target value already exists
-        }
-        
-        if arr[mid] < target {
-            left = mid + 1
-        } else {
-            right = mid - 1
-        }
-    }
-    
-    // At this point, right < left and target should be inserted at index left
-    return left
-}
-```
+**Pointer Updates:**
+- If target is greater than middle: `left = mid + 1`
+- If target is less than middle: `right = mid - 1`
 
 ## Binary Search Edge Cases
 
@@ -117,7 +52,7 @@ When implementing binary search, be mindful of these common edge cases:
 3. **Target smaller than all elements**: Handle the case when the target is smaller than the smallest element
 4. **Target larger than all elements**: Handle the case when the target is larger than the largest element
 5. **Duplicate elements**: Decide how to handle multiple occurrences of the target value
-6. **Integer overflow**: When calculating the middle index, use `mid := left + (right - left) / 2` instead of `mid := (left + right) / 2` to avoid integer overflow for large arrays
+6. **Integer overflow**: When calculating the middle index, use proper overflow-safe arithmetic
 
 ## Binary Search Applications
 
@@ -138,6 +73,14 @@ There are several variants of binary search:
 3. **Closest element**: Find the element closest to the target value
 4. **Rotated sorted array**: Find an element in a sorted array that has been rotated
 5. **2D binary search**: Binary search in a 2D sorted matrix
+6. **Insertion position**: Find where an element should be inserted to maintain sorted order
+
+## Algorithm Analysis
+
+- **Time Complexity**: O(log n) - The search space is halved in each iteration
+- **Space Complexity**: 
+  - Iterative: O(1) - Uses only a constant amount of extra space
+  - Recursive: O(log n) - Due to the recursive call stack
 
 ## Further Reading
 
