@@ -2,3 +2,4 @@
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
 | RezaSi | 7 | 7 |
+| lajosbnk | 7 | 7 |
