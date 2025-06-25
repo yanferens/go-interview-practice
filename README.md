@@ -63,8 +63,9 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 | 🥉 | <img src="https://github.com/lajosbnk.png" width="24" height="24" style="border-radius: 50%;"><br/>**[lajosbnk](https://github.com/lajosbnk)** | **4**/30 | **13.3%** | Beginner | ✅✅✅⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 | 4 | <img src="https://github.com/krmaxwell.png" width="24" height="24" style="border-radius: 50%;"><br/>**[krmaxwell](https://github.com/krmaxwell)** | **3**/30 | **10.0%** | Beginner | ✅✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 | 5 | <img src="https://github.com/setarehabhari.png" width="24" height="24" style="border-radius: 50%;"><br/>**[setarehabhari](https://github.com/setarehabhari)** | **2**/30 | **6.7%** | Beginner | ✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
-| 6 | <img src="https://github.com/micos7.png" width="24" height="24" style="border-radius: 50%;"><br/>**[micos7](https://github.com/micos7)** | **1**/30 | **3.3%** | Beginner | ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜ |
-| 7 | <img src="https://github.com/puffyguy.png" width="24" height="24" style="border-radius: 50%;"><br/>**[puffyguy](https://github.com/puffyguy)** | **1**/30 | **3.3%** | Beginner | ✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 6 | <img src="https://github.com/mick4711.png" width="24" height="24" style="border-radius: 50%;"><br/>**[mick4711](https://github.com/mick4711)** | **1**/30 | **3.3%** | Beginner | ✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 7 | <img src="https://github.com/micos7.png" width="24" height="24" style="border-radius: 50%;"><br/>**[micos7](https://github.com/micos7)** | **1**/30 | **3.3%** | Beginner | ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 8 | <img src="https://github.com/puffyguy.png" width="24" height="24" style="border-radius: 50%;"><br/>**[puffyguy](https://github.com/puffyguy)** | **1**/30 | **3.3%** | Beginner | ✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 
 <div align="center">
 
@@ -79,7 +80,7 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 ### Challenge Progress Overview
 
 - **Total Challenges Available**: 30
-- **Active Developers**: 7
+- **Active Developers**: 8
 - **Most Challenges Solved**: 13 by RezaSi
 
 ---
