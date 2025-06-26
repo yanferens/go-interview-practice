@@ -2,8 +2,10 @@
 package challenge6
 
 import (
-	// Add any necessary imports here
+	"bytes"
 )
+
+// Add any necessary imports here
 
 // CountWordFrequency takes a string containing multiple words and returns
 // a map where each key is a word and the value is the number of times that
@@ -18,5 +20,10 @@ import (
 // Output: map[string]int{"the": 2, "quick": 1, "brown": 1, "fox": 1, "jumps": 1, "over": 1, "lazy": 1, "dog": 1}
 func CountWordFrequency(text string) map[string]int {
 	// Your implementation here
-	return nil
-} 
+	words := bytes.Fields([]byte(text))
+	counts := make(map[string]int, len(words))
+	for _, word := range words {
+		counts[string(bytes.ToLower(word))]++
+	}
+	return counts
+}
