@@ -2,4 +2,5 @@
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
 | RezaSi | 23 | 23 |
+| Yaska1706 | 23 | 23 |
 | mick4711 | 23 | 23 |
