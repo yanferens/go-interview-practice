@@ -67,7 +67,7 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 | 7 | <img src="https://github.com/bmeverett.png" width="24" height="24" style="border-radius: 50%;"><br/>**[bmeverett](https://github.com/bmeverett)** | **3**/30 | **10.0%** | Beginner | ✅⬜⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 | 8 | <img src="https://github.com/krmaxwell.png" width="24" height="24" style="border-radius: 50%;"><br/>**[krmaxwell](https://github.com/krmaxwell)** | **3**/30 | **10.0%** | Beginner | ✅✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 | 9 | <img src="https://github.com/KhaledMosaad.png" width="24" height="24" style="border-radius: 50%;"><br/>**[KhaledMosaad](https://github.com/KhaledMosaad)** | **2**/30 | **6.7%** | Beginner | ⬜⬜⬜⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜✅⬜⬜⬜⬜ |
-| 10 | <img src="https://github.com/setarehabhari.png" width="24" height="24" style="border-radius: 50%;"><br/>**[setarehabhari](https://github.com/setarehabhari)** | **2**/30 | **6.7%** | Beginner | ✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 10 | <img src="https://github.com/deloz.png" width="24" height="24" style="border-radius: 50%;"><br/>**[deloz](https://github.com/deloz)** | **2**/30 | **6.7%** | Beginner | ✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 
 <div align="center">
 
@@ -82,7 +82,7 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 ### Challenge Progress Overview
 
 - **Total Challenges Available**: 30
-- **Active Developers**: 13
+- **Active Developers**: 14
 - **Most Challenges Solved**: 14 by RezaSi
 
 ---
