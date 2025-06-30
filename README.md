@@ -10,7 +10,7 @@ Welcome to the **Go Interview Practice** repository! Master Go programming and a
 Our comprehensive web interface provides everything you need to practice and master Go programming:
 
 <div align="center">
-  <img src="./images/challenges.png" alt="Go Interview Practice - Challenge Overview" width="90%">
+  [![Go Interview Practice - Challenge Overview](https://img.youtube.com/vi/wAu7C8IdL44/0.jpg)](https://www.youtube.com/watch?v=wAu7C8IdL44)
   <p><em>Complete challenge dashboard with difficulty levels, progress tracking, and performance metrics</em></p>
 </div>
 
