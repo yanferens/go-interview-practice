@@ -66,8 +66,8 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 | 6 | <img src="https://github.com/lajosbnk.png" width="24" height="24" style="border-radius: 50%;"><br/>**[lajosbnk](https://github.com/lajosbnk)** | **4**/30 | **13.3%** | Beginner | ✅✅✅⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 | 7 | <img src="https://github.com/bmeverett.png" width="24" height="24" style="border-radius: 50%;"><br/>**[bmeverett](https://github.com/bmeverett)** | **3**/30 | **10.0%** | Beginner | ✅⬜⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 | 8 | <img src="https://github.com/krmaxwell.png" width="24" height="24" style="border-radius: 50%;"><br/>**[krmaxwell](https://github.com/krmaxwell)** | **3**/30 | **10.0%** | Beginner | ✅✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
-| 9 | <img src="https://github.com/KhaledMosaad.png" width="24" height="24" style="border-radius: 50%;"><br/>**[KhaledMosaad](https://github.com/KhaledMosaad)** | **2**/30 | **6.7%** | Beginner | ⬜⬜⬜⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜✅⬜⬜⬜⬜ |
-| 10 | <img src="https://github.com/deloz.png" width="24" height="24" style="border-radius: 50%;"><br/>**[deloz](https://github.com/deloz)** | **2**/30 | **6.7%** | Beginner | ✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 9 | <img src="https://github.com/suminitgo.png" width="24" height="24" style="border-radius: 50%;"><br/>**[suminitgo](https://github.com/suminitgo)** | **3**/30 | **10.0%** | Beginner | ✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 10 | <img src="https://github.com/KhaledMosaad.png" width="24" height="24" style="border-radius: 50%;"><br/>**[KhaledMosaad](https://github.com/KhaledMosaad)** | **2**/30 | **6.7%** | Beginner | ⬜⬜⬜⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜✅⬜⬜⬜⬜ |
 
 <div align="center">
 
@@ -82,7 +82,7 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 ### Challenge Progress Overview
 
 - **Total Challenges Available**: 30
-- **Active Developers**: 14
+- **Active Developers**: 15
 - **Most Challenges Solved**: 15 by odelbos
 
 ---
