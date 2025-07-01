@@ -1,3 +1,4 @@
+
 # Go Interview Practice
 
 Welcome to the **Go Interview Practice** repository! Master Go programming and ace your technical interviews with our interactive coding challenges.
@@ -10,8 +11,8 @@ Welcome to the **Go Interview Practice** repository! Master Go programming and a
 Our comprehensive web interface provides everything you need to practice and master Go programming:
 
 <div align="center">
-  <img src="./images/challenges.png" alt="Go Interview Practice - Challenge Overview" width="90%">
-  <p><em>Complete challenge dashboard with difficulty levels, progress tracking, and performance metrics</em></p>
+  <video src="https://github.com/user-attachments/assets/b715a4b7-de39-40b2-94bc-2a74e344e51a" controls width="90%"></video>
+  <p><em>A brief introduction to the project</em></p>
 </div>
 
 ---
