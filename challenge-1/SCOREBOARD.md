@@ -1,6 +1,7 @@
 # Scoreboard for challenge-1
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
+| 0xJaskirat | 6 | 6 |
 | AliNazariii | 6 | 6 |
 | KhaledMosaad | 6 | 6 |
 | RezaSi | 6 | 6 |
