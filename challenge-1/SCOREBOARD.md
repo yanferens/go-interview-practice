@@ -2,6 +2,7 @@
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
 | AliNazariii | 6 | 6 |
+| KhaledMosaad | 6 | 6 |
 | RezaSi | 6 | 6 |
 | Seokky | 6 | 6 |
 | bmeverett | 6 | 6 |
