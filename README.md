@@ -124,7 +124,29 @@ go run main.go
 - Follow the provided Git commands to commit and push your changes
 - Create a pull request to contribute your solutions back to the main project
 
-### Option 2: Command Line
+### Option 2: GitHub Codespaces (Cloud Development)
+
+Want to get started instantly without setting up anything locally? Use GitHub Codespaces!
+
+1. **Fork this repository** (if you haven't already)
+2. **Open in Codespaces**: Click the green "Code" button on your forked repository, then select "Codespaces" tab
+3. **Create Codespace**: Click "Create codespace on main"
+4. **Start the Web UI**: Once the codespace loads, open a terminal and run:
+   ```bash
+   cd web-ui
+   go run main.go
+   ```
+5. **Access the Web UI**: Click on the "Ports" tab in the bottom panel, then click the "Open in Browser" button next to port 8080
+
+**Benefits of using Codespaces:**
+- ✅ No local setup required
+- ✅ Pre-configured Go environment
+- ✅ Full VS Code experience in the browser
+- ✅ Automatic port forwarding for the web UI
+- ✅ All dependencies pre-installed
+- ✅ Works on any device with a browser
+
+### Option 3: Command Line
 
 ```bash
 # 1. Fork the repository first (see step 1 above)
