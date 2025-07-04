@@ -124,7 +124,7 @@ go run main.go
 - Follow the provided Git commands to commit and push your changes
 - Create a pull request to contribute your solutions back to the main project
 
-### Option 2: GitHub Codespaces (Cloud Development)
+### Option 2: GitHub Codespaces (Cloud Development + Web UI)
 
 Want to get started instantly without setting up anything locally? Use GitHub Codespaces!
 
@@ -139,12 +139,12 @@ Want to get started instantly without setting up anything locally? Use GitHub Co
 5. **Access the Web UI**: Click on the "Ports" tab in the bottom panel, then click the "Open in Browser" button next to port 8080
 
 **Benefits of using Codespaces:**
-- ✅ No local setup required
-- ✅ Pre-configured Go environment
-- ✅ Full VS Code experience in the browser
-- ✅ Automatic port forwarding for the web UI
-- ✅ All dependencies pre-installed
-- ✅ Works on any device with a browser
+- No local setup required
+- Pre-configured Go environment
+- Full VS Code experience in the browser
+- Automatic port forwarding for the web UI
+- All dependencies pre-installed
+- Works on any device with a browser
 
 ### Option 3: Command Line
 
