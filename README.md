@@ -67,8 +67,8 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 | 6 | <img src="https://github.com/ashwinipatankar.png" width="24" height="24" style="border-radius: 50%;"><br/>**[ashwinipatankar](https://github.com/ashwinipatankar)** | **6**/30 | **20.0%** | Intermediate | ✅✅✅⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜✅⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 | 7 | <img src="https://github.com/AliNazariii.png" width="24" height="24" style="border-radius: 50%;"><br/>**[AliNazariii](https://github.com/AliNazariii)** | **4**/30 | **13.3%** | Beginner | ✅✅✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 | 8 | <img src="https://github.com/lajosbnk.png" width="24" height="24" style="border-radius: 50%;"><br/>**[lajosbnk](https://github.com/lajosbnk)** | **4**/30 | **13.3%** | Beginner | ✅✅✅⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
-| 9 | <img src="https://github.com/MuraliMohan-2000.png" width="24" height="24" style="border-radius: 50%;"><br/>**[MuraliMohan-2000](https://github.com/MuraliMohan-2000)** | **3**/30 | **10.0%** | Beginner | ✅✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
-| 10 | <img src="https://github.com/Seokky.png" width="24" height="24" style="border-radius: 50%;"><br/>**[Seokky](https://github.com/Seokky)** | **3**/30 | **10.0%** | Beginner | ✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 9 | <img src="https://github.com/skx.png" width="24" height="24" style="border-radius: 50%;"><br/>**[skx](https://github.com/skx)** | **4**/30 | **13.3%** | Beginner | ✅✅⬜⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 10 | <img src="https://github.com/MuraliMohan-2000.png" width="24" height="24" style="border-radius: 50%;"><br/>**[MuraliMohan-2000](https://github.com/MuraliMohan-2000)** | **3**/30 | **10.0%** | Beginner | ✅✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 
 <div align="center">
 
@@ -83,7 +83,7 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 ### Challenge Progress Overview
 
 - **Total Challenges Available**: 30
-- **Active Developers**: 19
+- **Active Developers**: 20
 - **Most Challenges Solved**: 19 by odelbos
 
 ---
