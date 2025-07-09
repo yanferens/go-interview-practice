@@ -10,6 +10,7 @@
 | ashwinipatankar | 6 | 6 |
 | bmeverett | 6 | 6 |
 | deloz | 6 | 6 |
+| jersonzc | 6 | 6 |
 | krmaxwell | 6 | 6 |
 | lajosbnk | 6 | 6 |
 | mick4711 | 6 | 6 |
