@@ -83,7 +83,7 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 ### Challenge Progress Overview
 
 - **Total Challenges Available**: 30
-- **Active Developers**: 25
+- **Active Developers**: 26
 - **Most Challenges Solved**: 24 by odelbos
 
 ---
