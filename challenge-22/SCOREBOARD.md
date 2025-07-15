@@ -1,6 +1,7 @@
 # Scoreboard for challenge-22
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
+| Gandook | 23 | 23 |
 | KhaledMosaad | 23 | 23 |
 | RezaSi | 23 | 23 |
 | ashwinipatankar | 23 | 23 |

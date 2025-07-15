@@ -1,6 +1,7 @@
 # Scoreboard for challenge-6
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
+| Gandook | 7 | 7 |
 | KhaledMosaad | 7 | 7 |
 | MYK12397 | 7 | 7 |
 | PolinaSvet | 7 | 7 |
