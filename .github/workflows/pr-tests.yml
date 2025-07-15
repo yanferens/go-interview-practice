@@ -86,9 +86,19 @@ jobs:
           
           if [ -z "$MODIFIED_SUBMISSION_DIRS" ]; then
             echo "No submission directories modified in this PR"
-            echo "validation_needed=false" >> $GITHUB_OUTPUT
-            echo "validation_passed=true" >> $GITHUB_OUTPUT
-            echo "manual_approval_needed=false" >> $GITHUB_OUTPUT
+            
+            # Still need to check if manual approval is required for non-submission files
+            if [ -n "$NON_SUBMISSION_FILES" ] && [ "$MANUAL_APPROVAL_GRANTED" != "true" ]; then
+              echo "⚠️  PR contains non-submission file changes that require manual approval"
+              echo "validation_needed=true" >> $GITHUB_OUTPUT
+              echo "validation_passed=false" >> $GITHUB_OUTPUT
+              echo "manual_approval_needed=true" >> $GITHUB_OUTPUT
+            else
+              echo "✅ No submission files modified and no manual approval needed"
+              echo "validation_needed=false" >> $GITHUB_OUTPUT
+              echo "validation_passed=true" >> $GITHUB_OUTPUT
+              echo "manual_approval_needed=false" >> $GITHUB_OUTPUT
+            fi
             exit 0
           fi
           
