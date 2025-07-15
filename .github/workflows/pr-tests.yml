@@ -2,8 +2,6 @@ name: PR Tests
 
 permissions:
   contents: read
-  issues: write
-  pull-requests: write
 
 on:
   pull_request:
@@ -167,26 +165,20 @@ jobs:
     if: needs.validate-submission-security.outputs.manual_approval_needed == 'true'
     
     steps:
-      - name: Comment on PR for Manual Approval
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '## 🔍 Manual Approval Required\n\nThis PR modifies files outside of submission directories and requires manual review by maintainers.\n\n### Files Modified Outside Submissions:\nThe following files were modified outside of `challenge-*/submissions/` directories and need maintainer approval.\n\n### For Maintainers:\nTo approve this PR after reviewing the changes:\n1. ✅ **Review the changes carefully**\n2. 🏷️ **Add the `manual-approval-granted` label to this PR**\n3. 🔄 **Re-run the workflow** (or push a new commit)\n\n### For Contributors:\nIf you only intended to submit a solution, please ensure your changes are only in:\n- `challenge-*/submissions/your-username/`\n\n⚠️ **Security Note**: Only maintainers should approve changes outside submission directories.'
-            })
-            
       - name: Manual Approval Required
         run: |
-          echo "🔍 This PR modifies files outside of submission directories and requires manual approval"
-          echo "📋 To approve this PR, maintainers should:"
-          echo "   1. Review the changes carefully"
-          echo "   2. Add the 'manual-approval-granted' label to this PR"
-          echo "   3. Re-run the workflow"
+          echo "🚨 MANUAL APPROVAL REQUIRED 🚨"
           echo ""
-          echo "⚠️  WARNING: Only approve if you trust these changes!"
+          echo "🔍 This PR modifies files outside of submission directories"
+          echo "📝 Files modified outside challenge-*/submissions/ need admin review"
+          echo ""
+          echo "📢 @RezaSi - Please review and approve this PR by:"
+          echo "   1. ✅ Reviewing the changes carefully"
+          echo "   2. 🏷️  Adding the 'manual-approval-granted' label"
+          echo "   3. 🔄 Re-running this workflow (close/reopen PR)"
+          echo ""
+          echo "⚠️  SECURITY: Only approve changes you trust!"
+          echo "❌ This workflow will block until manual approval is granted"
 
   no-challenges-changed:
     runs-on: ubuntu-latest
