@@ -66,9 +66,9 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 | 5 | <img src="https://github.com/MYK12397.png" width="24" height="24" style="border-radius: 50%;"><br/>**[MYK12397](https://github.com/MYK12397)** | **11**/30 | **36.7%** | Advanced | ⬜✅✅⬜✅✅✅⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜✅✅✅⬜✅⬜⬜✅⬜⬜⬜⬜⬜✅ |
 | 6 | <img src="https://github.com/ashwinipatankar.png" width="24" height="24" style="border-radius: 50%;"><br/>**[ashwinipatankar](https://github.com/ashwinipatankar)** | **9**/30 | **30.0%** | Intermediate | ✅✅✅⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜✅✅✅⬜✅✅⬜⬜⬜⬜⬜⬜⬜⬜ |
 | 7 | <img src="https://github.com/y1hao.png" width="24" height="24" style="border-radius: 50%;"><br/>**[y1hao](https://github.com/y1hao)** | **7**/30 | **23.3%** | Intermediate | ✅✅✅⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜✅⬜⬜✅✅⬜⬜⬜⬜⬜⬜⬜⬜ |
-| 8 | <img src="https://github.com/lanmanul.png" width="24" height="24" style="border-radius: 50%;"><br/>**[lanmanul](https://github.com/lanmanul)** | **5**/30 | **16.7%** | Intermediate | ✅✅⬜⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜✅⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
-| 9 | <img src="https://github.com/timlkko.png" width="24" height="24" style="border-radius: 50%;"><br/>**[timlkko](https://github.com/timlkko)** | **5**/30 | **16.7%** | Intermediate | ✅✅✅⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
-| 10 | <img src="https://github.com/AliNazariii.png" width="24" height="24" style="border-radius: 50%;"><br/>**[AliNazariii](https://github.com/AliNazariii)** | **4**/30 | **13.3%** | Beginner | ✅✅✅✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 8 | <img src="https://github.com/PolinaSvet.png" width="24" height="24" style="border-radius: 50%;"><br/>**[PolinaSvet](https://github.com/PolinaSvet)** | **5**/30 | **16.7%** | Intermediate | ✅✅✅⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 9 | <img src="https://github.com/lanmanul.png" width="24" height="24" style="border-radius: 50%;"><br/>**[lanmanul](https://github.com/lanmanul)** | **5**/30 | **16.7%** | Intermediate | ✅✅⬜⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜✅⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| 10 | <img src="https://github.com/timlkko.png" width="24" height="24" style="border-radius: 50%;"><br/>**[timlkko](https://github.com/timlkko)** | **5**/30 | **16.7%** | Intermediate | ✅✅✅⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜<br/>⬜⬜✅⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
 
 <div align="center">
 
@@ -83,7 +83,7 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 ### Challenge Progress Overview
 
 - **Total Challenges Available**: 30
-- **Active Developers**: 31
+- **Active Developers**: 32
 - **Most Challenges Solved**: 24 by odelbos
 
 ---
