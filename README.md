@@ -86,8 +86,46 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 - **Active Developers**: 36
 - **Most Challenges Solved**: 24 by odelbos
 
----
+<!-- END_CLASSIC_LEADERBOARD -->
+## 🚀 Package Challenges Leaderboard
 
+Master Go packages through hands-on challenges! Each package offers a structured learning path with real-world scenarios.
+
+> **Note**: The data below is automatically updated by GitHub Actions when package challenge scoreboards change.
+
+| 🏅 | Developer | Total Solved | Packages | Achievement | Challenge Distribution |
+|:---:|:---:|:---:|:---:|:---:|:---|
+| 🥇 | <img src="https://github.com/RezaSi.png" width="24" height="24" style="border-radius: 50%;"><br/>**[RezaSi](https://github.com/RezaSi)** | **2** | **2** pkgs | 🌱 Package Beginner | **cobra**: 1 • **gin**: 1 |
+
+<div align="center">
+
+🚀 **Package Challenges** - Learn Go packages through practical, real-world scenarios
+
+</div>
+
+### 📦 Per-Package Progress
+
+#### Cobra Package
+
+| Rank | Developer | Completed | Progress |
+|:---:|:---:|:---:|:---|
+| 🥇 | **[RezaSi](https://github.com/RezaSi)** | 1/2 | 🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜ 50% |
+
+#### Gin Package
+
+| Rank | Developer | Completed | Progress |
+|:---:|:---:|:---:|:---|
+| 🥇 | **[RezaSi](https://github.com/RezaSi)** | 1/4 | 🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜ 25% |
+
+### 📊 Package Challenge Statistics
+
+- **Total Package Challenges Available**: 7
+- **Active Package Learners**: 1
+- **Available Packages**: 3 (cobra, gin, gorm)
+
+- **Most Package Challenges Solved**: 2 by RezaSi
+
+<!-- END_PACKAGE_LEADERBOARD -->
 ## Key Features
 
 - **Interactive Web UI** - Code, test, and submit solutions in your browser
@@ -243,13 +281,23 @@ Review the learning materials to deepen your understanding of the concepts used.
 
 ## Contributing
 
-We welcome contributions! To add a new challenge:
+We welcome contributions! You can contribute in several ways:
 
+**Submit Solutions:**
+- Solve existing classic or package challenges
+- Submit your solutions via pull request
+
+**Add New Challenges:**
+- **Classic Challenges:** Algorithm and data structure problems
+- **Package Challenges:** Framework-specific practical applications (Gin, Cobra, GORM, etc.)
+
+**Quick Steps:**
 1. Fork the repository
-2. Create a new challenge following our template structure
-3. Submit a pull request
+2. Choose challenge type (classic or package-based)
+3. Follow our template structure
+4. Submit a pull request
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on both challenge types.
 
 ## License
 
