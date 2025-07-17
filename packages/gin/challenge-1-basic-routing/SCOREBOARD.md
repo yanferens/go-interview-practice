@@ -1,5 +1,5 @@
-# Scoreboard for Gin Challenge 1: Basic Routing
+# Scoreboard for gin challenge-1-basic-routing
 
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
-| RezaSi     | 13           | 13          | 
+| RezaSi | 13 | 13 |
