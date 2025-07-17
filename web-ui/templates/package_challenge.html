@@ -169,7 +169,8 @@
         // Initialize challenge data from server (loaded from hidden elements)
         challengeData = {
             packageName: "{{.Package.Name}}",
-            challengeId: parseInt("{{.Challenge.ID}}"),
+            challengeId: "{{.Challenge.ID}}", // Keep as string for API calls
+            challengeIdForHighlighting: "{{.Package.Name}}_{{.Challenge.ID}}", // Use unique string for highlighting storage
             title: "{{.Challenge.Title}}",
             description: `{{.Challenge.Description}}`,
             template: decodeHtmlEntities(document.getElementById('template-content').textContent),
@@ -186,7 +187,7 @@
         renderMarkdown(challengeData.learningMaterials, learningElement);
 
         // Initialize learning materials highlighting
-        initLearningMaterials('learning-materials', challengeData.challengeId);
+        initLearningMaterials('learning-materials', challengeData.challengeIdForHighlighting);
 
         // Initialize hints system
         initializeHints(challengeData.hints);
