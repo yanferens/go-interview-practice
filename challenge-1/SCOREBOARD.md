@@ -19,6 +19,7 @@
 | ashwinipatankar | 6 | 6 |
 | bmeverett | 6 | 6 |
 | deloz | 6 | 6 |
+| diyorich | 6 | 6 |
 | hodgechung | 6 | 6 |
 | jersonzc | 6 | 6 |
 | krmaxwell | 6 | 6 |
