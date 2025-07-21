@@ -120,7 +120,7 @@ Master Go packages through hands-on challenges! Each package offers a structured
 
 ### 📊 Package Challenge Statistics
 
-- **Total Package Challenges Available**: 7
+- **Total Package Challenges Available**: 10
 - **Active Package Learners**: 1
 - **Available Packages**: 3 (cobra, gin, gorm)
 
