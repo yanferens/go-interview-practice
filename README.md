@@ -60,7 +60,7 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 
 | 🏅 | Developer | Solved | Rate | Achievement | Progress |
 |:---:|:---:|:---:|:---:|:---:|:---|
-| 🥇 | <img src="https://github.com/odelbos.png" width="24" height="24" style="border-radius: 50%;"><br/>**[odelbos](https://github.com/odelbos)** | **24**/30 | **80.0%** | Master | ✅✅✅✅✅✅✅✅✅✅⬜⬜✅✅⬜<br/>✅✅✅✅✅✅✅✅⬜⬜✅✅✅⬜✅ |
+| 🥇 | <img src="https://github.com/odelbos.png" width="24" height="24" style="border-radius: 50%;"><br/>**[odelbos](https://github.com/odelbos)** | **28**/30 | **93.3%** | Master | ✅✅✅✅✅✅✅✅✅✅✅⬜✅✅⬜<br/>✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ |
 | 🥈 | <img src="https://github.com/y1hao.png" width="24" height="24" style="border-radius: 50%;"><br/>**[y1hao](https://github.com/y1hao)** | **21**/30 | **70.0%** | Master | ✅✅✅✅✅✅✅✅⬜✅⬜⬜✅✅⬜<br/>✅✅✅✅✅✅✅✅⬜⬜⬜✅⬜⬜✅ |
 | 🥉 | <img src="https://github.com/mick4711.png" width="24" height="24" style="border-radius: 50%;"><br/>**[mick4711](https://github.com/mick4711)** | **19**/30 | **63.3%** | Expert | ✅✅✅✅✅✅✅⬜⬜✅⬜⬜✅⬜⬜<br/>✅✅✅✅✅✅✅✅⬜⬜⬜✅⬜⬜✅ |
 | 4 | <img src="https://github.com/Gandook.png" width="24" height="24" style="border-radius: 50%;"><br/>**[Gandook](https://github.com/Gandook)** | **15**/30 | **50.0%** | Expert | ✅✅✅⬜⬜✅✅⬜⬜✅⬜⬜⬜⬜⬜<br/>⬜✅✅✅⬜✅✅✅✅✅⬜✅⬜⬜⬜ |
@@ -85,7 +85,7 @@ Our most accomplished Go developers, ranked by number of challenges completed:
 
 - **Total Challenges Available**: 30
 - **Active Developers**: 47
-- **Most Challenges Solved**: 24 by odelbos
+- **Most Challenges Solved**: 28 by odelbos
 
 <!-- END_CLASSIC_LEADERBOARD -->
 ## 🚀 Package Challenges Leaderboard
