@@ -7,11 +7,6 @@ on:
       - completed
     branches:
       - main
-  push:
-    branches:
-      - main
-    paths:
-      - 'packages/*/challenge-*/SCOREBOARD.md'
   schedule:
     # Run daily at 01:00 UTC to catch any missed updates (offset from classic scoreboard)
     - cron: '0 1 * * *'
