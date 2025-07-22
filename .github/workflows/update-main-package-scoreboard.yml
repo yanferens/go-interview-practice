@@ -16,6 +16,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: update-scoreboards
+  cancel-in-progress: false
+
 jobs:
   update-main-package-scoreboard:
     runs-on: ubuntu-latest
