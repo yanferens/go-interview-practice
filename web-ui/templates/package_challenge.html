@@ -524,6 +524,12 @@
         // Initial position update
         updateEditorPosition();
 
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
         // Reset button functionality
         document.getElementById('reset-editor-btn').addEventListener('click', function() {
             // Show template preview in modal
@@ -591,16 +597,25 @@
         document.getElementById('fullscreen-btn').addEventListener('click', function() {
             const editorWrapper = document.querySelector('.editor-wrapper');
             const icon = this.querySelector('i');
+            const tooltip = bootstrap.Tooltip.getInstance(this);
             
             if (!document.fullscreenElement && !editorWrapper.classList.contains('editor-fullscreen')) {
                 // Enter fullscreen mode
                 editorWrapper.classList.add('editor-fullscreen');
                 icon.className = 'bi bi-fullscreen-exit';
-                this.title = 'Exit fullscreen';
+                this.setAttribute('data-bs-original-title', 'Exit fullscreen mode (ESC)');
+                if (tooltip) {
+                    tooltip.dispose();
+                    new bootstrap.Tooltip(this, { 
+                        title: 'Exit fullscreen mode (ESC)',
+                        placement: 'top'
+                    });
+                }
                 
                 // Resize editor to fit fullscreen
                 setTimeout(() => {
                     editor.resize();
+                    updateEditorPosition(); // Update position after resize
                 }, 100);
                 
                 // Add escape key listener
@@ -615,14 +630,23 @@
             const editorWrapper = document.querySelector('.editor-wrapper');
             const fullscreenBtn = document.getElementById('fullscreen-btn');
             const icon = fullscreenBtn.querySelector('i');
+            const tooltip = bootstrap.Tooltip.getInstance(fullscreenBtn);
             
             editorWrapper.classList.remove('editor-fullscreen');
             icon.className = 'bi bi-arrows-fullscreen';
-            fullscreenBtn.title = 'Toggle fullscreen editor';
+            fullscreenBtn.setAttribute('data-bs-original-title', 'Enter fullscreen mode (ESC to exit)');
+            if (tooltip) {
+                tooltip.dispose();
+                new bootstrap.Tooltip(fullscreenBtn, { 
+                    title: 'Enter fullscreen mode (ESC to exit)',
+                    placement: 'top'
+                });
+            }
             
             // Resize editor back to normal
             setTimeout(() => {
                 editor.resize();
+                updateEditorPosition(); // Update position after resize
             }, 100);
             
             // Remove escape key listener
@@ -656,6 +680,18 @@
         function hideSaveIndicators() {
             document.getElementById('saving-indicator').classList.add('d-none');
             document.getElementById('save-indicator').classList.add('d-none');
+        }
+
+        // Update line and column numbers in status bar
+        function updateEditorPosition() {
+            if (!editor) return;
+            
+            const cursor = editor.getCursorPosition();
+            const lineNumber = cursor.row + 1; // Ace uses 0-based indexing
+            const colNumber = cursor.column + 1;
+            
+            document.getElementById('line-number').textContent = lineNumber;
+            document.getElementById('col-number').textContent = colNumber;
         }
     });
 
