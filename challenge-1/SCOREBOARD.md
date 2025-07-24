@@ -27,6 +27,7 @@
 | ingingX | 6 | 6 |
 | jasonnfeng | 6 | 6 |
 | jersonzc | 6 | 6 |
+| jordanhimawan | 6 | 6 |
 | krmaxwell | 6 | 6 |
 | lajosbnk | 6 | 6 |
 | lanmanul | 6 | 6 |
