@@ -247,6 +247,7 @@ jobs:
           echo "✅ Completed rejudging $CHALLENGE_DIR"
 
       - name: Commit scoreboard changes
+        id: commit-changes
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
@@ -307,7 +308,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Trigger main scoreboard update
-        if: github.event.inputs.update_main_scoreboard == 'true' && steps.commit-changes.outputs.has_changes == 'true'
+        if: github.event.inputs.update_main_scoreboard == true && steps.commit-changes.outputs.has_changes == 'true'
         run: |
           echo "🏆 Triggering main scoreboard update..."
           
