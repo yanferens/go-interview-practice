@@ -12,11 +12,6 @@ on:
         required: false
         default: true
         type: boolean
-      force_main_update:
-        description: 'Force main scoreboard update even if no changes'
-        required: false
-        default: false
-        type: boolean
 
 permissions:
   contents: write
@@ -313,7 +308,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Trigger main scoreboard update
-        if: github.event.inputs.update_main_scoreboard == true && (steps.commit-changes.outputs.has_changes == 'true' || github.event.inputs.force_main_update == true)
+        if: github.event.inputs.update_main_scoreboard == true && steps.commit-changes.outputs.has_changes == 'true'
         run: |
           echo "🏆 Triggering main scoreboard update..."
           
@@ -351,11 +346,7 @@ jobs:
           echo "- 🔄 Sorted rankings by performance" >> $GITHUB_STEP_SUMMARY
           
           if [ "${{ github.event.inputs.update_main_scoreboard }}" == "true" ]; then
-            if [ "${{ github.event.inputs.force_main_update }}" == "true" ]; then
-              echo "- 🏆 Triggered main scoreboard update (forced)" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "- 🏆 Triggered main scoreboard update" >> $GITHUB_STEP_SUMMARY
-            fi
+            echo "- 🏆 Triggered main scoreboard update" >> $GITHUB_STEP_SUMMARY
           fi
           
           echo "" >> $GITHUB_STEP_SUMMARY
