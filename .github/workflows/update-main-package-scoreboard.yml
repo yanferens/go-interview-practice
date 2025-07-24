@@ -17,7 +17,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: update-scoreboards
+  group: update-main-package-scoreboard
   cancel-in-progress: false
 
 jobs:
