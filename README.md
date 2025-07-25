@@ -110,7 +110,7 @@ Master Go packages through hands-on challenges! Each package offers a structured
 
 | Rank | Developer | Completed | Progress |
 |:---:|:---:|:---:|:---|
-| 🥇 | **[RezaSi](https://github.com/RezaSi)** | 1/2 | 🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜ 50% |
+| 🥇 | **[RezaSi](https://github.com/RezaSi)** | 1/4 | 🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜ 25% |
 
 #### Gin Package
 
@@ -126,7 +126,7 @@ Master Go packages through hands-on challenges! Each package offers a structured
 
 ### 📊 Package Challenge Statistics
 
-- **Total Package Challenges Available**: 11
+- **Total Package Challenges Available**: 13
 - **Active Package Learners**: 1
 - **Available Packages**: 3 (cobra, gin, gorm)
 
