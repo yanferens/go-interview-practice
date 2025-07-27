@@ -1,6 +1,7 @@
 # Scoreboard for challenge-5
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
+| JackDalberg | 9 | 9 |
 | MYK12397 | 9 | 9 |
 | PolinaSvet | 9 | 9 |
 | RezaSi | 9 | 9 |
