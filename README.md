@@ -8,14 +8,18 @@
 [![Challenges](https://img.shields.io/badge/Challenges-30+-brightgreen?style=for-the-badge&logo=checkmarx)](https://github.com/RezaSi/go-interview-practice)
 
 <a href="https://trendshift.io/repositories/14255" target="_blank">
-<img src="https://trendshift.io/api/badge/repositories/14255" alt="RezaSi%2Fgo-interview-practice | Trendshift" style="width: 200px;" width="200"/>
+<img src="https://trendshift.io/api/badge/repositories/14255" alt="RezaSi%2Fgo-interview-practice | Trendshift" style="width: 250px;" width="250"/>
 </a>
 
 <br/>
 
+**Your star helps us grow and stay motivated!** ⭐
+<br/>
+
+<br/>
 </div>
 
-**Your star helps us grow and stay motivated!** ⭐
+
 
 Welcome to the **Go Interview Practice** repository! Master Go programming and ace your technical interviews with our interactive coding challenges.
 
