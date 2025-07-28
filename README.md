@@ -325,6 +325,12 @@ Help keep Go education free and accessible! Your sponsorship enables me to creat
 - **Ongoing maintenance** when your package updates
 - Your package featured prominently on the platform
 
+**💎 $200/month - Premium Business Sponsor**
+- All previous benefits plus:
+- **Company logo placement** on README, homepage, and challenge pages
+- Monthly social media mentions and priority partnership
+- Quarterly strategy calls and recruitment opportunities
+
 **☕ $10 - Buy Me a Coffee** *(One-time)*
 - Show appreciation for the free educational content
 - Support continued development with a simple coffee
@@ -335,6 +341,25 @@ Help keep Go education free and accessible! Your sponsorship enables me to creat
 [**🎯 Become a Sponsor**](https://github.com/sponsors/RezaSi)
 
 *Your support helps maintain 30+ challenges, the web platform, and keeps everything free for the community!*
+
+---
+
+## 🏢 Premium Business Sponsors
+
+*Thank you to our premium sponsors who make this project possible!*
+
+<!-- 
+Premium sponsor logos will appear here when we have them. Format:
+<div align="center">
+<a href="https://company-website.com" target="_blank">
+<img src="https://company-logo-url.com/logo.png" alt="Company Name" height="60" style="margin: 0 20px;">
+</a>
+</div>
+-->
+
+*Interested in premium sponsorship? [Contact us](https://github.com/sponsors/RezaSi) to feature your company logo here and on our platform!*
+
+---
 
 ## License
 
