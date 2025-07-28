@@ -240,15 +240,44 @@ jobs:
             SUBMISSION_DIR="submissions/$USERNAME"
             if [ -d "$SUBMISSION_DIR" ]; then
               echo "Testing package challenge submission from $USERNAME"
-              cp "$SUBMISSION_DIR"/*.go .
               
-              # Handle dependencies if go.mod exists
+              # Create a temporary directory for testing
+              TEMP_DIR=$(mktemp -d)
+              
+              # Copy the user's solution file and test file to temp directory
+              cp "$SUBMISSION_DIR/solution.go" "$TEMP_DIR/"
+              cp "solution-template_test.go" "$TEMP_DIR/"
+              
+              # Copy go.mod if it exists
               if [ -f "go.mod" ]; then
-                echo "Found go.mod file, downloading dependencies..."
-                go mod tidy
+                cp "go.mod" "$TEMP_DIR/"
               fi
               
+              # Rename solution.go to solution-template.go for the test
+              mv "$TEMP_DIR/solution.go" "$TEMP_DIR/solution-template.go"
+              
+              # Navigate to temp directory
+              pushd "$TEMP_DIR" > /dev/null
+              
+                              # Handle dependencies if go.mod exists
+              if [ -f "go.mod" ]; then
+                echo "Found go.mod file, downloading dependencies..."
+                # Update module name to avoid conflicts
+                sed -i 's/^module .*/module challenge/' go.mod
+                go mod tidy
+              else
+                go mod init challenge
+              fi
+              
+              # Run tests
               go test -v
+              TEST_EXIT_CODE=$?
+              
+              # Return to original directory and cleanup
+              popd > /dev/null
+              rm -rf "$TEMP_DIR"
+              
+              exit $TEST_EXIT_CODE
             else
               echo "No submission found for $USERNAME in package challenge ${{ matrix.challenge }}"
             fi
