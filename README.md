@@ -314,8 +314,6 @@ Help keep Go education free and accessible! Your sponsorship enables me to creat
 
 ### GitHub Sponsors
 
-[![GitHub Sponsors](https://img.shields.io/github/sponsors/RezaSi?style=for-the-badge&logo=github&logoColor=white&color=EA4AAA)](https://github.com/sponsors/RezaSi)
-
 **🥉 $5/month - Go Supporter**
 - Sponsor badge on your profile
 - Early access to new challenges (24 hours before public release)
