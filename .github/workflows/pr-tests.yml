@@ -75,7 +75,7 @@ jobs:
           # Extract challenges that were modified (either submissions or other files)
           # Include both regular challenges and package challenges
           REGULAR_CHALLENGES=$(echo "$CHANGED_FILES" | grep -E "^challenge-[0-9]+/" | sed 's|/.*||' || true)
-          PACKAGE_CHALLENGES=$(echo "$CHANGED_FILES" | grep -E "^packages/[^/]+/challenge-[^/]+/" | sed 's|/challenge-[^/]*/.*||' || true)
+          PACKAGE_CHALLENGES=$(echo "$CHANGED_FILES" | grep -E "^packages/[^/]+/challenge-[^/]+/" | sed -E 's|^(packages/[^/]+/challenge-[^/]+)/.*|\1|' || true)
           CHANGED_CHALLENGES=$(echo -e "$REGULAR_CHALLENGES\n$PACKAGE_CHALLENGES" | grep -v '^$' | sort -u || true)
           
           # Extract submission directories that were modified  
