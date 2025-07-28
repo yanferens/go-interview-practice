@@ -308,6 +308,36 @@ We welcome contributions! You can contribute in several ways:
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on both challenge types.
 
+## 💖 Support This Project
+
+Help keep Go education free and accessible! Your sponsorship enables me to create more challenges, maintain the platform, and support the community.
+
+### GitHub Sponsors
+
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/RezaSi?style=for-the-badge&logo=github&logoColor=white&color=EA4AAA)](https://github.com/sponsors/RezaSi)
+
+**🥉 $5/month - Go Supporter**
+- Sponsor badge on your profile
+- Early access to new challenges (24 hours before public release)
+- Priority support and your name in contributors section
+
+**🚀 $25/month - Go Package Champion** 
+- All supporter benefits plus:
+- **Custom package tutorial creation** with 4-6 progressive challenges
+- **Ongoing maintenance** when your package updates
+- Your package featured prominently on the platform
+
+**☕ $10 - Buy Me a Coffee** *(One-time)*
+- Show appreciation for the free educational content
+- Support continued development with a simple coffee
+
+**💎 $100 - Package Challenge Creation** *(One-time)*
+- Complete learning path for your Go package (one-time creation, no ongoing updates)
+
+[**🎯 Become a Sponsor**](https://github.com/sponsors/RezaSi)
+
+*Your support helps maintain 30+ challenges, the web platform, and keeps everything free for the community!*
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
