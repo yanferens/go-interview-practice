@@ -13,9 +13,6 @@
 
 <br/>
 
-⭐ **Your star helps us grow and stay motivated** ⭐
-<br/>
-
 <br/>
 </div>
 
