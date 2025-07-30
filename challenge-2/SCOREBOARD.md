@@ -1,6 +1,7 @@
 # Scoreboard for challenge-2
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
+| AkifhanIlgaz | 7 | 7 |
 | AliNazariii | 7 | 7 |
 | Gandook | 7 | 7 |
 | IBraveMonkey | 7 | 7 |
