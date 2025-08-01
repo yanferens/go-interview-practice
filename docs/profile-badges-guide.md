@@ -2,6 +2,8 @@
 
 Welcome to the **Go Interview Practice** profile badges system! This guide shows you how to showcase your coding achievements using beautiful badges on your GitHub profile, LinkedIn, personal website, or anywhere you want to demonstrate your Go programming skills.
 
+> **✨ All badges are clickable!** When users click your badge, they'll be taken directly to the Go Interview Practice repository, helping you promote the project while showcasing your achievements.
+
 ## 📚 Quick Navigation
 
 - [🎯 Quick Start](#-quick-start) - Get your badges in 3 steps
@@ -35,11 +37,11 @@ Your badges automatically update as you solve more challenges - no manual work n
 These badges automatically update when you solve more challenges:
 
 **Example for user `odelbos`:**
-![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/odelbos.json&style=for-the-badge&logo=go&logoColor=white)
+[![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/odelbos.json&style=for-the-badge&logo=go&logoColor=white)](https://github.com/RezaSi/go-interview-practice)
 
-**Your Dynamic Badge:**
+**Your Dynamic Badge (Clickable):**
 ```markdown
-![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/YOUR_USERNAME.json&style=for-the-badge&logo=go&logoColor=white)
+[![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/YOUR_USERNAME.json&style=for-the-badge&logo=go&logoColor=white)](https://github.com/RezaSi/go-interview-practice)
 ```
 
 ### 2. **Custom SVG Badges**
@@ -50,20 +52,20 @@ Beautiful custom-designed badges with gradients and achievement levels:
 **Beautiful Modern Designs with Progress Bars:**
 
 **🏆 Master Level (Gold)** - odelbos with 28/30 challenges:
-![Go Interview Practice Achievement](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/odelbos.svg)
+[![Go Interview Practice Achievement](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/odelbos.svg)](https://github.com/RezaSi/go-interview-practice)
 
 **⚡ Advanced Level (Orange)** - RezaSi with 14/30 challenges:
-![Go Interview Practice Achievement](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/RezaSi.svg)
+[![Go Interview Practice Achievement](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/RezaSi.svg)](https://github.com/RezaSi/go-interview-practice)
 
 **🎯 Expert Level (Blue)** - ashwinipatankar with 17/30 challenges:
-![Go Interview Practice Achievement](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/ashwinipatankar.svg)
+[![Go Interview Practice Achievement](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/ashwinipatankar.svg)](https://github.com/RezaSi/go-interview-practice)
 
 **⚡ Compact Horizontal Style:**
-![Go Interview Practice Compact](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/odelbos_compact.svg)
+[![Go Interview Practice Compact](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/odelbos_compact.svg)](https://github.com/RezaSi/go-interview-practice)
 
-**Your SVG Badge:**
+**Your SVG Badge (Clickable):**
 ```markdown
-![Go Interview Practice Achievement](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/YOUR_USERNAME.svg)
+[![Go Interview Practice Achievement](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/YOUR_USERNAME.svg)](https://github.com/RezaSi/go-interview-practice)
 ```
 
 ### 3. **Static Badges**
@@ -108,7 +110,7 @@ Available colors for static badges:
 ```markdown
 ## 🏆 My Go Interview Practice Journey
 
-![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/YOUR_USERNAME.json&style=for-the-badge&logo=go&logoColor=white)
+[![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/YOUR_USERNAME.json&style=for-the-badge&logo=go&logoColor=white)](https://github.com/RezaSi/go-interview-practice)
 
 I've been practicing Go programming through the [Go Interview Practice](https://github.com/RezaSi/go-interview-practice) repository, where I've solved multiple coding challenges and improved my algorithmic thinking skills.
 ```
@@ -156,7 +158,7 @@ Your dynamic badges automatically refresh when:
 
 I actively practice algorithmic problem-solving through structured challenges:
 
-![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/YOUR_USERNAME.json&style=for-the-badge&logo=go&logoColor=white)
+[![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/YOUR_USERNAME.json&style=for-the-badge&logo=go&logoColor=white)](https://github.com/RezaSi/go-interview-practice)
 
 **Repository**: [Go Interview Practice](https://github.com/RezaSi/go-interview-practice)
 **My Solutions**: [View my submissions](https://github.com/RezaSi/go-interview-practice/tree/main/challenge-*/submissions/YOUR_USERNAME)
@@ -192,13 +194,13 @@ Use badges in:
 Here are some real examples from our top contributors:
 
 ### Master Level (20+ challenges)
-![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/odelbos.json&style=for-the-badge&logo=go&logoColor=white)
+[![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/odelbos.json&style=for-the-badge&logo=go&logoColor=white)](https://github.com/RezaSi/go-interview-practice)
 
 ### Expert Level (15+ challenges)  
-![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/ashwinipatankar.json&style=for-the-badge&logo=go&logoColor=white)
+[![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/ashwinipatankar.json&style=for-the-badge&logo=go&logoColor=white)](https://github.com/RezaSi/go-interview-practice)
 
 ### Advanced Level (10+ challenges)
-![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/RezaSi.json&style=for-the-badge&logo=go&logoColor=white)
+[![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/RezaSi.json&style=for-the-badge&logo=go&logoColor=white)](https://github.com/RezaSi/go-interview-practice)
 
 ## 📞 Need Help?
 
