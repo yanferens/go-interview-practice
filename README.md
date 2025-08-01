@@ -161,6 +161,7 @@ Master Go packages through hands-on challenges! Each package offers a structured
 - **Interactive Web UI** - Code, test, and submit solutions in your browser
 - **Automated Testing** - Get immediate feedback on your solutions
 - **Automated Scoreboards** - Solutions are automatically scored and ranked
+- **🏆 Profile Badges** - Beautiful auto-updating badges for GitHub profiles, LinkedIn, and portfolios
 - **Performance Analytics** - Track execution time and memory usage for your solutions
 - **Comprehensive Learning** - Each challenge includes detailed explanations and resources
 - **Progressive Difficulty** - From beginner to advanced Go concepts
@@ -239,6 +240,31 @@ Each challenge has its own scoreboard that tracks:
 - Completion dates
 
 View global and per-challenge scoreboards in the Web UI to compare your solutions with others.
+
+## 🏆 Profile Badges for Contributors
+
+Showcase your Go programming achievements with beautiful, auto-updating profile badges! Perfect for GitHub profiles, LinkedIn, and personal websites.
+
+### ✨ Examples
+
+![Go Interview Practice Achievement](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/RezaSi.svg)
+
+![Go Interview Practice Compact](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/RezaSi_compact.svg)
+
+### 🎯 Quick Start
+
+1. **Contribute** solutions to challenges
+2. **Get your badges** auto-generated in [`badges/YOUR_USERNAME_badges.md`](badges/)
+3. **Copy & paste** into your GitHub profile or website
+
+### 🎨 What You Get
+
+- **Full-size card badges** with progress bars and stats
+- **Compact badges** perfect for README headers  
+- **Auto-updating** based on your challenge progress
+- **Multiple formats** ready for any platform
+
+**📖 [Complete Badge Guide & Examples →](docs/profile-badges-guide.md)**
 
 ## Challenge Categories
 
