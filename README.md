@@ -247,9 +247,9 @@ Showcase your Go programming achievements with beautiful, auto-updating profile 
 
 ### ✨ Examples
 
-![Go Interview Practice Achievement](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/RezaSi.svg)
+[![Go Interview Practice Achievement](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/RezaSi.svg)](https://github.com/RezaSi/go-interview-practice)
 
-![Go Interview Practice Compact](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/RezaSi_compact.svg)
+[![Go Interview Practice Compact](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/RezaSi_compact.svg)](https://github.com/RezaSi/go-interview-practice)
 
 ### 🎯 Quick Start
 

@@ -365,32 +365,33 @@ class BadgeGenerator:
         level, color, emoji = self.get_achievement_level(challenges_solved, total_challenges)
         completion_rate = round((challenges_solved / total_challenges * 100), 1) if total_challenges > 0 else 0
         
-        # Dynamic badge (requires the JSON endpoint)
-        dynamic_badge = f"""![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/{username}.json&style=for-the-badge&logo=go&logoColor=white)"""
+        # Dynamic badge (requires the JSON endpoint) - with clickable link
+        dynamic_badge = f"""[![Go Interview Practice](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/{username}.json&style=for-the-badge&logo=go&logoColor=white)](https://github.com/RezaSi/go-interview-practice)"""
         
-        # Static badges
-        challenge_badge = f"""![Challenges Solved](https://img.shields.io/badge/Go_Challenges-{challenges_solved}%2F{total_challenges}-brightgreen?style=for-the-badge&logo=go&logoColor=white)"""
+        # Static badges - with clickable links
+        challenge_badge = f"""[![Challenges Solved](https://img.shields.io/badge/Go_Challenges-{challenges_solved}%2F{total_challenges}-brightgreen?style=for-the-badge&logo=go&logoColor=white)](https://github.com/RezaSi/go-interview-practice)"""
         
-        level_badge = f"""![Achievement Level](https://img.shields.io/badge/Level-{emoji}_{level}-{color}?style=for-the-badge&logo=trophy&logoColor=white)"""
+        level_badge = f"""[![Achievement Level](https://img.shields.io/badge/Level-{emoji}_{level}-{color}?style=for-the-badge&logo=trophy&logoColor=white)](https://github.com/RezaSi/go-interview-practice)"""
         
-        completion_badge = f"""![Completion Rate](https://img.shields.io/badge/Completion-{completion_rate}%25-{color}?style=for-the-badge&logo=checkmarx&logoColor=white)"""
+        completion_badge = f"""[![Completion Rate](https://img.shields.io/badge/Completion-{completion_rate}%25-{color}?style=for-the-badge&logo=checkmarx&logoColor=white)](https://github.com/RezaSi/go-interview-practice)"""
         
-        # Package badges if available
+        # Package badges if available - with clickable link
         package_badges = ""
         if package_stats:
             total_package_challenges = sum(package_stats.values())
             package_count = len(package_stats)
-            package_badges = f"""![Package Challenges](https://img.shields.io/badge/Package_Challenges-{total_package_challenges}_across_{package_count}_packages-purple?style=for-the-badge&logo=package&logoColor=white)"""
+            package_badges = f"""[![Package Challenges](https://img.shields.io/badge/Package_Challenges-{total_package_challenges}_across_{package_count}_packages-purple?style=for-the-badge&logo=package&logoColor=white)](https://github.com/RezaSi/go-interview-practice)"""
         
         badges_collection = f"""## 🏆 Go Interview Practice Achievements
 
 ### 🎨 Beautiful Custom Badges
+*Click any badge to visit the Go Interview Practice repository!*
 
-<!-- Full-size Card Badge -->
-![Go Interview Practice Achievement Card](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/{username}.svg)
+<!-- Full-size Card Badge - Clickable -->
+[![Go Interview Practice Achievement Card](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/{username}.svg)](https://github.com/RezaSi/go-interview-practice)
 
-<!-- Compact Horizontal Badge -->
-![Go Interview Practice Compact](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/{username}_compact.svg)
+<!-- Compact Horizontal Badge - Clickable -->
+[![Go Interview Practice Compact](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/{username}_compact.svg)](https://github.com/RezaSi/go-interview-practice)
 
 ### 🔄 Dynamic Shields.io Badge
 <!-- Dynamic Badge (auto-updates) -->
