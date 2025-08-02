@@ -241,30 +241,25 @@ Each challenge has its own scoreboard that tracks:
 
 View global and per-challenge scoreboards in the Web UI to compare your solutions with others.
 
-## 🏆 Profile Badges for Contributors
+## Profile Badges for Contributors
 
-Showcase your Go programming achievements with beautiful, auto-updating profile badges! Perfect for GitHub profiles, LinkedIn, and personal websites.
+Showcase your Go programming achievements with auto-updating profile badges for GitHub profiles, portfolios, and personal websites.
 
-### ✨ Examples
+### Examples
 
 [![Go Interview Practice Achievement](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/RezaSi.svg)](https://github.com/RezaSi/go-interview-practice)
 
 [![Go Interview Practice Compact](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/RezaSi_compact.svg)](https://github.com/RezaSi/go-interview-practice)
 
-### 🎯 Quick Start
+### Quick Usage
 
-1. **Contribute** solutions to challenges
-2. **Get your badges** auto-generated in [`badges/YOUR_USERNAME_badges.md`](badges/)
-3. **Copy & paste** into your GitHub profile or website
+```markdown
+[![Go Interview Practice Achievement](https://raw.githubusercontent.com/RezaSi/go-interview-practice/main/badges/YOUR_USERNAME.svg)](https://github.com/RezaSi/go-interview-practice)
+```
 
-### 🎨 What You Get
+After contributing solutions, your badges are automatically generated in [`badges/YOUR_USERNAME_badges.md`](badges/) with multiple formats ready to use.
 
-- **Full-size card badges** with progress bars and stats
-- **Compact badges** perfect for README headers  
-- **Auto-updating** based on your challenge progress
-- **Multiple formats** ready for any platform
-
-**📖 [Complete Badge Guide & Examples →](docs/profile-badges-guide.md)**
+**[Complete Badge Guide & Examples →](docs/profile-badges-guide.md)**
 
 ## Challenge Categories
 
