@@ -18,6 +18,7 @@
 | ZaharBorisenko | 7 | 7 |
 | adwantay | 7 | 7 |
 | arslanoktay | 7 | 7 |
+| aseifi880 | 7 | 7 |
 | ashwinipatankar | 7 | 7 |
 | deloz | 7 | 7 |
 | igorek890 | 7 | 7 |
