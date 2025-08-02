@@ -36,6 +36,7 @@
 | jersonzc | 6 | 6 |
 | jordanhimawan | 6 | 6 |
 | krmaxwell | 6 | 6 |
+| kuzminprog | 6 | 6 |
 | lajosbnk | 6 | 6 |
 | lanmanul | 6 | 6 |
 | mayconvm | 6 | 6 |

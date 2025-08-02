@@ -24,6 +24,7 @@
 | jersonzc | 5 | 5 |
 | jordanhimawan | 5 | 5 |
 | krmaxwell | 5 | 5 |
+| kuzminprog | 5 | 5 |
 | lajosbnk | 5 | 5 |
 | lanmanul | 5 | 5 |
 | mayconvm | 5 | 5 |
