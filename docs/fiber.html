@@ -189,59 +189,56 @@
     <!-- Challenge Preview -->
     <section class="challenges-section py-5 bg-light">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto text-center mb-5">
-                    <h2 class="fw-bold mb-3">Progressive Learning Path</h2>
-                    <p class="lead text-muted">
-                        Each challenge builds upon the previous one, ensuring you develop a deep understanding of Fiber.
-                    </p>
+            <div class="row text-center mb-5">
+                <div class="col-lg-8 mx-auto">
+                    <h2 class="display-5 fw-bold mb-3">Challenge Roadmap</h2>
+                    <p class="lead text-muted">From basic HTTP server to production-ready APIs</p>
                 </div>
             </div>
-
+            
             <div class="row g-4">
-                <div class="col-lg-3 col-md-6">
-                    <div class="challenge-preview-card">
-                        <div class="challenge-number">01</div>
-                        <h5 class="fw-bold mb-2">Basic Routing</h5>
-                        <p class="text-muted small mb-3">Master HTTP methods, route parameters, and JSON responses</p>
-                        <div class="challenge-tags">
-                            <span class="badge bg-success">Beginner</span>
-                        </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="challenge-card">
+                        <div class="challenge-number">1</div>
+                        <h6>Basic Routing</h6>
+                        <p class="small text-muted">Setup Fiber, routes, and handlers</p>
+                        <div class="difficulty beginner">Beginner</div>
                     </div>
                 </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="challenge-preview-card">
-                        <div class="challenge-number">02</div>
-                        <h5 class="fw-bold mb-2">Middleware</h5>
-                        <p class="text-muted small mb-3">Implement custom middleware, logging, and CORS handling</p>
-                        <div class="challenge-tags">
-                            <span class="badge bg-warning">Intermediate</span>
-                        </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="challenge-card">
+                        <div class="challenge-number">2</div>
+                        <h6>Middleware & CORS</h6>
+                        <p class="small text-muted">Custom middleware and rate limiting</p>
+                        <div class="difficulty intermediate">Intermediate</div>
                     </div>
                 </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="challenge-preview-card">
-                        <div class="challenge-number">03</div>
-                        <h5 class="fw-bold mb-2">Validation & Errors</h5>
-                        <p class="text-muted small mb-3">Handle input validation and structured error responses</p>
-                        <div class="challenge-tags">
-                            <span class="badge bg-warning">Intermediate</span>
-                        </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="challenge-card">
+                        <div class="challenge-number">3</div>
+                        <h6>Validation & Errors</h6>
+                        <p class="small text-muted">Input validation and error handling</p>
+                        <div class="difficulty intermediate">Intermediate</div>
                     </div>
                 </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="challenge-preview-card">
-                        <div class="challenge-number">04</div>
-                        <h5 class="fw-bold mb-2">Authentication</h5>
-                        <p class="text-muted small mb-3">Secure APIs with JWT tokens and role-based access</p>
-                        <div class="challenge-tags">
-                            <span class="badge bg-danger">Advanced</span>
-                        </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="challenge-card">
+                        <div class="challenge-number">4</div>
+                        <h6>Authentication</h6>
+                        <p class="small text-muted">JWT tokens and API key validation</p>
+                        <div class="difficulty advanced">Advanced</div>
                     </div>
                 </div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="https://github.com/RezaSi/go-interview-practice" 
+                   class="btn btn-primary btn-lg pulse">
+                    <i class="bi bi-github me-2"></i>Start Your Fiber Journey
+                </a>
             </div>
         </div>
     </section>
@@ -294,19 +291,21 @@ func main() {
     </section>
 
     <!-- Footer -->
-    <footer class="bg-dark text-light py-4">
+    <footer class="footer py-4 bg-dark text-light">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <p class="mb-0">&copy; 2024 Go Interview Practice. Built with ❤️ for the Go community.</p>
+                    <p class="mb-0">Part of <a href="index.html" class="text-light">Go Interview Practice</a> • 30+ Go Challenges</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <a href="https://github.com/RezaSi/go-interview-practice" class="text-light me-3">
-                        <i class="bi bi-github"></i> GitHub
-                    </a>
-                    <a href="https://github.com/sponsors/RezaSi" class="text-light">
-                        <i class="bi bi-heart-fill"></i> Sponsor
-                    </a>
+                    <div class="social-links">
+                        <a href="https://github.com/RezaSi/go-interview-practice" class="text-light me-3">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                        <a href="https://github.com/sponsors/RezaSi" class="text-light">
+                            <i class="bi bi-heart-fill"></i> Sponsor
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
