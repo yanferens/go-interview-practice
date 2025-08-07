@@ -11,8 +11,8 @@
 <img src="https://trendshift.io/api/badge/repositories/14255" alt="RezaSi%2Fgo-interview-practice | Trendshift" style="width: 250px;" width="250"/>
 </a>
 
+<span style="font-size:12px">**⭐ Star the repo if it’s useful to you (it helps others find it)**</span>
 <br/>
-
 <br/>
 </div>
 
