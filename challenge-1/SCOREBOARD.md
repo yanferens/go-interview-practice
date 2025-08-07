@@ -37,6 +37,7 @@
 | jersonzc | 6 | 6 |
 | joaovitoralvares | 6 | 6 |
 | jordanhimawan | 6 | 6 |
+| korranat9 | 6 | 6 |
 | krmaxwell | 6 | 6 |
 | kuzminprog | 6 | 6 |
 | lajosbnk | 6 | 6 |
