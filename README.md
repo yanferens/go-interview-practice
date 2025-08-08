@@ -196,6 +196,13 @@ cd web-ui
 go run main.go
 
 # 4. Open http://localhost:8080 in your browser
+
+# 5. Optional: Enable AI Features (Recommended) 🤖
+# Add your free Gemini API key to enable AI interview simulation
+echo "AI_PROVIDER=gemini" > web-ui/.env
+echo "GEMINI_API_KEY=your_actual_api_key_here" >> web-ui/.env
+# Get your free API key: https://makersuite.google.com/app/apikey
+# Note: .env files are automatically ignored by git for security
 ```
 
 **After solving challenges and submitting solutions:**
@@ -215,7 +222,12 @@ Want to get started instantly without setting up anything locally? Use GitHub Co
    cd web-ui
    go run main.go
    ```
-5. **Access the Web UI**: Click on the "Ports" tab in the bottom panel, then click the "Open in Browser" button next to port 8080
+5. **Optional: Enable AI Features**: Add your Gemini API key:
+   ```bash
+   echo "AI_PROVIDER=gemini" > .env
+   echo "GEMINI_API_KEY=your_actual_api_key_here" >> .env
+   ```
+6. **Access the Web UI**: Click on the "Ports" tab in the bottom panel, then click the "Open in Browser" button next to port 8080
 
 **Benefits of using Codespaces:**
 - No local setup required
