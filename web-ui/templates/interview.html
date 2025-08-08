@@ -133,69 +133,57 @@
                     <!-- AI Assistant Tab -->
                     <div class="tab-pane fade h-100" id="ai-content" role="tabpanel">
                       <div class="p-3 h-100 d-flex flex-column">
-                        <div class="text-center mb-4">
+                        <div class="text-center mb-3">
                           <div class="d-inline-block p-3 bg-primary bg-opacity-10 rounded-circle mb-3">
                             <i class="bi bi-robot fs-2 text-primary"></i>
                           </div>
-                          <h6 class="text-primary">AI Assistant</h6>
-                          <p class="small text-muted">Your coding companion</p>
+                          <h6 class="text-primary mb-1">AI Assistant</h6>
+                          <p class="small text-muted mb-0">Your coding companion</p>
                         </div>
                         
-                        <div class="flex-grow-1 d-flex flex-column gap-3" style="overflow: auto;">
-                          <!-- AI Features -->
-                          <div class="card border-0 bg-light">
-                            <div class="card-body py-2 px-3">
-                              <div class="d-flex align-items-center">
-                                <i class="bi bi-chat-dots text-info me-2"></i>
-                                <div>
-                                  <div class="fw-semibold small">Real-time Hints</div>
-                                  <div class="text-muted" style="font-size: 0.75rem;">Get suggestions as you code</div>
-                                </div>
-                              </div>
-                            </div>
+                        <!-- AI Action Buttons -->
+                        <div class="d-grid gap-2">
+                          <button type="button" class="btn btn-primary btn-sm" onclick="requestAIReview()">
+                            <i class="bi bi-search me-1"></i> Get AI Code Review
+                          </button>
+                          <button type="button" class="btn btn-info btn-sm" onclick="requestInterviewQuestions()">
+                            <i class="bi bi-chat-dots me-1"></i> Ask Interviewer Questions
+                          </button>
+                          <div class="btn-group w-100" role="group">
+                            <button type="button" class="btn btn-warning btn-sm" onclick="requestHint(1)">
+                              💡 Hint Lv1
+                            </button>
+                            <button type="button" class="btn btn-outline-warning btn-sm" onclick="requestHint(2)">
+                              Lv2
+                            </button>
+                            <button type="button" class="btn btn-outline-warning btn-sm" onclick="requestHint(3)">
+                              Lv3
+                            </button>
+                            <button type="button" class="btn btn-outline-warning btn-sm" onclick="requestHint(4)">
+                              Lv4
+                            </button>
                           </div>
-                          
+                        </div>
+                        
+                        <!-- AI Response Area -->
+                        <div id="ai-response-area" class="mt-3" style="display: none;">
                           <div class="card border-0 bg-light">
-                            <div class="card-body py-2 px-3">
-                              <div class="d-flex align-items-center">
-                                <i class="bi bi-mic text-success me-2"></i>
-                                <div>
-                                  <div class="fw-semibold small">Voice Chat</div>
-                                  <div class="text-muted" style="font-size: 0.75rem;">Talk through problems naturally</div>
-                                </div>
-                              </div>
+                            <div class="card-header bg-primary text-white py-2">
+                              <h6 class="mb-0">
+                                <i class="bi bi-robot me-1"></i>
+                                <span id="ai-response-title">AI Feedback</span>
+                              </h6>
                             </div>
-                          </div>
-                          
-                          <div class="card border-0 bg-light">
-                            <div class="card-body py-2 px-3">
-                              <div class="d-flex align-items-center">
-                                <i class="bi bi-graph-up text-warning me-2"></i>
-                                <div>
-                                  <div class="fw-semibold small">Code Analysis</div>
-                                  <div class="text-muted" style="font-size: 0.75rem;">Performance & style feedback</div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <div class="card border-0 bg-light">
-                            <div class="card-body py-2 px-3">
-                              <div class="d-flex align-items-center">
-                                <i class="bi bi-lightbulb text-danger me-2"></i>
-                                <div>
-                                  <div class="fw-semibold small">Smart Debugging</div>
-                                  <div class="text-muted" style="font-size: 0.75rem;">Find and fix issues faster</div>
-                                </div>
-                              </div>
+                            <div class="card-body p-3" id="ai-response-content">
+                              <!-- AI responses will appear here -->
                             </div>
                           </div>
                         </div>
                         
                         <div class="mt-auto">
-                          <div class="alert alert-info py-2 px-3 mb-0 small">
-                            <i class="bi bi-info-circle me-1"></i>
-                            <strong>Coming Soon!</strong> AI features are in development.
+                          <div class="alert alert-success py-2 px-3 mb-0 small">
+                            <i class="bi bi-check-circle me-1"></i>
+                            <strong>AI Ready!</strong> Click buttons above to get AI assistance.
                           </div>
                         </div>
                       </div>
@@ -942,6 +930,316 @@
   });
 
   renderHistory();
+
+  // Helper function to escape HTML
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Helper function to get current challenge ID
+  function getCurrentChallengeId() {
+    if (!currentSession || !currentSession.challengeIds || currentSession.challengeIds.length === 0) {
+      return null;
+    }
+    
+    // For now, let's use the first challenge ID
+    // In a more sophisticated implementation, you might track which challenge is currently active
+    return currentSession.challengeIds[0];
+  }
+
+
+
+  // AI Functions
+  window.requestAIReview = async function() {
+    const currentCode = editor ? editor.getValue() : '';
+    
+    if (!currentCode.trim()) {
+      alert('Please write some code first!');
+      return;
+    }
+    
+    // Get current challenge ID using the helper function
+    const currentChallengeId = getCurrentChallengeId();
+    
+    if (!currentChallengeId) {
+      alert('Please start an interview session and select a challenge first!\n\nSteps:\n1. Select challenges from the list\n2. Set duration\n3. Click "Start Interview"\n4. Begin coding on a challenge');
+      return;
+    }
+
+    showAILoading('Getting AI Code Review...');
+    
+    try {
+      const response = await fetch('/api/ai/code-review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          challengeId: currentChallengeId,
+          code: currentCode,
+          context: `Interview session, ${currentSession.challengeIds.length} challenges, ${Math.floor((Date.now() - currentSession.startedAt) / 60000)} minutes elapsed`
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const review = await response.json();
+      console.log('AI Review Response:', review);
+      
+      if (!review || typeof review !== 'object') {
+        throw new Error('Invalid response format from AI service');
+      }
+      
+      displayAIReview(review);
+    } catch (error) {
+      showAIError('Failed to get AI review: ' + error.message);
+    }
+  };
+
+  window.requestInterviewQuestions = async function() {
+    const currentCode = editor ? editor.getValue() : '';
+    
+    // Get current challenge ID using the helper function
+    const currentChallengeId = getCurrentChallengeId();
+    
+    if (!currentChallengeId) {
+      alert('Please start an interview session and select a challenge first!');
+      return;
+    }
+
+    showAILoading('Generating Interview Questions...');
+    
+    try {
+      const response = await fetch('/api/ai/interviewer-questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          challengeId: currentChallengeId,
+          code: currentCode,
+          userProgress: `Challenge 1 of ${currentSession.challengeIds.length}`
+        })
+      });
+      
+      const result = await response.json();
+      console.log('AI Questions Response:', result);
+      
+      // Handle both direct array and object with questions property
+      const questions = result.questions || result;
+      displayInterviewQuestions(questions);
+    } catch (error) {
+      showAIError('Failed to get interview questions: ' + error.message);
+    }
+  };
+
+  window.requestHint = async function(level = 1) {
+    const currentCode = editor ? editor.getValue() : '';
+    
+    // Get current challenge ID using the helper function
+    const currentChallengeId = getCurrentChallengeId();
+    
+    if (!currentChallengeId) {
+      alert('Please start an interview session and select a challenge first!');
+      return;
+    }
+
+    showAILoading(`Getting Hint (Level ${level})...`);
+    
+    try {
+      const response = await fetch('/api/ai/code-hint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          challengeId: currentChallengeId,
+          code: currentCode,
+          hintLevel: level
+        })
+      });
+      
+      const result = await response.json();
+      displayHint(result.hint, level);
+    } catch (error) {
+      showAIError('Failed to get hint: ' + error.message);
+    }
+  };
+
+  function showAILoading(message) {
+    const responseArea = document.getElementById('ai-response-area');
+    const title = document.getElementById('ai-response-title');
+    const content = document.getElementById('ai-response-content');
+    
+    title.textContent = 'AI Thinking...';
+    content.innerHTML = `
+      <div class="text-center">
+        <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+        ${message}
+      </div>
+    `;
+    responseArea.style.display = 'block';
+  }
+
+  function displayAIReview(review) {
+    const title = document.getElementById('ai-response-title');
+    const content = document.getElementById('ai-response-content');
+    
+    // Provide defaults for missing properties
+    const overallScore = review.overall_score || 0;
+    const readabilityScore = review.readability_score || 0;
+    const interviewerFeedback = review.interviewer_feedback || 'No feedback available';
+    
+    title.textContent = `AI Code Review (Score: ${overallScore}/100)`;
+    
+    let html = `
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <div class="badge bg-${getScoreColor(overallScore)} fs-6">
+            Overall Score: ${overallScore}/100
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="badge bg-info fs-6">
+            Readability: ${readabilityScore}/100
+          </div>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <h6><i class="bi bi-chat-quote-fill me-1"></i>Interviewer Feedback:</h6>
+        <div class="alert alert-light p-2 small">${escapeHtml(interviewerFeedback)}</div>
+      </div>
+    `;
+    
+    if (review.issues && Array.isArray(review.issues) && review.issues.length > 0) {
+      html += `
+        <div class="mb-3">
+          <h6><i class="bi bi-exclamation-triangle me-1"></i>Issues Found:</h6>
+          ${review.issues.map(issue => `
+            <div class="alert alert-${getSeverityColor(issue.severity)} p-2 small mb-1">
+              <strong>${escapeHtml(issue.type.toUpperCase())}:</strong> ${escapeHtml(issue.description)}
+              ${issue.solution ? `<br><em>Fix: ${escapeHtml(issue.solution)}</em>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+    
+    if (review.suggestions && Array.isArray(review.suggestions) && review.suggestions.length > 0) {
+      html += `
+        <div class="mb-3">
+          <h6><i class="bi bi-lightbulb me-1"></i>Suggestions:</h6>
+          ${review.suggestions.map(suggestion => `
+            <div class="alert alert-info p-2 small mb-1">
+              <strong>${escapeHtml(suggestion.category)}:</strong> ${escapeHtml(suggestion.description)}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+    
+    if (review.complexity) {
+      html += `
+        <div class="mb-3">
+          <h6><i class="bi bi-speedometer me-1"></i>Complexity Analysis:</h6>
+          <div class="row">
+            <div class="col-6">
+              <div class="badge bg-secondary">Time: ${review.complexity.time_complexity}</div>
+            </div>
+            <div class="col-6">
+              <div class="badge bg-secondary">Space: ${review.complexity.space_complexity}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    content.innerHTML = html;
+  }
+
+  function displayInterviewQuestions(questions) {
+    const title = document.getElementById('ai-response-title');
+    const content = document.getElementById('ai-response-content');
+    
+    title.textContent = 'Interview Questions';
+    
+    let html = `
+      <div class="mb-2">
+        <h6><i class="bi bi-person-check me-1"></i>The interviewer asks:</h6>
+      </div>
+    `;
+    
+    // Ensure questions is an array
+    if (questions && Array.isArray(questions)) {
+      questions.forEach((question, index) => {
+      html += `
+        <div class="alert alert-primary p-2 small mb-2">
+          <strong>Q${index + 1}:</strong> ${escapeHtml(question)}
+        </div>
+      `;
+      });
+    } else {
+      html += `
+        <div class="alert alert-warning p-2 small">
+          No questions available at this time.
+        </div>
+      `;
+    }
+    
+    content.innerHTML = html;
+  }
+
+  function displayHint(hint, level) {
+    const title = document.getElementById('ai-response-title');
+    const content = document.getElementById('ai-response-content');
+    
+    title.textContent = `Hint (Level ${level}/4)`;
+    
+    // Ensure hint is a string
+    const safeHint = hint || 'No hint available at this time.';
+    
+    const nextLevelButton = level < 4 ? `
+      <button class="btn btn-warning btn-sm mt-2" onclick="requestHint(${level + 1})">
+        <i class="bi bi-lightbulb me-1"></i>Need More Help? (Level ${level + 1})
+      </button>
+    ` : '';
+    
+    content.innerHTML = `
+      <div class="alert alert-warning p-3">
+        <i class="bi bi-lightbulb-fill me-2"></i>
+        ${escapeHtml(safeHint)}
+        ${nextLevelButton}
+      </div>
+    `;
+  }
+
+  function showAIError(message) {
+    const title = document.getElementById('ai-response-title');
+    const content = document.getElementById('ai-response-content');
+    
+    title.textContent = 'AI Error';
+    content.innerHTML = `
+      <div class="alert alert-danger p-2 small">
+        <i class="bi bi-exclamation-triangle me-1"></i>
+        ${message}
+      </div>
+    `;
+  }
+
+  function getScoreColor(score) {
+    if (score >= 80) return 'success';
+    if (score >= 60) return 'warning';
+    return 'danger';
+  }
+
+  function getSeverityColor(severity) {
+    switch (severity) {
+      case 'critical': return 'danger';
+      case 'high': return 'warning';
+      case 'medium': return 'info';
+      case 'low': return 'light';
+      default: return 'secondary';
+    }
+  }
 })();
 </script>
 {{end}}
