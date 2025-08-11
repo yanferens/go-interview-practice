@@ -27,6 +27,7 @@
 | ashwinipatankar | 7 | 7 |
 | betosmith2000 | 7 | 7 |
 | chenyao0910 | 7 | 7 |
+| decko | 7 | 7 |
 | deloz | 7 | 7 |
 | idk2me | 7 | 7 |
 | igorek890 | 7 | 7 |
