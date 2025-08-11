@@ -432,9 +432,8 @@ Premium sponsor logos will appear here when we have them. Format:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=RezaSi/go-interview-practice&type=Date)](https://www.star-history.com/#RezaSi/go-interview-practice&Date)
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/RezaSi/go-interview-practice.svg?variant=adaptive)](https://starchart.cc/RezaSi/go-interview-practice)
 
 ---
 
