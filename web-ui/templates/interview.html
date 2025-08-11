@@ -944,8 +944,17 @@
       return null;
     }
     
-    // For now, let's use the first challenge ID
-    // In a more sophisticated implementation, you might track which challenge is currently active
+    // Get the currently active challenge ID from the DOM element
+    const challengeIdElement = document.getElementById('challenge-id');
+    if (challengeIdElement && challengeIdElement.textContent) {
+      const currentId = Number(challengeIdElement.textContent);
+      // Verify this ID is in our session's challenge list
+      if (currentSession.challengeIds.includes(currentId)) {
+        return currentId;
+      }
+    }
+    
+    // Fallback to first challenge if no active challenge is found
     return currentSession.challengeIds[0];
   }
 
