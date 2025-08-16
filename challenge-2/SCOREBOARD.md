@@ -3,6 +3,7 @@
 |------------|--------------|-------------|
 | AkifhanIlgaz | 7 | 7 |
 | AliNazariii | 7 | 7 |
+| Andresrvaz | 7 | 7 |
 | Gandook | 7 | 7 |
 | IBraveMonkey | 7 | 7 |
 | JackDalberg | 7 | 7 |
