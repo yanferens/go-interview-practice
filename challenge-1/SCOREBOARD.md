@@ -30,6 +30,7 @@
 | ashwinipatankar | 6 | 6 |
 | betosmith2000 | 6 | 6 |
 | bmeverett | 6 | 6 |
+| cep-ter | 6 | 6 |
 | chenyao0910 | 6 | 6 |
 | decko | 6 | 6 |
 | deloz | 6 | 6 |
