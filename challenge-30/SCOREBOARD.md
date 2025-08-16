@@ -1,6 +1,7 @@
 # Scoreboard for challenge-30
 | Username   | Passed Tests | Total Tests |
 |------------|--------------|-------------|
+| Gandook | 13 | 13 |
 | JackDalberg | 13 | 13 |
 | KhaledMosaad | 13 | 13 |
 | MYK12397 | 13 | 13 |
