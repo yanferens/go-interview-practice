@@ -29,6 +29,7 @@
 | arslanoktay | 6 | 6 |
 | aseifi880 | 6 | 6 |
 | ashwinipatankar | 6 | 6 |
+| berikulyBeket | 6 | 6 |
 | betosmith2000 | 6 | 6 |
 | bmeverett | 6 | 6 |
 | cep-ter | 6 | 6 |
