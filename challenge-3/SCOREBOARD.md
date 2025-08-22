@@ -3,6 +3,7 @@
 |------------|--------------|-------------|
 | AkifhanIlgaz | 5 | 5 |
 | AliNazariii | 5 | 5 |
+| Cpoing | 5 | 5 |
 | Gandook | 5 | 5 |
 | GinVlad | 5 | 5 |
 | IBraveMonkey | 5 | 5 |
